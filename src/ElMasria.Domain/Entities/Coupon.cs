@@ -1,0 +1,153 @@
+using ElMasria.Domain.Enums;
+
+namespace ElMasria.Domain.Entities;
+
+/// <summary>
+/// Discount coupon with flexible rules (percentage or fixed, usage limits, date range).
+/// </summary>
+public sealed class Coupon : BaseEntity
+{
+    /// <summary>Unique coupon code (e.g., "WELCOME10").</summary>
+    public string Code { get; private set; } = string.Empty;
+
+    /// <summary>Description in Arabic.</summary>
+    public string? DescriptionAr { get; private set; }
+
+    /// <summary>Description in English.</summary>
+    public string? DescriptionEn { get; private set; }
+
+    /// <summary>Discount type: Percentage or FixedAmount.</summary>
+    public DiscountType DiscountType { get; private set; }
+
+    /// <summary>Discount value (percentage 1-100 or fixed EGP amount).</summary>
+    public decimal DiscountValue { get; private set; }
+
+    /// <summary>Minimum order amount required to use coupon.</summary>
+    public decimal MinOrderAmount { get; private set; }
+
+    /// <summary>Maximum discount cap for percentage coupons (null = no cap).</summary>
+    public decimal? MaxDiscountAmount { get; private set; }
+
+    /// <summary>Maximum number of uses (0 = unlimited).</summary>
+    public int UsageLimit { get; private set; }
+
+    /// <summary>Number of times used.</summary>
+    public int UsedCount { get; private set; }
+
+    /// <summary>Coupon validity start date.</summary>
+    public DateTime StartsAt { get; private set; }
+
+    /// <summary>Coupon expiry date.</summary>
+    public DateTime ExpiresAt { get; private set; }
+
+    /// <summary>Whether the coupon is active.</summary>
+    public bool IsActive { get; private set; } = true;
+
+    // Navigation
+    /// <summary>Usage tracking records.</summary>
+    public ICollection<CouponUsage> Usages { get; private set; } = new List<CouponUsage>();
+
+    private Coupon() { }
+
+    /// <summary>Creates a new coupon.</summary>
+    public static Coupon Create(string code, DiscountType discountType, decimal discountValue,
+        DateTime startsAt, DateTime expiresAt, decimal minOrderAmount = 0, decimal? maxDiscountAmount = null,
+        int usageLimit = 0)
+    {
+        if (discountType == DiscountType.Percentage && (discountValue <= 0 || discountValue > 100))
+            throw new Exceptions.DomainException("نسبة الخصم يجب أن تكون بين 1 و 100", "Percentage must be between 1 and 100.");
+        if (discountValue <= 0)
+            throw new Exceptions.DomainException("قيمة الخصم يجب أن تكون أكبر من صفر", "Discount value must be > 0.");
+        if (expiresAt <= startsAt)
+            throw new Exceptions.DomainException("تاريخ الانتهاء يجب أن يكون بعد تاريخ البداية", "Expiry must be after start date.");
+
+        return new Coupon
+        {
+            Code = code.ToUpperInvariant(),
+            DiscountType = discountType,
+            DiscountValue = discountValue,
+            StartsAt = startsAt,
+            ExpiresAt = expiresAt,
+            MinOrderAmount = minOrderAmount,
+            MaxDiscountAmount = maxDiscountAmount,
+            UsageLimit = usageLimit,
+            IsActive = true
+        };
+    }
+
+    /// <summary>Calculates the discount amount for a given order subtotal.</summary>
+    public decimal CalculateDiscount(decimal orderSubTotal)
+    {
+        var discount = DiscountType == DiscountType.Percentage
+            ? orderSubTotal * (DiscountValue / 100m)
+            : DiscountValue;
+
+        // Apply max discount cap for percentage coupons
+        if (MaxDiscountAmount.HasValue && discount > MaxDiscountAmount.Value)
+            discount = MaxDiscountAmount.Value;
+
+        // Cannot exceed order total
+        return Math.Min(discount, orderSubTotal);
+    }
+
+    /// <summary>Validates and records a coupon usage. Throws if invalid.</summary>
+    public void Use(string userId, int orderId)
+    {
+        if (!IsActive)
+            throw new Exceptions.BusinessRuleException("هذا الكوبون غير نشط", "Coupon is not active.");
+        if (DateTime.UtcNow < StartsAt)
+            throw new Exceptions.BusinessRuleException("الكوبون لم يبدأ بعد", "Coupon has not started yet.");
+        if (DateTime.UtcNow > ExpiresAt)
+            throw new Exceptions.CouponExpiredException(Code);
+        if (UsageLimit > 0 && UsedCount >= UsageLimit)
+            throw new Exceptions.BusinessRuleException("تم استنفاد عدد استخدامات الكوبون", "Coupon usage limit reached.");
+
+        UsedCount++;
+    }
+
+    /// <summary>Whether the coupon is currently valid for use.</summary>
+    public bool IsValid => IsActive
+        && DateTime.UtcNow >= StartsAt
+        && DateTime.UtcNow <= ExpiresAt
+        && (UsageLimit == 0 || UsedCount < UsageLimit);
+}
+
+/// <summary>Tracks individual coupon usage per user per order.</summary>
+public sealed class CouponUsage
+{
+    /// <summary>Primary key.</summary>
+    public int Id { get; private set; }
+
+    /// <summary>Coupon ID.</summary>
+    public int CouponId { get; private set; }
+
+    /// <summary>User who used the coupon.</summary>
+    public string UserId { get; private set; } = string.Empty;
+
+    /// <summary>Order where coupon was applied.</summary>
+    public int OrderId { get; private set; }
+
+    /// <summary>Discount amount applied.</summary>
+    public decimal DiscountAmount { get; private set; }
+
+    /// <summary>Timestamp of usage.</summary>
+    public DateTime UsedAt { get; private set; } = DateTime.UtcNow;
+
+    // Navigation
+    /// <summary>The coupon.</summary>
+    public Coupon Coupon { get; private set; } = null!;
+
+    private CouponUsage() { }
+
+    /// <summary>Records a coupon usage.</summary>
+    public static CouponUsage Create(int couponId, string userId, int orderId, decimal discountAmount)
+    {
+        return new CouponUsage
+        {
+            CouponId = couponId,
+            UserId = userId,
+            OrderId = orderId,
+            DiscountAmount = discountAmount
+        };
+    }
+}

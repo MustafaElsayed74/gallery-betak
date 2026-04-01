@@ -1,0 +1,51 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+*.exe
+*.nupkg
+*.snupkg
+.vs/
+launchSettings.json
+
+## IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+## Secrets — NEVER commit
+appsettings.*.local.json
+*.pfx
+*.key
+
+## OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+## Uploads
+uploads/
+
+## Coverage
+coverage/
+TestResults/
+*.coveragexml
+
+## Node (Angular)
+node_modules/
+dist/
+.angular/
+.sass-cache/
+
+## Docker
+.env
+!.env.example
+
+## Logs
+logs/
+*.log

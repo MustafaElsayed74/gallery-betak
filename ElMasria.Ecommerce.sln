@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DC691319-4860-4116-86E9-2BD994C42F22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElMasria.Domain", "src\ElMasria.Domain\ElMasria.Domain.csproj", "{DDD76846-183C-428C-98E1-751081CD5E91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElMasria.Application", "src\ElMasria.Application\ElMasria.Application.csproj", "{DCFC2D02-6270-48E2-8844-FBDED9A1B2D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElMasria.Infrastructure", "src\ElMasria.Infrastructure\ElMasria.Infrastructure.csproj", "{5E4B2031-1FE6-40B5-934A-4181B3DD0B36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElMasria.API", "src\ElMasria.API\ElMasria.API.csproj", "{CE3EC7FF-0893-4720-A93B-C435CA44C8F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A63FF7C7-7435-49FE-82E9-FDE243B69C75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElMasria.UnitTests", "tests\ElMasria.UnitTests\ElMasria.UnitTests.csproj", "{E2D6705F-8CA3-4CFF-89DA-B4E2CDF35263}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElMasria.IntegrationTests", "tests\ElMasria.IntegrationTests\ElMasria.IntegrationTests.csproj", "{4B08ECD0-05E8-4571-A0A9-81A65C464F9E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDD76846-183C-428C-98E1-751081CD5E91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDD76846-183C-428C-98E1-751081CD5E91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDD76846-183C-428C-98E1-751081CD5E91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDD76846-183C-428C-98E1-751081CD5E91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCFC2D02-6270-48E2-8844-FBDED9A1B2D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCFC2D02-6270-48E2-8844-FBDED9A1B2D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCFC2D02-6270-48E2-8844-FBDED9A1B2D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCFC2D02-6270-48E2-8844-FBDED9A1B2D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E4B2031-1FE6-40B5-934A-4181B3DD0B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E4B2031-1FE6-40B5-934A-4181B3DD0B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E4B2031-1FE6-40B5-934A-4181B3DD0B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E4B2031-1FE6-40B5-934A-4181B3DD0B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE3EC7FF-0893-4720-A93B-C435CA44C8F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE3EC7FF-0893-4720-A93B-C435CA44C8F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE3EC7FF-0893-4720-A93B-C435CA44C8F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE3EC7FF-0893-4720-A93B-C435CA44C8F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2D6705F-8CA3-4CFF-89DA-B4E2CDF35263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2D6705F-8CA3-4CFF-89DA-B4E2CDF35263}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2D6705F-8CA3-4CFF-89DA-B4E2CDF35263}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2D6705F-8CA3-4CFF-89DA-B4E2CDF35263}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B08ECD0-05E8-4571-A0A9-81A65C464F9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B08ECD0-05E8-4571-A0A9-81A65C464F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B08ECD0-05E8-4571-A0A9-81A65C464F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B08ECD0-05E8-4571-A0A9-81A65C464F9E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DDD76846-183C-428C-98E1-751081CD5E91} = {DC691319-4860-4116-86E9-2BD994C42F22}
+		{DCFC2D02-6270-48E2-8844-FBDED9A1B2D7} = {DC691319-4860-4116-86E9-2BD994C42F22}
+		{5E4B2031-1FE6-40B5-934A-4181B3DD0B36} = {DC691319-4860-4116-86E9-2BD994C42F22}
+		{CE3EC7FF-0893-4720-A93B-C435CA44C8F6} = {DC691319-4860-4116-86E9-2BD994C42F22}
+		{E2D6705F-8CA3-4CFF-89DA-B4E2CDF35263} = {A63FF7C7-7435-49FE-82E9-FDE243B69C75}
+		{4B08ECD0-05E8-4571-A0A9-81A65C464F9E} = {A63FF7C7-7435-49FE-82E9-FDE243B69C75}
+	EndGlobalSection
+EndGlobal

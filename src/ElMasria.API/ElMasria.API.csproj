@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>ElMasria.API</RootNamespace>
+    <AssemblyName>ElMasria.API</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- API references Application ONLY — not Infrastructure directly.
+         Infrastructure is wired via DI in Program.cs extension methods. -->
+    <ProjectReference Include="..\ElMasria.Application\ElMasria.Application.csproj" />
+    <!-- Infrastructure referenced ONLY for DI registration (AddInfrastructureServices) -->
+    <ProjectReference Include="..\ElMasria.Infrastructure\ElMasria.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.8.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+    <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.10" />
+  </ItemGroup>
+
+</Project>
