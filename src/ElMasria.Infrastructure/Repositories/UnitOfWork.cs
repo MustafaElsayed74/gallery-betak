@@ -19,7 +19,7 @@ public sealed class UnitOfWork : IUnitOfWork
     // Lazy-initialized repositories
     private IProductRepository? _products;
     private IOrderRepository? _orders;
-    private IGenericRepository<Category>? _categories;
+    private ICategoryRepository? _categories;
     private IGenericRepository<Tag>? _tags;
     private IGenericRepository<Coupon>? _coupons;
     private IGenericRepository<Review>? _reviews;
@@ -39,8 +39,8 @@ public sealed class UnitOfWork : IUnitOfWork
         _orders ??= new OrderRepository(_context);
 
     /// <inheritdoc/>
-    public IGenericRepository<Category> Categories =>
-        _categories ??= new GenericRepository<Category>(_context);
+    public ICategoryRepository Categories =>
+        _categories ??= new CategoryRepository(_context);
 
     /// <inheritdoc/>
     public IGenericRepository<Tag> Tags =>

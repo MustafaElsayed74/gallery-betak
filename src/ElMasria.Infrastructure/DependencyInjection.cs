@@ -98,6 +98,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IProductService, Services.ProductService>();
         services.AddScoped<IPhotoService, Services.PhotoService>();
+        services.AddScoped<ICategoryService, Services.CategoryService>();
 
         return services;
     }

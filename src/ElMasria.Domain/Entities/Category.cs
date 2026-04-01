@@ -49,7 +49,7 @@ public sealed class Category : BaseEntity
     /// <summary>
     /// Factory method to create a category.
     /// </summary>
-    public static Category Create(string nameAr, string nameEn, string slug, int? parentId = null)
+    public static Category Create(string nameAr, string nameEn, string slug, string? descriptionAr, string? descriptionEn, int? parentId, string? imageUrl, int displayOrder)
     {
         if (string.IsNullOrWhiteSpace(nameAr))
             throw new Exceptions.DomainException("اسم التصنيف بالعربية مطلوب", "Category Arabic name is required.");
@@ -63,7 +63,11 @@ public sealed class Category : BaseEntity
             NameAr = nameAr,
             NameEn = nameEn,
             Slug = slug.ToLowerInvariant(),
+            DescriptionAr = descriptionAr,
+            DescriptionEn = descriptionEn,
+            ImageUrl = imageUrl,
             ParentId = parentId,
+            DisplayOrder = displayOrder,
             IsActive = true
         };
     }

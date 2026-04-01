@@ -53,7 +53,7 @@ public interface IUnitOfWork : IDisposable
     IProductRepository Products { get; }
 
     /// <summary>Category repository.</summary>
-    IGenericRepository<Entities.Category> Categories { get; }
+    ICategoryRepository Categories { get; }
 
     /// <summary>Order repository.</summary>
     IOrderRepository Orders { get; }
