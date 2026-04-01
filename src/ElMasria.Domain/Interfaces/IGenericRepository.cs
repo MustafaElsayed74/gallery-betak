@@ -64,6 +64,9 @@ public interface IUnitOfWork : IDisposable
     /// <summary>Cart repository.</summary>
     IGenericRepository<Entities.Cart> Carts { get; }
 
+    /// <summary>Wishlist repository.</summary>
+    IGenericRepository<Entities.Wishlist> Wishlists { get; }
+
     /// <summary>Category repository.</summary>
     ICategoryRepository Categories { get; }
 

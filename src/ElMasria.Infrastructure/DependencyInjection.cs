@@ -100,6 +100,7 @@ public static class DependencyInjection
         services.AddScoped<IPhotoService, Services.PhotoService>();
         services.AddScoped<ICategoryService, Services.CategoryService>();
         services.AddScoped<ICartService, Services.CartService>();
+        services.AddScoped<IWishlistService, Services.WishlistService>();
 
         return services;
     }

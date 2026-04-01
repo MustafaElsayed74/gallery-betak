@@ -3,10 +3,8 @@ namespace ElMasria.Domain.Entities;
 /// <summary>
 /// Per-user wishlist. Each user has exactly one wishlist (auto-created).
 /// </summary>
-public sealed class Wishlist
+public sealed class Wishlist : BaseEntity
 {
-    /// <summary>Primary key.</summary>
-    public int Id { get; private set; }
 
     /// <summary>Owning user ID.</summary>
     public string UserId { get; private set; } = string.Empty;
