@@ -101,6 +101,7 @@ public static class DependencyInjection
         services.AddScoped<ICategoryService, Services.CategoryService>();
         services.AddScoped<ICartService, Services.CartService>();
         services.AddScoped<IWishlistService, Services.WishlistService>();
+        services.AddScoped<IOrderService, Services.OrderService>();
 
         return services;
     }
