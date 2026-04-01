@@ -70,6 +70,9 @@ public interface IUnitOfWork : IDisposable
     /// <summary>Addresses repository.</summary>
     IGenericRepository<Entities.Address> Addresses { get; }
 
+    /// <summary>Payments repository.</summary>
+    IGenericRepository<Entities.Payment> Payments { get; }
+
     /// <summary>Category repository.</summary>
     ICategoryRepository Categories { get; }
 

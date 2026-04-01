@@ -102,6 +102,16 @@ public static class DependencyInjection
         services.AddScoped<ICartService, Services.CartService>();
         services.AddScoped<IWishlistService, Services.WishlistService>();
         services.AddScoped<IOrderService, Services.OrderService>();
+        services.AddScoped<IPaymentService, Services.PaymentService>();
+        
+        // Paymob Integrations
+        services.Configure<ElMasria.Infrastructure.Settings.PaymobSettings>(
+            configuration.GetSection(ElMasria.Infrastructure.Settings.PaymobSettings.SectionName));
+            
+        services.AddHttpClient("Paymob", client =>
+        {
+            client.BaseAddress = new Uri("https://accept.paymob.com/api/");
+        });
 
         return services;
     }
