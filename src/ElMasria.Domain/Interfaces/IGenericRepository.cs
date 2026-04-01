@@ -27,6 +27,15 @@ public interface IGenericRepository<T> where T : Entities.BaseEntity
     /// <summary>Counts entities matching the predicate.</summary>
     Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
 
+    /// <summary>Gets a single entity matching the specification.</summary>
+    Task<T?> GetEntityWithSpecAsync(ISpecification<T> spec, CancellationToken cancellationToken = default);
+
+    /// <summary>Gets a list of entities matching the specification.</summary>
+    Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec, CancellationToken cancellationToken = default);
+
+    /// <summary>Counts entities matching the specification.</summary>
+    Task<int> CountAsync(ISpecification<T> spec, CancellationToken cancellationToken = default);
+
     /// <summary>Adds a new entity.</summary>
     Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
 

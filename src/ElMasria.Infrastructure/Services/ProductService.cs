@@ -29,47 +29,16 @@ public sealed class ProductService : IProductService
     public async Task<ApiResponse<PagedResult<ProductListDto>>> GetProductsAsync(
         ProductQueryParams query, CancellationToken ct = default)
     {
-        // Use search if query term provided
-        if (!string.IsNullOrWhiteSpace(query.Search))
-        {
-            var (searchItems, searchTotal) = await _unitOfWork.Products
-                .SearchAsync(query.Search, query.PageNumber, query.PageSize, ct);
+        var skip = (query.PageNumber - 1) * query.PageSize;
+        
+        var spec = new ElMasria.Application.Specifications.ProductWithCategorySpecification(
+            query.Search, query.CategoryId, null, skip, query.PageSize);
+            
+        var countSpec = new ElMasria.Application.Specifications.ProductFiltersForCountSpecification(
+            query.Search, query.CategoryId);
 
-            var searchDtos = _mapper.Map<IReadOnlyList<ProductListDto>>(searchItems);
-            var searchResult = new PagedResult<ProductListDto>
-            {
-                Items = searchDtos,
-                TotalCount = searchTotal,
-                PageNumber = query.PageNumber,
-                PageSize = query.PageSize
-            };
-
-            return ApiResponse<PagedResult<ProductListDto>>.Ok(searchResult, searchResult.ToMeta(),
-                "تم جلب نتائج البحث", "Search results retrieved.");
-        }
-
-        // Use category filter if provided
-        if (query.CategoryId.HasValue)
-        {
-            var (catItems, catTotal) = await _unitOfWork.Products
-                .GetByCategoryAsync(query.CategoryId.Value, query.PageNumber, query.PageSize, ct);
-
-            var catDtos = _mapper.Map<IReadOnlyList<ProductListDto>>(catItems);
-            var catResult = new PagedResult<ProductListDto>
-            {
-                Items = catDtos,
-                TotalCount = catTotal,
-                PageNumber = query.PageNumber,
-                PageSize = query.PageSize
-            };
-
-            return ApiResponse<PagedResult<ProductListDto>>.Ok(catResult, catResult.ToMeta(),
-                "تم جلب المنتجات", "Products retrieved.");
-        }
-
-        // Default: get all with pagination (using search with empty query for generic listing)
-        var (items, total) = await _unitOfWork.Products
-            .SearchAsync("", query.PageNumber, query.PageSize, ct);
+        var items = await _unitOfWork.Products.ListAsync(spec, ct);
+        var total = await _unitOfWork.Products.CountAsync(countSpec, ct);
 
         var dtos = _mapper.Map<IReadOnlyList<ProductListDto>>(items);
         var result = new PagedResult<ProductListDto>
@@ -87,7 +56,8 @@ public sealed class ProductService : IProductService
     /// <inheritdoc/>
     public async Task<ApiResponse<ProductDetailDto>> GetByIdAsync(int id, CancellationToken ct = default)
     {
-        var product = await _unitOfWork.Products.GetDetailAsync(id, ct);
+        var spec = new ElMasria.Application.Specifications.ProductWithCategorySpecification(id);
+        var product = await _unitOfWork.Products.GetEntityWithSpecAsync(spec, ct);
         if (product is null)
             return ApiResponse<ProductDetailDto>.Fail(404, "المنتج غير موجود", "Product not found.");
 
@@ -100,7 +70,8 @@ public sealed class ProductService : IProductService
     /// <inheritdoc/>
     public async Task<ApiResponse<ProductDetailDto>> GetBySlugAsync(string slug, CancellationToken ct = default)
     {
-        var product = await _unitOfWork.Products.GetBySlugAsync(slug, ct);
+        var spec = new ElMasria.Application.Specifications.ProductWithCategorySpecification(slug);
+        var product = await _unitOfWork.Products.GetEntityWithSpecAsync(spec, ct);
         if (product is null)
             return ApiResponse<ProductDetailDto>.Fail(404, "المنتج غير موجود", "Product not found.");
 
@@ -159,8 +130,9 @@ public sealed class ProductService : IProductService
         await _unitOfWork.Products.AddAsync(product, ct);
         await _unitOfWork.SaveChangesAsync(ct);
 
-        // Reload with includes
-        var created = await _unitOfWork.Products.GetDetailAsync(product.Id, ct);
+        // Reload with includes using specification
+        var spec = new ElMasria.Application.Specifications.ProductWithCategorySpecification(product.Id);
+        var created = await _unitOfWork.Products.GetEntityWithSpecAsync(spec, ct);
         _logger.LogInformation("Product created: {ProductId} - {SKU}", product.Id, product.SKU);
 
         return ApiResponse<ProductDetailDto>.Created(
@@ -172,7 +144,8 @@ public sealed class ProductService : IProductService
     public async Task<ApiResponse<ProductDetailDto>> UpdateAsync(
         int id, UpdateProductRequest request, CancellationToken ct = default)
     {
-        var product = await _unitOfWork.Products.GetDetailAsync(id, ct);
+        var spec = new ElMasria.Application.Specifications.ProductWithCategorySpecification(id);
+        var product = await _unitOfWork.Products.GetEntityWithSpecAsync(spec, ct);
         if (product is null)
             return ApiResponse<ProductDetailDto>.Fail(404, "المنتج غير موجود", "Product not found.");
 
@@ -202,7 +175,8 @@ public sealed class ProductService : IProductService
 
         await _unitOfWork.SaveChangesAsync(ct);
 
-        var updated = await _unitOfWork.Products.GetDetailAsync(id, ct);
+        var updatedSpec = new ElMasria.Application.Specifications.ProductWithCategorySpecification(id);
+        var updated = await _unitOfWork.Products.GetEntityWithSpecAsync(updatedSpec, ct);
         _logger.LogInformation("Product updated: {ProductId}", id);
 
         return ApiResponse<ProductDetailDto>.Ok(

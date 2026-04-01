@@ -69,6 +69,24 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     }
 
     /// <inheritdoc/>
+    public async Task<T?> GetEntityWithSpecAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
+    {
+        return await ApplySpecification(spec).FirstOrDefaultAsync(cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
+    {
+        return await ApplySpecification(spec).ToListAsync(cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<int> CountAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
+    {
+        return await ApplySpecification(spec).CountAsync(cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
     {
         var entry = await DbSet.AddAsync(entity, cancellationToken);
@@ -98,5 +116,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     public void RemoveRange(IEnumerable<T> entities)
     {
         DbSet.RemoveRange(entities);
+    }
+
+    private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+    {
+        return SpecificationEvaluator<T>.GetQuery(DbSet.AsQueryable(), spec);
     }
 }
