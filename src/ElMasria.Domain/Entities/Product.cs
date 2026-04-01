@@ -121,6 +121,29 @@ public sealed class Product : BaseEntity
         };
     }
 
+    /// <summary>
+    /// Factory overload that auto-generates slug from English name.
+    /// </summary>
+    public static Product Create(
+        string nameAr, string nameEn,
+        string? descriptionAr, string? descriptionEn,
+        decimal price, string sku, int stockQuantity, int categoryId)
+    {
+        var slug = GenerateSlug(nameEn);
+        var product = Create(nameAr, nameEn, slug, sku, price, categoryId, stockQuantity);
+        product.DescriptionAr = descriptionAr;
+        product.DescriptionEn = descriptionEn;
+        return product;
+    }
+
+    private static string GenerateSlug(string name)
+    {
+        return name.ToLowerInvariant()
+            .Replace(" ", "-")
+            .Replace("'", "")
+            .Replace("&", "and");
+    }
+
     /// <summary>Updates product details.</summary>
     public void Update(
         string nameAr, string nameEn, string slug,
@@ -204,11 +227,55 @@ public sealed class Product : BaseEntity
     /// <summary>Marks product as featured.</summary>
     public void SetFeatured(bool isFeatured) => IsFeatured = isFeatured;
 
+    /// <summary>Sets active/inactive status.</summary>
+    public void SetActive(bool isActive) => IsActive = isActive;
+
     /// <summary>Activates the product (visible to customers).</summary>
     public void Activate() => IsActive = true;
 
     /// <summary>Deactivates the product (hidden from customers).</summary>
     public void Deactivate() => IsActive = false;
+
+    /// <summary>Updates the price and optional original price.</summary>
+    public void UpdatePrice(decimal price, decimal? originalPrice = null)
+    {
+        if (price <= 0)
+            throw new DomainException("السعر يجب أن يكون أكبر من صفر", "Price must be greater than zero.");
+        Price = price;
+        OriginalPrice = originalPrice;
+    }
+
+    /// <summary>Sets stock quantity directly (admin recount).</summary>
+    public void UpdateStock(int quantity)
+    {
+        if (quantity < 0)
+            throw new DomainException("الكمية لا يمكن أن تكون سالبة", "Stock cannot be negative.");
+        StockQuantity = quantity;
+        if (StockQuantity < 5)
+            _domainEvents.Add(new ProductStockLowEvent(Id, NameAr, StockQuantity));
+    }
+
+    /// <summary>Adds a tag association to this product.</summary>
+    public void AddTag(int tagId)
+    {
+        if (ProductTags.Any(pt => pt.TagId == tagId)) return;
+        ProductTags.Add(ProductTag.Create(Id, tagId));
+    }
+
+    /// <summary>Removes all tag associations.</summary>
+    public void ClearTags() => ProductTags.Clear();
+
+    /// <summary>Updates basic product info (simplified overload for service layer).</summary>
+    public void Update(string nameAr, string nameEn,
+        string? descriptionAr, string? descriptionEn, int categoryId)
+    {
+        NameAr = nameAr;
+        NameEn = nameEn;
+        Slug = GenerateSlug(nameEn);
+        DescriptionAr = descriptionAr;
+        DescriptionEn = descriptionEn;
+        CategoryId = categoryId;
+    }
 
     /// <summary>Whether the product has a discount.</summary>
     public bool HasDiscount => OriginalPrice.HasValue && OriginalPrice > Price;

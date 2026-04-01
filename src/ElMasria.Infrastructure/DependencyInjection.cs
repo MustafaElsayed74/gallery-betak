@@ -96,6 +96,8 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<JwtTokenService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IProductService, Services.ProductService>();
+        services.AddScoped<IPhotoService, Services.PhotoService>();
 
         return services;
     }
