@@ -99,6 +99,7 @@ public static class DependencyInjection
         services.AddScoped<IProductService, Services.ProductService>();
         services.AddScoped<IPhotoService, Services.PhotoService>();
         services.AddScoped<ICategoryService, Services.CategoryService>();
+        services.AddScoped<ICartService, Services.CartService>();
 
         return services;
     }

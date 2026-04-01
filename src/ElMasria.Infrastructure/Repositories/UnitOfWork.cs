@@ -20,6 +20,7 @@ public sealed class UnitOfWork : IUnitOfWork
     private IProductRepository? _products;
     private IOrderRepository? _orders;
     private ICategoryRepository? _categories;
+    private IGenericRepository<Cart>? _carts;
     private IGenericRepository<Tag>? _tags;
     private IGenericRepository<Coupon>? _coupons;
     private IGenericRepository<Review>? _reviews;
@@ -41,6 +42,10 @@ public sealed class UnitOfWork : IUnitOfWork
     /// <inheritdoc/>
     public ICategoryRepository Categories =>
         _categories ??= new CategoryRepository(_context);
+
+    /// <inheritdoc/>
+    public IGenericRepository<Cart> Carts =>
+        _carts ??= new GenericRepository<Cart>(_context);
 
     /// <inheritdoc/>
     public IGenericRepository<Tag> Tags =>
