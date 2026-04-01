@@ -73,11 +73,8 @@ public sealed class Notification
 /// Immutable audit log entry. No update or delete operations.
 /// Tracks all admin/system actions for compliance.
 /// </summary>
-public sealed class AuditLog
+public sealed class AuditLog : BaseEntity
 {
-    /// <summary>Primary key (BIGINT for high volume).</summary>
-    public long Id { get; private set; }
-
     /// <summary>User who performed the action.</summary>
     public string? UserId { get; private set; }
 

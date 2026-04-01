@@ -103,6 +103,7 @@ public static class DependencyInjection
         services.AddScoped<IWishlistService, Services.WishlistService>();
         services.AddScoped<IOrderService, Services.OrderService>();
         services.AddScoped<IPaymentService, Services.PaymentService>();
+        services.AddScoped<IAdminDashboardService, Services.AdminDashboardService>();
         
         // Paymob Integrations
         services.Configure<ElMasria.Infrastructure.Settings.PaymobSettings>(

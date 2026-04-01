@@ -73,6 +73,9 @@ public interface IUnitOfWork : IDisposable
     /// <summary>Payments repository.</summary>
     IGenericRepository<Entities.Payment> Payments { get; }
 
+    /// <summary>AuditLogs repository.</summary>
+    IGenericRepository<Entities.AuditLog> AuditLogs { get; }
+
     /// <summary>Category repository.</summary>
     ICategoryRepository Categories { get; }
 
