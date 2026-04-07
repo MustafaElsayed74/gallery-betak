@@ -6,7 +6,7 @@
     "rewrites": [
         {
             "source": "/api/:path*",
-            "destination": "https://gallerybetak.runasp.net/api/:path*"
+            "destination": "http://gallerybetak.runasp.net/api/:path*"
         }
     ]
 }
