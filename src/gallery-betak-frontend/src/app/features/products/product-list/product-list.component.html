@@ -12,71 +12,53 @@
       </ol>
     </nav>
 
-    <!-- Mobile Experience (From Scratch) -->
-    <section class="mobile-products-v2 mobile-safe-bottom md:hidden mb-6" id="mobile-products-top">
-      <div class="mobile-hero-card">
-        <p class="mobile-hero-kicker">
-          {{ uiMessages.products.listCountPrefix }} {{ displayedProducts.length }} {{ uiMessages.products.listCountInfix
-          }}
-          {{ totalCount }} {{ uiMessages.products.listCountSuffix }}
-        </p>
+    <!-- Mobile Header (Noon-inspired) -->
+    <section class="mobile-noon-shell mobile-safe-bottom md:hidden mb-6" id="mobile-products-top">
+      <div class="mobile-noon-search-row">
+        <label class="mobile-noon-search">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-4.35-4.35m1.6-5.15a6.75 6.75 0 11-13.5 0 6.75 6.75 0 0113.5 0z" />
+          </svg>
 
-        <div class="mobile-hero-head">
-          <h1 class="mobile-hero-title">{{ uiMessages.products.listTitle }}</h1>
+          <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChanged($event)"
+            (keyup.enter)="applySearch()" [placeholder]="uiMessages.products.searchPlaceholder" class="font-cairo">
 
-          <button type="button" (click)="toggleFilters()" [attr.aria-expanded]="isFilterOpen"
-            aria-controls="product-filters" class="mobile-hero-filter" [class.is-active]="hasActiveFilters"
-            [class.is-open]="isFilterOpen">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          <button *ngIf="searchTerm.trim().length > 0" type="button" (click)="clearSearch()"
+            class="mobile-noon-clear" [attr.aria-label]="uiMessages.products.clearButton">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
-            {{ uiMessages.products.filterButton }}
           </button>
-        </div>
+        </label>
+
+        <button type="button" class="mobile-noon-filter-trigger" (click)="toggleFilters()"
+          [attr.aria-expanded]="isFilterOpen" aria-controls="product-filters"
+          [class.has-active]="hasActiveFilters" [attr.aria-label]="uiMessages.products.filterButton">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+        </button>
       </div>
 
-      <div class="mobile-controls-card">
-        <div class="mobile-search-wrap">
-          <label class="mobile-search-field compact">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-4.35-4.35m1.6-5.15a6.75 6.75 0 11-13.5 0 6.75 6.75 0 0113.5 0z" />
-            </svg>
-
-            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChanged($event)"
-              (keyup.enter)="applySearch()" [placeholder]="uiMessages.products.searchPlaceholder" class="font-cairo">
-
-            <button *ngIf="searchTerm.trim().length > 0" type="button" (click)="clearSearch()"
-              class="mobile-inline-clear-btn" [attr.aria-label]="uiMessages.products.clearButton">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            <button type="button" (click)="applySearch()" class="mobile-inline-search-btn"
-              [attr.aria-label]="uiMessages.products.searchButton">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-4.35-4.35m1.6-5.15a6.75 6.75 0 11-13.5 0 6.75 6.75 0 0113.5 0z" />
-              </svg>
-            </button>
-          </label>
-        </div>
-
-        <div class="mobile-controls-inline">
-          <select [(ngModel)]="sortBy" (ngModelChange)="onSortChange($event)" class="mobile-sort-select font-cairo"
-            [attr.aria-label]="uiMessages.products.sortDefault">
-            <option value="default">{{ uiMessages.products.sortDefault }}</option>
-            <option value="price_asc">{{ uiMessages.products.sortPriceAsc }}</option>
-            <option value="price_desc">{{ uiMessages.products.sortPriceDesc }}</option>
-            <option value="newest">{{ uiMessages.products.sortNewest }}</option>
-          </select>
-
-          <button type="button" (click)="clearAllFilters()" [disabled]="!hasActiveFilters" class="mobile-reset-mini">
-            {{ uiMessages.products.resetFiltersButton }}
-          </button>
-        </div>
+      <div class="mobile-noon-sort-row" role="group" [attr.aria-label]="uiMessages.products.sortDefault">
+        <button type="button" class="mobile-noon-sort-pill" [class.is-active]="sortBy === 'default'"
+          (click)="onSortChange('default')">
+          {{ uiMessages.products.sortDefault }}
+        </button>
+        <button type="button" class="mobile-noon-sort-pill" [class.is-active]="sortBy === 'price_asc'"
+          (click)="onSortChange('price_asc')">
+          {{ uiMessages.products.sortPriceAsc }}
+        </button>
+        <button type="button" class="mobile-noon-sort-pill" [class.is-active]="sortBy === 'price_desc'"
+          (click)="onSortChange('price_desc')">
+          {{ uiMessages.products.sortPriceDesc }}
+        </button>
+        <button type="button" class="mobile-noon-sort-pill" [class.is-active]="sortBy === 'newest'"
+          (click)="onSortChange('newest')">
+          {{ uiMessages.products.sortNewest }}
+        </button>
       </div>
 
       <div *ngIf="categoriesErrorMessage"
@@ -102,10 +84,8 @@
       </div>
 
       <div class="mobile-active-strip" *ngIf="hasActiveFilters">
-        <span class="mobile-active-pill" *ngIf="selectedCategoryId !== null">{{ uiMessages.products.categoriesTitle
-          }}</span>
-        <span class="mobile-active-pill" *ngIf="minPrice !== null || maxPrice !== null">{{
-          uiMessages.products.priceTitle }}</span>
+        <span class="mobile-active-pill" *ngIf="selectedCategoryId !== null">{{ uiMessages.products.categoriesTitle }}</span>
+        <span class="mobile-active-pill" *ngIf="minPrice !== null || maxPrice !== null">{{ uiMessages.products.priceTitle }}</span>
         <span class="mobile-active-pill search" *ngIf="searchTerm.trim().length > 0">{{ searchTerm.trim() }}</span>
       </div>
     </section>
@@ -262,98 +242,65 @@
           {{ uiMessages.products.loadingProducts }}
         </div>
 
-        <div *ngIf="isLoading" class="mobile-skeleton-stack md:hidden" aria-hidden="true">
-          <article class="mobile-skeleton-card" *ngFor="let i of [1,2,3,4]">
-            <div class="mobile-skeleton-main">
-              <div class="mobile-skeleton-media"></div>
-
-              <div class="mobile-skeleton-lines">
-                <span class="mobile-skeleton-line xs"></span>
-                <span class="mobile-skeleton-line"></span>
-                <span class="mobile-skeleton-line short"></span>
-                <span class="mobile-skeleton-line price"></span>
-              </div>
-            </div>
-
-            <div class="mobile-skeleton-actions">
-              <span class="mobile-skeleton-btn"></span>
-              <span class="mobile-skeleton-btn"></span>
+        <div *ngIf="isLoading" class="mobile-noon-skeleton-grid md:hidden" aria-hidden="true">
+          <article class="mobile-noon-skeleton-card" *ngFor="let i of [1,2,3,4]">
+            <div class="mobile-noon-skeleton-media"></div>
+            <div class="mobile-noon-skeleton-lines">
+              <span class="line short"></span>
+              <span class="line"></span>
+              <span class="line tiny"></span>
+              <span class="line price"></span>
             </div>
           </article>
         </div>
 
-        <div class="mobile-results-stack md:hidden" *ngIf="!isLoading">
-          <article *ngFor="let p of displayedProducts" class="mobile-product-card">
-            <a [routerLink]="['/products', p.slug]" class="mobile-product-main">
-              <div class="mobile-product-media">
-                <div class="mobile-product-badge-stack">
-                  <span *ngIf="p.discountPercentage > 0" class="mobile-product-badge">
-                    {{ p.discountPercentage }}% {{ uiMessages.products.discountPrefix }}
-                  </span>
+        <div class="mobile-noon-grid md:hidden" *ngIf="!isLoading">
+          <article *ngFor="let p of displayedProducts" class="mobile-noon-card">
+            <button type="button" class="mobile-noon-fav" (click)="handleAddToWishlist(p.id)"
+              [attr.aria-label]="uiMessages.products.addToWishlist" [title]="uiMessages.products.addToWishlist">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
 
-                  <span *ngIf="p.isNew" class="mobile-product-badge new">
-                    {{ uiMessages.products.newBadge }}
-                  </span>
-                </div>
+            <a [routerLink]="['/products', p.slug]" class="mobile-noon-media">
+              <img [src]="p.imageUrl || 'assets/placeholder.svg'" [alt]="p.nameAr || p.nameEn" loading="lazy">
 
-                <img [src]="p.imageUrl || 'assets/placeholder.svg'" [alt]="p.nameAr || p.nameEn" loading="lazy">
-              </div>
+              <span *ngIf="p.discountPercentage > 0" class="mobile-noon-badge discount">
+                {{ p.discountPercentage }}% {{ uiMessages.products.discountPrefix }}
+              </span>
 
-              <div class="mobile-product-body">
-                <p class="mobile-product-category">{{ p.categoryName || p.categoryNameAr || p.categoryNameEn }}</p>
-                <h3 class="mobile-product-title">{{ p.nameAr || p.nameEn }}</h3>
-
-                <div class="mobile-product-rating">
-                  <div class="mobile-product-stars">
-                    <svg *ngFor="let i of [1,2,3,4,5]" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"
-                      [class.muted]="i > (p.avgRating ?? p.averageRating)">
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  </div>
-
-                  <span class="mobile-product-rating-count">({{ p.reviewsCount }})</span>
-                </div>
-
-                <div class="mobile-product-price-line">
-                  <span class="mobile-product-price">{{ p.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
-                  <span *ngIf="p.originalPrice > p.price" class="mobile-product-original">
-                    {{ p.originalPrice | currency:'EGP':'symbol-narrow':'1.0-0' }}
-                  </span>
-                </div>
-              </div>
+              <span *ngIf="p.isNew" class="mobile-noon-badge new">
+                {{ uiMessages.products.newBadge }}
+              </span>
             </a>
 
-            <div class="mobile-product-actions">
-              <button type="button" class="mobile-product-action-btn cart" (click)="handleAddToCart(p.id)">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                {{ uiMessages.products.addToCart }}
-              </button>
+            <div class="mobile-noon-body">
+              <p class="mobile-noon-category">{{ p.categoryName || p.categoryNameAr || p.categoryNameEn }}</p>
+              <h3 class="mobile-noon-title">{{ p.nameAr || p.nameEn }}</h3>
 
-              <button type="button" class="mobile-product-action-btn wishlist" (click)="handleAddToWishlist(p.id)">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                {{ uiMessages.products.addToWishlist }}
-              </button>
+              <div class="mobile-noon-meta">
+                <span class="mobile-noon-rating">{{ (p.avgRating ?? p.averageRating) | number:'1.1-1' }}</span>
+                <span class="mobile-noon-reviews">({{ p.reviewsCount }})</span>
+              </div>
+
+              <div class="mobile-noon-price-row">
+                <span class="mobile-noon-price">{{ p.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
+                <span *ngIf="p.originalPrice > p.price" class="mobile-noon-original">
+                  {{ p.originalPrice | currency:'EGP':'symbol-narrow':'1.0-0' }}
+                </span>
+              </div>
             </div>
+
+            <button type="button" class="mobile-noon-add" (click)="handleAddToCart(p.id)"
+              [attr.aria-label]="uiMessages.products.addToCart" [title]="uiMessages.products.addToCart">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M6 12h12" />
+              </svg>
+            </button>
           </article>
         </div>
-
-        <button type="button" class="mobile-fab-filter md:hidden" (click)="toggleFilters()"
-          [class.is-open]="isFilterOpen" [attr.aria-expanded]="isFilterOpen" aria-controls="product-filters"
-          [attr.aria-label]="uiMessages.products.filterButton">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-          </svg>
-          <span>{{ uiMessages.products.filterButton }}</span>
-          <span class="mobile-fab-dot" *ngIf="hasActiveFilters" aria-hidden="true"></span>
-        </button>
 
         <div
           class="hidden md:grid products-results-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4 xl:gap-5">

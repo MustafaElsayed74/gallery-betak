@@ -107,8 +107,340 @@
     }
 }
 
+@media (max-width: 767px) {
+    .mobile-noon-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+    }
+
+    .mobile-noon-search-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 2.65rem;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .mobile-noon-search {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        width: 100%;
+        min-height: 2.55rem;
+        border-radius: 0.8rem;
+        border: 1px solid rgba(148, 163, 184, 0.36);
+        background: #fff;
+        padding: 0 2.25rem 0 0.7rem;
+        color: #64748b;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.07);
+    }
+
+    .mobile-noon-search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #1e293b;
+        font-size: 0.83rem;
+    }
+
+    .mobile-noon-search input::placeholder {
+        color: #94a3b8;
+    }
+
+    .mobile-noon-clear {
+        position: absolute;
+        inset-inline-end: 0.38rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.65rem;
+        height: 1.65rem;
+        border: 0;
+        border-radius: 999px;
+        color: #64748b;
+        background: #f8fafc;
+    }
+
+    .mobile-noon-filter-trigger {
+        width: 2.65rem;
+        height: 2.65rem;
+        border-radius: 0.78rem;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        color: #0f172a;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+    }
+
+    .mobile-noon-filter-trigger.has-active {
+        border-color: rgba(14, 165, 233, 0.64);
+        color: #0369a1;
+        background: rgba(240, 249, 255, 0.95);
+    }
+
+    .mobile-noon-sort-row {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        overflow-x: auto;
+        padding-bottom: 0.1rem;
+        scrollbar-width: none;
+    }
+
+    .mobile-noon-sort-row::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mobile-noon-sort-pill {
+        flex-shrink: 0;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        border-radius: 999px;
+        padding: 0.4rem 0.72rem;
+        background: #fff;
+        color: #334155;
+        font-size: 0.72rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .mobile-noon-sort-pill.is-active {
+        border-color: rgba(14, 165, 233, 0.6);
+        color: #0c4a6e;
+        background: linear-gradient(145deg, #e0f2fe, #ecfeff);
+    }
+
+    .mobile-noon-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.58rem;
+        padding-bottom: 1.25rem;
+    }
+
+    .mobile-noon-card {
+        position: relative;
+        border: 1px solid rgba(148, 163, 184, 0.26);
+        border-radius: 0.88rem;
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    .mobile-noon-media {
+        display: block;
+        position: relative;
+        background: #f1f5f9;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+    }
+
+    .mobile-noon-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .mobile-noon-badge {
+        position: absolute;
+        left: 0.4rem;
+        border-radius: 0.45rem;
+        padding: 0.12rem 0.35rem;
+        font-size: 0.58rem;
+        font-weight: 800;
+        color: #fff;
+    }
+
+    .mobile-noon-badge.discount {
+        top: 0.4rem;
+        background: linear-gradient(120deg, #ef4444, #f97316);
+    }
+
+    .mobile-noon-badge.new {
+        top: 1.72rem;
+        background: linear-gradient(120deg, #0284c7, #14b8a6);
+    }
+
+    .mobile-noon-fav {
+        position: absolute;
+        top: 0.38rem;
+        inset-inline-end: 0.38rem;
+        z-index: 2;
+        width: 1.72rem;
+        height: 1.72rem;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        color: #475569;
+        background: rgba(255, 255, 255, 0.92);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-noon-body {
+        padding: 0.5rem 0.5rem 0.7rem;
+    }
+
+    .mobile-noon-category {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.64rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mobile-noon-title {
+        margin: 0.2rem 0;
+        color: #0f172a;
+        font-size: 0.84rem;
+        line-height: 1.35;
+        font-weight: 800;
+        min-height: 2.25rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .mobile-noon-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.24rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .mobile-noon-rating {
+        font-size: 0.68rem;
+        color: #16a34a;
+        font-weight: 700;
+    }
+
+    .mobile-noon-reviews {
+        font-size: 0.64rem;
+        color: #64748b;
+    }
+
+    .mobile-noon-price-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0.06rem;
+        padding-inline-end: 1.85rem;
+    }
+
+    .mobile-noon-price {
+        font-size: 1.02rem;
+        line-height: 1.05;
+        font-weight: 900;
+        color: #111827;
+    }
+
+    .mobile-noon-original {
+        font-size: 0.64rem;
+        color: #94a3b8;
+        text-decoration: line-through;
+    }
+
+    .mobile-noon-add {
+        position: absolute;
+        inset-inline-end: 0.45rem;
+        bottom: 0.45rem;
+        width: 1.78rem;
+        height: 1.78rem;
+        border-radius: 0.48rem;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        color: #0f172a;
+        background: #f8fafc;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-noon-skeleton-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.58rem;
+    }
+
+    .mobile-noon-skeleton-card {
+        border-radius: 0.88rem;
+        border: 1px solid rgba(148, 163, 184, 0.26);
+        background: #fff;
+        padding: 0.5rem;
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    .mobile-noon-skeleton-media,
+    .mobile-noon-skeleton-lines .line {
+        background: linear-gradient(110deg, #e2e8f0 8%, #f8fafc 18%, #e2e8f0 33%);
+        background-size: 220% 100%;
+        animation: noonShimmer 1.2s linear infinite;
+    }
+
+    .mobile-noon-skeleton-media {
+        border-radius: 0.72rem;
+        aspect-ratio: 1 / 1;
+        margin-bottom: 0.45rem;
+    }
+
+    .mobile-noon-skeleton-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .mobile-noon-skeleton-lines .line {
+        height: 0.5rem;
+        border-radius: 999px;
+    }
+
+    .mobile-noon-skeleton-lines .line.short {
+        width: 62%;
+    }
+
+    .mobile-noon-skeleton-lines .line.tiny {
+        width: 42%;
+    }
+
+    .mobile-noon-skeleton-lines .line.price {
+        width: 52%;
+        height: 0.62rem;
+    }
+}
+
+@keyframes noonShimmer {
+    from {
+        background-position: 220% 0;
+    }
+
+    to {
+        background-position: -220% 0;
+    }
+}
+
+@media (max-width: 420px) {
+    .mobile-noon-grid {
+        gap: 0.5rem;
+    }
+
+    .mobile-noon-title {
+        font-size: 0.8rem;
+    }
+
+    .mobile-noon-price {
+        font-size: 0.95rem;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .products-results-grid app-product-card {
+        animation: none;
+    }
+
+    .mobile-noon-skeleton-media,
+    .mobile-noon-skeleton-lines .line {
         animation: none;
     }
 }
