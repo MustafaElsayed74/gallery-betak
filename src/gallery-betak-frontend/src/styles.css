@@ -171,6 +171,18 @@
   }
 }
 
+@keyframes filterDrawerIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes skeletonShimmer {
   from {
     background-position: 200% 0;
@@ -494,9 +506,9 @@
     inset: 0;
     z-index: 70;
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0.55rem;
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0;
     margin: 0;
     opacity: 0;
     visibility: hidden;
@@ -514,8 +526,8 @@
     position: absolute;
     inset: 0;
     border: 0;
-    background: rgba(15, 23, 42, 0.56);
-    backdrop-filter: blur(2px);
+    background: rgba(15, 23, 42, 0.48);
+    backdrop-filter: blur(1px);
     opacity: 0;
   }
 
@@ -526,34 +538,105 @@
   .products-filters-panel {
     position: relative;
     top: auto;
-    width: 100%;
-    max-height: 90vh;
+    margin-inline-start: auto;
+    width: min(88vw, 23rem);
+    max-height: 100dvh;
+    height: 100dvh;
     overflow-y: auto;
-    border-radius: 1.4rem 1.4rem 1rem 1rem;
-    padding: 1rem;
+    border-radius: 1.25rem 0 0 1.25rem;
+    padding: 0.95rem;
     padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    box-shadow: 0 -20px 40px rgba(15, 23, 42, 0.2);
+    box-shadow: -24px 0 40px rgba(15, 23, 42, 0.22);
     border-color: rgba(148, 163, 184, 0.35);
-    transform-origin: bottom center;
+    transform-origin: center right;
     will-change: transform, opacity;
   }
 
   .products-filters.mobile-sheet-open .products-filters-panel {
-    animation: filterSheetRise 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation: filterDrawerIn 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
   }
 
   .products-filters.mobile-sheet-closed .products-filters-panel {
-    transform: translateY(16px) scale(0.985);
-    opacity: 0;
+    transform: translateX(100%);
+    opacity: 1;
   }
 
   .products-filters-mobile-head {
     position: sticky;
     top: 0;
     z-index: 2;
-    padding-bottom: 0.56rem;
+    padding-bottom: 0.72rem;
     margin-bottom: 0.75rem;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(255, 255, 255, 0.9));
+  }
+
+  .mobile-noon-sheet-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+  }
+
+  .mobile-noon-sheet-reset {
+    border: 1px solid rgba(148, 163, 184, 0.34);
+    border-radius: 0.7rem;
+    height: 2rem;
+    padding: 0 0.62rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #334155;
+    background: #fff;
+  }
+
+  .mobile-noon-sheet-reset:disabled {
+    opacity: 0.54;
+    cursor: not-allowed;
+  }
+
+  .mobile-noon-sheet-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.7rem;
+    border: 1px solid rgba(148, 163, 184, 0.34);
+    color: #475569;
+    background: #fff;
+  }
+
+  .mobile-noon-filter-list {
+    display: grid;
+    gap: 0.42rem;
+  }
+
+  .mobile-noon-filter-option {
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 0.7rem;
+    min-height: 2.22rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .mobile-noon-filter-option.bg-cyan-50 {
+    border-color: rgba(14, 165, 233, 0.42);
+    background: linear-gradient(145deg, rgba(224, 242, 254, 0.85), rgba(236, 254, 255, 0.9));
+  }
+
+  .mobile-noon-price-row {
+    align-items: flex-start;
+  }
+
+  .mobile-noon-price-actions {
+    position: sticky;
+    bottom: calc(-0.95rem - env(safe-area-inset-bottom, 0px));
+    z-index: 2;
+    margin-inline: -0.95rem;
+    margin-bottom: calc(-0.95rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.8rem 0.95rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(148, 163, 184, 0.24);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.98));
+    backdrop-filter: blur(8px);
   }
 
   .mobile-results-stack {

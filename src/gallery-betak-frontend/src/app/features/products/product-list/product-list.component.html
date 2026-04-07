@@ -34,11 +34,13 @@
 
         <button type="button" class="mobile-noon-filter-trigger" (click)="toggleFilters()"
           [attr.aria-expanded]="isFilterOpen" aria-controls="product-filters" [class.has-active]="hasActiveFilters"
+          [class.is-open]="isFilterOpen"
           [attr.aria-label]="uiMessages.products.filterButton">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
           </svg>
+          <span>{{ uiMessages.products.filterButton }}</span>
         </button>
       </div>
 
@@ -141,19 +143,26 @@
           [attr.aria-label]="uiMessages.products.clearButton"></button>
 
         <div
-          class="products-filters-panel bg-gradient-to-b from-white to-slate-50/70 rounded-2xl shadow-sm border border-slate-200 p-6 sticky top-24">
+          class="products-filters-panel mobile-noon-filter-panel bg-gradient-to-b from-white to-slate-50/70 rounded-2xl shadow-sm border border-slate-200 p-6 sticky top-24">
           <div class="products-filters-mobile-head md:hidden mb-4 flex items-center justify-between">
             <div>
               <p class="text-[11px] uppercase tracking-[0.14em] text-slate-500">{{ uiMessages.products.filterButton }}
               </p>
               <h3 class="text-base font-bold text-slate-900 font-cairo">{{ uiMessages.products.listTitle }}</h3>
             </div>
-            <button type="button" (click)="toggleFilters()"
-              class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+
+            <div class="mobile-noon-sheet-controls">
+              <button type="button" (click)="clearAllFilters()" [disabled]="!hasActiveFilters" class="mobile-noon-sheet-reset">
+                {{ uiMessages.products.resetFiltersButton }}
+              </button>
+
+              <button type="button" (click)="toggleFilters()" class="mobile-noon-sheet-close"
+                [attr.aria-label]="uiMessages.products.clearButton">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <!-- Categories Filter -->
@@ -169,10 +178,10 @@
               {{ uiMessages.products.categoriesLoading }}
             </div>
 
-            <ul class="space-y-2">
+            <ul class="space-y-2 mobile-noon-filter-list">
               <li>
                 <button type="button" (click)="selectCategory(null)"
-                  class="w-full text-right px-3 py-2 rounded-lg transition"
+                  class="w-full text-right px-3 py-2 rounded-lg transition mobile-noon-filter-option"
                   [class.bg-cyan-50]="selectedCategoryId === null" [class.text-cyan-700]="selectedCategoryId === null"
                   [class.text-slate-700]="selectedCategoryId !== null">
                   {{ uiMessages.products.allCategories }}
@@ -180,7 +189,7 @@
               </li>
               <li *ngFor="let cat of categories">
                 <button type="button" (click)="selectCategory(cat.id)"
-                  class="w-full text-right px-3 py-2 rounded-lg transition"
+                  class="w-full text-right px-3 py-2 rounded-lg transition mobile-noon-filter-option"
                   [class.bg-cyan-50]="selectedCategoryId === cat.id"
                   [class.text-cyan-700]="selectedCategoryId === cat.id"
                   [class.text-slate-700]="selectedCategoryId !== cat.id">
@@ -199,7 +208,7 @@
               {{ filterErrorMessage }}
             </div>
 
-            <div class="flex items-center space-x-2 rtl:space-x-reverse mt-4">
+            <div class="flex items-center space-x-2 rtl:space-x-reverse mt-4 mobile-noon-price-row">
               <div class="w-full">
                 <label class="mb-1 block text-xs font-medium text-slate-500">{{ uiMessages.products.priceFromPlaceholder
                   }}</label>
@@ -217,7 +226,7 @@
               </div>
             </div>
 
-            <div class="mt-4 flex gap-2">
+            <div class="mt-4 flex gap-2 mobile-noon-price-actions">
               <button type="button" (click)="applyPriceFilter()"
                 class="flex-1 bg-slate-900 hover:bg-black text-white font-medium py-2 rounded-lg transition-colors">
                 {{ uiMessages.products.applyButton }}
