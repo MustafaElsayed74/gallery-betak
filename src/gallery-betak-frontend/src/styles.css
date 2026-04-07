@@ -570,6 +570,30 @@
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(255, 255, 255, 0.9));
   }
 
+  .mobile-noon-filter-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .mobile-noon-filter-section {
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.85rem;
+    border-bottom-color: rgba(148, 163, 184, 0.2);
+  }
+
+  .mobile-noon-filter-section-last {
+    margin-bottom: 0;
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .mobile-noon-section-title {
+    margin-bottom: 0.65rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+  }
+
   .mobile-noon-sheet-controls {
     display: inline-flex;
     align-items: center;
@@ -624,7 +648,18 @@
   }
 
   .mobile-noon-price-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .mobile-noon-price-row > span {
+    display: none;
+  }
+
+  .mobile-noon-price-row input {
+    min-height: 2.22rem;
   }
 
   .mobile-noon-price-actions {

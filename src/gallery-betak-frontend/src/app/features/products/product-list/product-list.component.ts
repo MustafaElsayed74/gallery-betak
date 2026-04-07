@@ -110,6 +110,8 @@ export class ProductListComponent implements OnInit {
     if (this.searchDebounceTimer) {
       clearTimeout(this.searchDebounceTimer);
     }
+
+    document.body.style.overflow = '';
   }
 
   private loadCategories() {
@@ -175,6 +177,11 @@ export class ProductListComponent implements OnInit {
     this.setFilterOpenState(!this.isFilterOpen);
   }
 
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.syncMobileBodyScrollLock();
+  }
+
   @HostListener('document:keydown.escape')
   onEscapeKey() {
     if (this.isFilterOpen) {
@@ -183,7 +190,7 @@ export class ProductListComponent implements OnInit {
   }
 
   selectCategory(categoryId: number | null) {
-    this.closeFiltersOnMobile();
+    this.closeFiltersPanel();
 
     if (categoryId === null) {
       this.router.navigate(['/products'], {
@@ -260,7 +267,7 @@ export class ProductListComponent implements OnInit {
     this.filterErrorMessage = '';
 
     this.router.navigate(['/products']);
-    this.closeFiltersOnMobile();
+    this.closeFiltersPanel();
   }
 
   applyPriceFilter() {
@@ -278,7 +285,7 @@ export class ProductListComponent implements OnInit {
       page: 1
     });
 
-    this.closeFiltersOnMobile();
+    this.closeFiltersPanel();
   }
 
   clearPriceFilter() {
@@ -287,7 +294,7 @@ export class ProductListComponent implements OnInit {
     this.maxPrice = null;
     this.updateQueryParams({ minPrice: null, maxPrice: null, page: 1 });
 
-    this.closeFiltersOnMobile();
+    this.closeFiltersPanel();
   }
 
   goToPreviousPage() {
@@ -345,12 +352,16 @@ export class ProductListComponent implements OnInit {
   private setFilterOpenState(isOpen: boolean) {
     this.isFilterOpen = isOpen;
     localStorage.setItem(ProductListComponent.FILTER_STATE_KEY, isOpen ? '1' : '0');
+    this.syncMobileBodyScrollLock();
   }
 
-  private closeFiltersOnMobile() {
-    if (window.matchMedia('(max-width: 767px)').matches) {
-      this.setFilterOpenState(false);
-    }
+  private closeFiltersPanel() {
+    this.setFilterOpenState(false);
+  }
+
+  private syncMobileBodyScrollLock() {
+    const isMobileViewport = window.matchMedia('(max-width: 767px)').matches;
+    document.body.style.overflow = isMobileViewport && this.isFilterOpen ? 'hidden' : '';
   }
 
   handleAddToCart(productId: number) {
