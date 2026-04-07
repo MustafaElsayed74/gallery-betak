@@ -1,0 +1,52 @@
+:host {
+    display: block;
+}
+
+.register-page {
+    isolation: isolate;
+}
+
+.register-page::before {
+    content: '';
+    position: absolute;
+    inset: -28% -20% auto;
+    height: 380px;
+    background:
+        radial-gradient(circle at 18% 28%, rgba(16, 185, 129, 0.2), transparent 56%),
+        radial-gradient(circle at 82% 22%, rgba(14, 165, 233, 0.18), transparent 54%);
+    pointer-events: none;
+}
+
+.auth-card {
+    position: relative;
+    border-color: rgba(148, 163, 184, 0.28);
+    box-shadow: 0 26px 44px rgba(15, 23, 42, 0.11);
+}
+
+.auth-card::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+}
+
+.auth-card input {
+    border-color: rgba(148, 163, 184, 0.35);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-card input:focus {
+    border-color: rgba(16, 185, 129, 0.72);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+}
+
+.auth-card button[type='submit'] {
+    box-shadow: 0 14px 24px rgba(16, 185, 129, 0.26);
+}
+
+.auth-card button[type='submit']:hover:not(:disabled) {
+    transform: translateY(-1px);
+}

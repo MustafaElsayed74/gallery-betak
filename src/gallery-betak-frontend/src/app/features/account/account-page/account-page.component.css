@@ -1,0 +1,45 @@
+:host {
+    display: block;
+}
+
+.account-page {
+    isolation: isolate;
+}
+
+.account-shell,
+.account-guest {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(148, 163, 184, 0.28);
+    box-shadow: 0 22px 40px rgba(15, 23, 42, 0.09);
+}
+
+.account-shell::before,
+.account-guest::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 220px;
+    height: 220px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.16), transparent 68%);
+    pointer-events: none;
+}
+
+.account-shell h1,
+.account-guest h1 {
+    letter-spacing: -0.02em;
+}
+
+.account-shell a,
+.account-shell button,
+.account-guest a {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.account-shell a:hover,
+.account-shell button:hover,
+.account-guest a:hover {
+    transform: translateY(-1px);
+}

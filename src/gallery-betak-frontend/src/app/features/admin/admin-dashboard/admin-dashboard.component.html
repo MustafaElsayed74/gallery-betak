@@ -1,0 +1,1628 @@
+<div class="admin-shell min-h-screen bg-slate-50 px-4 py-8">
+    <div class="admin-stage mx-auto max-w-7xl space-y-6">
+        <header class="admin-hero rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.24em] text-slate-400">{{ t('Admin control center', 'مركز
+                        تحكم الإدارة') }}</p>
+                    <h1 class="mt-2 text-3xl font-bold text-slate-900">{{ t('Business operations cockpit', 'لوحة قيادة
+                        العمليات') }}</h1>
+                    <p class="mt-2 text-sm text-slate-500">
+                        {{ t('Manage users, catalog, orders, support operations, and analytics from one place.', 'إدارة
+                        المستخدمين والمنتجات والطلبات والدعم والتحليلات من مكان واحد.') }}
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div *ngIf="currentUser"
+                        class="rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-sm text-slate-700">
+                        {{ currentUser.firstName }} {{ currentUser.lastName }}
+                    </div>
+
+                    <button type="button" (click)="refreshAll()"
+                        class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
+                        {{ t('Refresh all', 'تحديث الكل') }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="admin-tabs mt-6 flex flex-wrap gap-2">
+                <button type="button" (click)="setTab('overview')"
+                    [class]="activeTab === 'overview' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Overview', 'نظرة عامة') }}</button>
+                <button type="button" (click)="setTab('users')"
+                    [class]="activeTab === 'users' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Users', 'المستخدمون') }}</button>
+                <button type="button" (click)="setTab('categories')"
+                    [class]="activeTab === 'categories' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Categories', 'الفئات') }}</button>
+                <button type="button" (click)="setTab('products')"
+                    [class]="activeTab === 'products' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Products', 'المنتجات') }}</button>
+                <button type="button" (click)="setTab('orders')"
+                    [class]="activeTab === 'orders' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Orders', 'الطلبات') }}</button>
+                <button type="button" (click)="setTab('support')"
+                    [class]="activeTab === 'support' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Support', 'الدعم') }}</button>
+                <button type="button" (click)="setTab('coupons')"
+                    [class]="activeTab === 'coupons' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Coupons', 'الكوبونات') }}</button>
+                <button type="button" (click)="setTab('offers')"
+                    [class]="activeTab === 'offers' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Offers', 'العروض') }}</button>
+                <button type="button" (click)="setTab('analytics')"
+                    [class]="activeTab === 'analytics' ? 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white' : 'rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100'">{{
+                    t('Analytics', 'التحليلات') }}</button>
+            </div>
+        </header>
+
+        <div *ngIf="errorMessage" class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage"
+            class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            {{ successMessage }}
+        </div>
+
+        <ng-container [ngSwitch]="activeTab">
+            <section *ngSwitchCase="'overview'" class="space-y-6 module-overview">
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Total users', 'إجمالي
+                            المستخدمين') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">{{ metrics?.totalUsers ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Total orders', 'إجمالي
+                            الطلبات') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">{{ metrics?.totalOrders ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Total revenue', 'إجمالي
+                            الإيرادات') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">{{ metrics?.totalRevenue ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Revenue 30 days', 'إيرادات
+                            آخر 30 يومًا') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">{{ metrics?.revenueLast30Days ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Active products', 'المنتجات
+                            النشطة') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">{{ metrics?.activeProducts ?? '—' }}</p>
+                    </div>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Pending orders', 'الطلبات
+                            المعلقة') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-amber-600">{{ metrics?.pendingOrders ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Cancelled orders', 'الطلبات
+                            الملغاة') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-rose-600">{{ metrics?.cancelledOrders ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Low stock (<= 2)', 'مخزون
+                            منخفض (<= 2)' ) }}</p>
+                                <p class="mt-2 text-3xl font-bold text-orange-600">{{ metrics?.lowStockProducts ?? '—'
+                                    }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Open support', 'الدعم
+                            المفتوح') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-blue-600">{{ metrics?.openSupportMessages ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">{{ t('Resolved support', 'الدعم
+                            المحلول') }}</p>
+                        <p class="mt-2 text-3xl font-bold text-emerald-600">{{ metrics?.resolvedSupportMessages ?? '—'
+                            }}</p>
+                    </div>
+                </div>
+
+                <div class="grid gap-6 lg:grid-cols-2">
+                    <article class="module-panel rounded-3xl border border-slate-200 bg-white p-6">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-lg font-bold text-slate-900">{{ t('Recent orders', 'أحدث الطلبات') }}</h2>
+                            <button type="button" class="text-sm font-medium text-blue-600 hover:text-blue-700"
+                                (click)="setTab('orders')">{{ t('Open orders', 'فتح الطلبات') }}</button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div *ngFor="let order of recentOrders; trackBy: trackById"
+                                class="rounded-2xl bg-slate-100 px-4 py-3">
+                                <div class="flex items-center justify-between">
+                                    <p class="font-semibold text-slate-900">{{ order.orderNumber }}</p>
+                                    <span
+                                        class="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">{{
+                                        displayOrderStatus(order.status) }}</span>
+                                </div>
+                                <p class="mt-1 text-sm text-slate-600">{{ t('Items', 'العناصر') }}: {{ order.itemCount
+                                    }} · {{ t('Total', 'الإجمالي') }}: {{
+                                    order.totalAmount }}</p>
+                            </div>
+
+                            <p *ngIf="recentOrders.length === 0" class="text-sm text-slate-500">{{ t('No recent
+                                orders.', 'لا توجد طلبات حديثة.') }}</p>
+                        </div>
+                    </article>
+
+                    <article class="module-panel rounded-3xl border border-slate-200 bg-white p-6">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-lg font-bold text-slate-900">{{ t('Critical stock alerts', 'تنبيهات المخزون
+                                الحرجة') }}</h2>
+                            <button type="button" class="text-sm font-medium text-blue-600 hover:text-blue-700"
+                                (click)="setTab('products')">{{ t('Open products', 'فتح المنتجات') }}</button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div *ngFor="let product of lowStockProducts; trackBy: trackById"
+                                class="rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3">
+                                <p class="font-semibold text-slate-900">{{ displayName(product.nameEn, product.nameAr)
+                                    }}</p>
+                                <p class="text-sm text-slate-600">{{ displayName(product.categoryNameEn,
+                                    product.categoryNameAr) || t('Uncategorized', 'غير مصنف') }}</p>
+                            </div>
+
+                            <p *ngIf="lowStockProducts.length === 0" class="text-sm text-slate-500">{{ t('No low stock
+                                warnings right now.', 'لا توجد تحذيرات انخفاض مخزون حاليًا.') }}</p>
+                        </div>
+                    </article>
+                </div>
+
+                <article class="module-panel rounded-3xl border border-slate-200 bg-white p-6">
+                    <h2 class="mb-4 text-lg font-bold text-slate-900">{{ t('Recent audit logs', 'أحدث سجلات التدقيق') }}
+                    </h2>
+
+                    <div class="space-y-3">
+                        <div *ngFor="let log of recentLogs; trackBy: trackById"
+                            class="rounded-2xl border border-slate-200 px-4 py-3">
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <p class="font-semibold text-slate-900">{{ log.action }}</p>
+                                    <p class="text-sm text-slate-500">{{ log.entityType }} · {{ log.entityId || '—' }}
+                                    </p>
+                                </div>
+                                <p class="text-xs text-slate-400">{{ log.timestamp | date: 'medium' }}</p>
+                            </div>
+                        </div>
+
+                        <p *ngIf="recentLogs.length === 0" class="text-sm text-slate-500">{{ t('No audit logs found.',
+                            'لا توجد سجلات تدقيق.') }}</p>
+                    </div>
+                </article>
+            </section>
+
+            <section *ngSwitchCase="'users'" class="module-panel rounded-3xl border border-slate-200 bg-white p-6"
+                [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                        <input [(ngModel)]="userSearch"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm md:w-80"
+                            [placeholder]="t('Search users by name, email, phone', 'ابحث عن المستخدمين بالاسم أو البريد الإلكتروني أو الهاتف')" />
+                        <button type="button" (click)="userPage = 1; loadUsers()"
+                            class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+                            {{ t('Search', 'بحث') }}
+                        </button>
+                    </div>
+
+                    <button type="button" (click)="openCreateUserModal()"
+                        class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
+                        {{ t('Create user', 'إنشاء مستخدم') }}
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-100 text-slate-600" [class.text-right]="isArabic"
+                            [class.text-left]="!isArabic">
+                            <tr>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Name', 'الاسم') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Email', 'البريد الإلكتروني') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Roles', 'الأدوار') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Status', 'الحالة') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Actions', 'الإجراءات') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 bg-white">
+                            <tr *ngFor="let user of users; trackBy: trackById">
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+                                    <p class="font-semibold text-slate-900">{{ user.firstName }} {{ user.lastName }}</p>
+                                    <p class="text-xs text-slate-500">{{ t('Created', 'تاريخ الإنشاء') }}: {{
+                                        user.createdAt | date: 'shortDate' }}
+                                    </p>
+                                </td>
+                                <td class="px-4 py-3 text-slate-700" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ user.email }}</td>
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+                                    <div class="flex flex-wrap gap-1">
+                                        <span *ngFor="let role of user.roles"
+                                            class="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">{{
+                                            displayRole(role) }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+                                    <span
+                                        [class]="user.isActive ? 'rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700' : 'rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700'">
+                                        {{ user.isActive ? t('Active', 'نشط') : t('Inactive', 'غير نشط') }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex flex-wrap gap-2" [class.justify-start]="isArabic"
+                                        [class.justify-end]="!isArabic">
+                                        <button type="button" (click)="openEditUserModal(user)"
+                                            [attr.aria-label]="t('Edit', 'تعديل')" [title]="t('Edit', 'تعديل')"
+                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
+                                                aria-hidden="true">
+                                                <path
+                                                    d="M13.586 3.586a2 2 0 112.828 2.828l-8.9 8.9a2 2 0 01-.878.497l-3.286.94a.75.75 0 01-.928-.928l.94-3.286a2 2 0 01.497-.878l8.9-8.9zM12.525 5.818L4.41 13.934a.5.5 0 00-.124.22l-.559 1.957 1.957-.559a.5.5 0 00.22-.124l8.116-8.115-1.495-1.495z" />
+                                            </svg>
+                                        </button>
+                                        <button type="button" (click)="openRoleModal(user)"
+                                            class="rounded-lg border border-blue-300 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-50">{{
+                                            t('Assign role', 'تعيين دور') }}</button>
+                                        <button type="button" (click)="toggleUserStatus(user)"
+                                            class="rounded-lg border border-amber-300 px-3 py-1 text-xs font-medium text-amber-700 hover:bg-amber-50">
+                                            {{ user.isActive ? t('Deactivate', 'تعطيل') : t('Activate', 'تفعيل') }}
+                                        </button>
+                                        <button type="button" (click)="deleteUser(user)"
+                                            [attr.aria-label]="t('Delete', 'حذف')" [title]="t('Delete', 'حذف')"
+                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-rose-300 text-rose-700 hover:bg-rose-50">
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
+                                                aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                    d="M8.75 2.5a1.25 1.25 0 00-1.25 1.25V5H5.75a.75.75 0 000 1.5h.334l.708 9.01A2.25 2.25 0 009.036 17.5h1.928a2.25 2.25 0 002.244-1.99l.708-9.01h.334a.75.75 0 000-1.5H12.5V3.75A1.25 1.25 0 0011.25 2.5h-2.5zM11 5V3.75a.25.25 0 00-.25-.25h-1.5a.25.25 0 00-.25.25V5H11zm-2 3a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0V8zm3.75-.75a.75.75 0 00-.75.75v6a.75.75 0 001.5 0V8a.75.75 0 00-.75-.75z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!loadingUsers && users.length === 0">
+                                <td colspan="5" class="px-4 py-8 text-center text-slate-500">{{ t('No users found.', 'لا
+                                    يوجد مستخدمون.') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between">
+                    <p class="text-sm text-slate-500">{{ t('Total', 'الإجمالي') }}: {{ userTotal }}</p>
+
+                    <div class="flex gap-2">
+                        <button type="button" (click)="previousUsersPage()" [disabled]="userPage === 1"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Previous', 'السابق') }}</button>
+                        <button type="button" (click)="nextUsersPage()" [disabled]="userPage * userLimit >= userTotal"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Next', 'التالي') }}</button>
+                    </div>
+                </div>
+            </section>
+
+            <section *ngSwitchCase="'categories'" class="module-panel rounded-3xl border border-slate-200 bg-white p-6"
+                [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <div class="mb-4 flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-slate-900">{{ t('Category management', 'إدارة الفئات') }}</h2>
+                    <button type="button" (click)="openCreateCategoryModal()"
+                        class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">{{
+                        t('Create category', 'إنشاء فئة') }}</button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-100 text-slate-600" [class.text-right]="isArabic"
+                            [class.text-left]="!isArabic">
+                            <tr>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Name (EN)', 'الاسم (إنجليزي)') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Name (AR)', 'الاسم (عربي)') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Parent', 'الفئة الأب') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-center]="true">{{ t('Display order',
+                                    'ترتيب العرض') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Actions', 'الإجراءات') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 bg-white">
+                            <tr *ngFor="let category of categories; trackBy: trackById">
+                                <td class="px-4 py-3 font-semibold text-slate-900" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ category.nameEn }}</td>
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">{{
+                                    category.nameAr }}</td>
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">{{
+                                    category.parentId || t('Root', 'جذر') }}</td>
+                                <td class="px-4 py-3 text-center">{{ category.displayOrder }}</td>
+                                <td class="px-4 py-3">
+                                    <div class="flex flex-wrap gap-2" [class.justify-start]="isArabic"
+                                        [class.justify-end]="!isArabic">
+                                        <button type="button" (click)="openEditCategoryModal(category)"
+                                            [attr.aria-label]="t('Edit', 'تعديل')" [title]="t('Edit', 'تعديل')"
+                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
+                                                aria-hidden="true">
+                                                <path
+                                                    d="M13.586 3.586a2 2 0 112.828 2.828l-8.9 8.9a2 2 0 01-.878.497l-3.286.94a.75.75 0 01-.928-.928l.94-3.286a2 2 0 01.497-.878l8.9-8.9zM12.525 5.818L4.41 13.934a.5.5 0 00-.124.22l-.559 1.957 1.957-.559a.5.5 0 00.22-.124l8.116-8.115-1.495-1.495z" />
+                                            </svg>
+                                        </button>
+                                        <button type="button" (click)="deleteCategory(category)"
+                                            [attr.aria-label]="t('Delete', 'حذف')" [title]="t('Delete', 'حذف')"
+                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-rose-300 text-rose-700 hover:bg-rose-50">
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
+                                                aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                    d="M8.75 2.5a1.25 1.25 0 00-1.25 1.25V5H5.75a.75.75 0 000 1.5h.334l.708 9.01A2.25 2.25 0 009.036 17.5h1.928a2.25 2.25 0 002.244-1.99l.708-9.01h.334a.75.75 0 000-1.5H12.5V3.75A1.25 1.25 0 0011.25 2.5h-2.5zM11 5V3.75a.25.25 0 00-.25-.25h-1.5a.25.25 0 00-.25.25V5H11zm-2 3a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0V8zm3.75-.75a.75.75 0 00-.75.75v6a.75.75 0 001.5 0V8a.75.75 0 00-.75-.75z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!loadingCategories && categories.length === 0">
+                                <td colspan="5" class="px-4 py-8 text-center text-slate-500">{{ t('No categories
+                                    found.', 'لا توجد فئات.') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section *ngSwitchCase="'products'" class="module-panel rounded-3xl border border-slate-200 bg-white p-6"
+                [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                        <input [(ngModel)]="productSearch"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm md:w-80"
+                            [placeholder]="t('Search products', 'ابحث عن المنتجات')" />
+
+                        <select [(ngModel)]="productCategoryFilter"
+                            class="rounded-xl border border-slate-300 px-4 py-2 text-sm">
+                            <option [ngValue]="undefined">{{ t('All categories', 'كل الفئات') }}</option>
+                            <option *ngFor="let category of categories" [ngValue]="category.id">{{
+                                displayName(category.nameEn, category.nameAr) }}
+                            </option>
+                        </select>
+
+                        <button type="button" (click)="productPage = 1; loadProducts()"
+                            class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                            t('Search', 'بحث') }}</button>
+                    </div>
+
+                    <button type="button" (click)="openCreateProductModal()"
+                        class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">{{
+                        t('Create product', 'إنشاء منتج') }}</button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-100 text-slate-600" [class.text-right]="isArabic"
+                            [class.text-left]="!isArabic">
+                            <tr>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Product', 'المنتج') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Category', 'الفئة') }}</th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Price', 'السعر') }}</th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Stock', 'المخزون') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Actions', 'الإجراءات') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 bg-white">
+                            <tr *ngFor="let product of products; trackBy: trackById">
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+                                    <p class="font-semibold text-slate-900">{{ displayName(product.nameEn,
+                                        product.nameAr) }}</p>
+                                    <p class="text-xs text-slate-500">{{ product.slug }}</p>
+                                </td>
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">{{
+                                    displayName(product.categoryNameEn, product.categoryNameAr) }}
+                                </td>
+                                <td class="px-4 py-3 text-center">{{ product.price }}</td>
+                                <td class="px-4 py-3 text-center">
+                                    <span
+                                        [class]="product.inStock ? 'rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700' : 'rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700'">
+                                        {{ product.inStock ? t('In stock', 'متوفر') : t('Out of stock', 'غير متوفر') }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex flex-wrap gap-2" [class.justify-start]="isArabic"
+                                        [class.justify-end]="!isArabic">
+                                        <button type="button" (click)="openEditProductModal(product)"
+                                            [attr.aria-label]="t('Edit', 'تعديل')" [title]="t('Edit', 'تعديل')"
+                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
+                                                aria-hidden="true">
+                                                <path
+                                                    d="M13.586 3.586a2 2 0 112.828 2.828l-8.9 8.9a2 2 0 01-.878.497l-3.286.94a.75.75 0 01-.928-.928l.94-3.286a2 2 0 01.497-.878l8.9-8.9zM12.525 5.818L4.41 13.934a.5.5 0 00-.124.22l-.559 1.957 1.957-.559a.5.5 0 00.22-.124l8.116-8.115-1.495-1.495z" />
+                                            </svg>
+                                        </button>
+                                        <button type="button" (click)="openOfferModal(product)"
+                                            class="rounded-lg border border-blue-300 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-50">{{
+                                            t('Offer', 'عرض') }}</button>
+                                        <button type="button" (click)="deleteProduct(product)"
+                                            [attr.aria-label]="t('Delete', 'حذف')" [title]="t('Delete', 'حذف')"
+                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-rose-300 text-rose-700 hover:bg-rose-50">
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
+                                                aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                    d="M8.75 2.5a1.25 1.25 0 00-1.25 1.25V5H5.75a.75.75 0 000 1.5h.334l.708 9.01A2.25 2.25 0 009.036 17.5h1.928a2.25 2.25 0 002.244-1.99l.708-9.01h.334a.75.75 0 000-1.5H12.5V3.75A1.25 1.25 0 0011.25 2.5h-2.5zM11 5V3.75a.25.25 0 00-.25-.25h-1.5a.25.25 0 00-.25.25V5H11zm-2 3a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0V8zm3.75-.75a.75.75 0 00-.75.75v6a.75.75 0 001.5 0V8a.75.75 0 00-.75-.75z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!loadingProducts && products.length === 0">
+                                <td colspan="5" class="px-4 py-8 text-center text-slate-500">{{ t('No products found.',
+                                    'لا توجد منتجات.') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between">
+                    <p class="text-sm text-slate-500">{{ t('Total', 'الإجمالي') }}: {{ productTotal }}</p>
+
+                    <div class="flex gap-2">
+                        <button type="button" (click)="previousProductsPage()" [disabled]="productPage === 1"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Previous', 'السابق') }}</button>
+                        <button type="button" (click)="nextProductsPage()"
+                            [disabled]="productPage * productLimit >= productTotal"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Next', 'التالي') }}</button>
+                    </div>
+                </div>
+            </section>
+
+            <section *ngSwitchCase="'orders'" class="module-panel space-y-6" [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <!-- Pending Queue Header -->
+                <div class="rounded-2xl border border-cyan-100 bg-gradient-to-r from-cyan-50 via-sky-50 to-blue-50 p-6">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-cyan-700">{{ t('Pending
+                                queue', 'قائمة الانتظار') }}</p>
+                            <p class="mt-1 text-sm text-slate-600">{{ t('This list shows pending orders only. Confirmed
+                                orders move out automatically after status update.', 'هذه القائمة تعرض الطلبات المعلقة
+                                فقط. الطلبات المؤكدة تنتقل تلقائيًا بعد تحديث الحالة.') }}</p>
+                        </div>
+                        <div
+                            class="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-white/80 px-4 py-2 text-sm font-semibold text-cyan-800">
+                            <span class="h-2 w-2 rounded-full bg-cyan-500"></span>
+                            {{ t('Pending orders', 'الطلبات المعلقة') }}: {{ orderTotal }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Grid/List -->
+                <div *ngIf="loadingOrders" class="space-y-4">
+                    <div *ngFor="let i of [1,2,3]" class="h-32 animate-pulse rounded-2xl bg-slate-150"></div>
+                </div>
+
+                <div *ngIf="!loadingOrders && orders.length > 0" class="grid gap-4 lg:grid-cols-2">
+                    <article *ngFor="let order of orders; trackBy: trackById"
+                        class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-cyan-300 hover:shadow-md"
+                        [ngClass]="{
+                            'ring-2 ring-cyan-300/80 shadow-lg': orderDrafts[order.id].isSubmitting,
+                            'ring-2 ring-emerald-300/80': orderDrafts[order.id].success,
+                            'ring-2 ring-rose-300/80': !!orderDrafts[order.id].error
+                        }">
+
+                        <!-- Order Header -->
+                        <div class="mb-4 flex items-start justify-between">
+                            <div>
+                                <h3 class="font-bold text-slate-900">{{ order.orderNumber }}</h3>
+                                <p class="mt-1 text-xs text-slate-500">{{ order.createdAt | date: 'mediumDate' }} · {{
+                                    t('Items', 'عناصر') }}: {{ order.itemCount }}</p>
+                            </div>
+                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold" [ngClass]="{
+                                    'bg-amber-100 text-amber-800': order.status === 'Pending',
+                                    'bg-blue-100 text-blue-800': order.status === 'Confirmed' || order.status === 'Processing',
+                                    'bg-purple-100 text-purple-800': order.status === 'Shipped',
+                                    'bg-emerald-100 text-emerald-800': order.status === 'Delivered',
+                                    'bg-rose-100 text-rose-800': order.status === 'Cancelled' || order.status === 'Refunded'
+                                }">
+                                {{ displayOrderStatus(order.status) }}
+                            </span>
+                        </div>
+
+                        <!-- Order Details -->
+                        <div class="mb-5 space-y-2 border-t border-slate-150  py-4">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-600">{{ t('Items', 'عدد العناصر') }}</span>
+                                <span class="font-medium text-slate-900">{{ order.itemCount }}</span>
+                            </div>
+                            <div class="border-t border-slate-150 pt-2 flex justify-between">
+                                <span class="font-bold text-slate-900">{{ t('Order total', 'إجمالي الطلب') }}</span>
+                                <span class="text-lg font-bold text-cyan-700">{{ order.totalAmount | currency:'EGP'
+                                    }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Status Update Controls -->
+                        <div class="space-y-3 border-t border-slate-150 pt-4">
+                            <label class="block text-xs font-bold text-slate-700">{{ t('Update status', 'تحديث الحالة')
+                                }}</label>
+                            <select [(ngModel)]="orderDrafts[order.id].status"
+                                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium hover:border-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10">
+                                <option *ngFor="let status of orderStatuses" [value]="status">{{
+                                    displayOrderStatus(status) }}</option>
+                            </select>
+
+                            <!-- Tracking Number (for Shipped status) -->
+                            <input *ngIf="orderDrafts[order.id].status === 'Shipped'"
+                                [(ngModel)]="orderDrafts[order.id].trackingNumber"
+                                [placeholder]="t('Tracking number', 'رقم التتبع')"
+                                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+
+                            <!-- Reason (for Cancelled status) -->
+                            <input *ngIf="orderDrafts[order.id].status === 'Cancelled'"
+                                [(ngModel)]="orderDrafts[order.id].reason"
+                                [placeholder]="t('Cancellation reason', 'سبب الإلغاء')"
+                                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+
+                            <button type="button" (click)="applyOrderStatus(order.id)"
+                                [disabled]="orderDrafts[order.id].isSubmitting"
+                                class="w-full rounded-lg bg-gradient-to-r px-4 py-2 text-sm font-bold text-white shadow-md transition-all disabled:opacity-70"
+                                [ngClass]="orderDrafts[order.id].success
+                                    ? 'from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600'
+                                    : 'from-cyan-600 to-cyan-700 hover:from-cyan-500 hover:to-cyan-600'">
+                                <span *ngIf="!orderDrafts[order.id].isSubmitting">{{ t('Apply status', 'تطبيق الحالة')
+                                    }}</span>
+                                <span *ngIf="orderDrafts[order.id].isSubmitting">{{ t('Applying...', 'جاري التطبيق...')
+                                    }}</span>
+                            </button>
+                        </div>
+
+                        <!-- Success/Error Feedback -->
+                        <div *ngIf="orderDrafts[order.id].success"
+                            class="mt-3 flex items-center gap-2 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            {{ t('Status updated successfully', 'تم تحديث الحالة بنجاح') }}
+                        </div>
+                        <div *ngIf="orderDrafts[order.id].error"
+                            class="mt-3 flex items-center gap-2 rounded-lg bg-rose-50 p-3 text-sm text-rose-700">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            {{ orderDrafts[order.id].error }}
+                        </div>
+                    </article>
+                </div>
+
+                <div *ngIf="!loadingOrders && orders.length === 0"
+                    class="rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 text-center">
+                    <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p class="mt-4 font-medium text-slate-900">{{ t('No pending orders right now', 'لا توجد طلبات معلقة
+                        حاليًا') }}</p>
+                    <p class="mt-1 text-sm text-slate-500">{{ t('New checkout requests will appear here automatically.',
+                        'ستظهر طلبات الشراء الجديدة هنا تلقائيًا.') }}</p>
+                </div>
+
+                <!-- Pagination -->
+                <div *ngIf="orders.length > 0"
+                    class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-4">
+                    <span class="text-sm text-slate-600">{{ t('Page', 'الصفحة') }} {{ orderPage }} {{ t('of', 'من') }}
+                        {{ (orderTotal + orderLimit - 1) / orderLimit | number:'1.0-0' }}</span>
+                    <div class="flex gap-2">
+                        <button type="button" (click)="previousOrdersPage()" [disabled]="orderPage === 1"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-50">
+                            {{ t('Previous', 'السابق') }}
+                        </button>
+                        <button type="button" (click)="nextOrdersPage()"
+                            [disabled]="orderPage * orderLimit >= orderTotal"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-50">
+                            {{ t('Next', 'التالي') }}
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section *ngSwitchCase="'support'" class="module-panel rounded-3xl border border-slate-200 bg-white p-6"
+                [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                        <input [(ngModel)]="supportSearch"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm md:w-80"
+                            [placeholder]="t('Search support messages', 'ابحث في رسائل الدعم')" />
+
+                        <select [(ngModel)]="supportStatusFilter"
+                            class="rounded-xl border border-slate-300 px-4 py-2 text-sm">
+                            <option value="">{{ t('All statuses', 'كل الحالات') }}</option>
+                            <option *ngFor="let status of supportStatuses" [value]="status">{{
+                                displaySupportStatus(status) }}</option>
+                        </select>
+
+                        <button type="button" (click)="supportPage = 1; loadSupportMessages()"
+                            class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                            t('Filter', 'تصفية') }}</button>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <article *ngFor="let message of supportMessages; trackBy: trackById"
+                        class="rounded-2xl border border-slate-200 p-4">
+                        <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">{{ message.subject }}</p>
+                                <p class="mt-1 text-xs text-slate-500">{{ message.name }} · {{ message.email }} · {{
+                                    message.createdAt | date: 'short' }}</p>
+                                <p class="mt-3 text-sm text-slate-700">{{ message.message }}</p>
+                            </div>
+
+                            <div class="w-full space-y-2 lg:w-80">
+                                <select [(ngModel)]="supportDrafts[message.id].status"
+                                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                                    <option *ngFor="let status of supportStatuses" [value]="status">{{
+                                        displaySupportStatus(status) }}
+                                    </option>
+                                </select>
+
+                                <textarea rows="3" [(ngModel)]="supportDrafts[message.id].notes"
+                                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                                    [placeholder]="t('Admin notes', 'ملاحظات المشرف')"></textarea>
+
+                                <button type="button" (click)="applySupportUpdate(message.id)"
+                                    class="w-full rounded-lg border border-emerald-300 px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50">
+                                    {{ t('Update message', 'تحديث الرسالة') }}
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <p *ngIf="!loadingSupport && supportMessages.length === 0"
+                        class="rounded-xl border border-slate-200 bg-slate-100 px-4 py-6 text-center text-sm text-slate-500">
+                        {{ t('No support messages found.', 'لا توجد رسائل دعم.') }}
+                    </p>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between">
+                    <p class="text-sm text-slate-500">{{ t('Total', 'الإجمالي') }}: {{ supportTotal }}</p>
+
+                    <div class="flex gap-2">
+                        <button type="button" (click)="previousSupportPage()" [disabled]="supportPage === 1"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Previous', 'السابق') }}</button>
+                        <button type="button" (click)="nextSupportPage()"
+                            [disabled]="supportPage * supportLimit >= supportTotal"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Next', 'التالي') }}</button>
+                    </div>
+                </div>
+            </section>
+
+            <section *ngSwitchCase="'coupons'" class="module-panel rounded-3xl border border-slate-200 bg-white p-6"
+                [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                        <input [(ngModel)]="couponSearch"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm md:w-80"
+                            [placeholder]="t('Search coupons', 'ابحث عن الكوبونات')" />
+
+                        <select [(ngModel)]="couponActiveFilter"
+                            class="rounded-xl border border-slate-300 px-4 py-2 text-sm">
+                            <option value="">{{ t('All statuses', 'كل الحالات') }}</option>
+                            <option value="true">{{ t('Active only', 'النشطة فقط') }}</option>
+                            <option value="false">{{ t('Inactive only', 'غير النشطة فقط') }}</option>
+                        </select>
+
+                        <button type="button" (click)="couponPage = 1; loadCoupons()"
+                            class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                            t('Filter', 'تصفية') }}</button>
+                    </div>
+
+                    <button type="button" (click)="openCreateCouponModal()"
+                        class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">{{
+                        t('Create coupon', 'إنشاء كوبون') }}</button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-100 text-slate-600" [class.text-right]="isArabic"
+                            [class.text-left]="!isArabic">
+                            <tr>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Code', 'الكود') }}</th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Type / Value', 'النوع / القيمة') }}
+                                </th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Validity', 'الصلاحية') }}</th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Usage', 'الاستخدام') }}</th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Status', 'الحالة') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Actions', 'الإجراءات') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 bg-white">
+                            <tr *ngFor="let coupon of coupons; trackBy: trackById">
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+                                    <p class="font-semibold text-slate-900">{{ coupon.code }}</p>
+                                    <p class="text-xs text-slate-500">{{ coupon.descriptionEn || coupon.descriptionAr ||
+                                        '—' }}</p>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <p class="font-semibold text-slate-900">{{ coupon.discountType === 'Percentage' ?
+                                        t('Percentage', 'نسبة') : t('Fixed', 'قيمة ثابتة') }}</p>
+                                    <p class="text-xs text-slate-600">{{ coupon.discountType === 'Percentage' ?
+                                        (coupon.discountValue + '%') : coupon.discountValue }}</p>
+                                </td>
+                                <td class="px-4 py-3 text-center text-xs text-slate-600">
+                                    <p>{{ coupon.startsAt | date: 'shortDate' }}</p>
+                                    <p>{{ coupon.expiresAt | date: 'shortDate' }}</p>
+                                </td>
+                                <td class="px-4 py-3 text-center text-xs text-slate-600">
+                                    <p>{{ coupon.usedCount }} / {{ coupon.usageLimit > 0 ? coupon.usageLimit :
+                                        t('Unlimited', 'غير محدود') }}</p>
+                                    <p>{{ t('Min order', 'أقل طلب') }}: {{ coupon.minOrderAmount }}</p>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <span
+                                        [class]="coupon.isActive ? 'rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700' : 'rounded-full bg-slate-200 px-2 py-1 text-xs font-semibold text-slate-700'">
+                                        {{ coupon.isActive ? t('Active', 'نشط') : t('Inactive', 'غير نشط') }}
+                                    </span>
+                                    <p class="mt-1 text-xs" [class.text-emerald-600]="coupon.isValid"
+                                        [class.text-amber-600]="!coupon.isValid">
+                                        {{ coupon.isValid ? t('Valid now', 'صالح الآن') : t('Not valid now', 'غير صالح
+                                        الآن') }}
+                                    </p>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex flex-wrap gap-2" [class.justify-start]="isArabic"
+                                        [class.justify-end]="!isArabic">
+                                        <button type="button" (click)="openEditCouponModal(coupon)"
+                                            class="rounded-lg border border-slate-300 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100">{{
+                                            t('Edit', 'تعديل') }}</button>
+                                        <button type="button" (click)="toggleCouponStatus(coupon)"
+                                            class="rounded-lg border border-amber-300 px-3 py-1 text-xs font-medium text-amber-700 hover:bg-amber-50">{{
+                                            coupon.isActive ? t('Deactivate', 'تعطيل') : t('Activate', 'تفعيل')
+                                            }}</button>
+                                        <button type="button" (click)="deleteCoupon(coupon)"
+                                            class="rounded-lg border border-rose-300 px-3 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50">{{
+                                            t('Delete', 'حذف') }}</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!loadingCoupons && coupons.length === 0">
+                                <td colspan="6" class="px-4 py-8 text-center text-slate-500">{{ t('No coupons found.',
+                                    'لا توجد كوبونات.') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between">
+                    <p class="text-sm text-slate-500">{{ t('Total', 'الإجمالي') }}: {{ couponTotal }}</p>
+
+                    <div class="flex gap-2">
+                        <button type="button" (click)="previousCouponsPage()" [disabled]="couponPage === 1"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Previous', 'السابق') }}</button>
+                        <button type="button" (click)="nextCouponsPage()"
+                            [disabled]="couponPage * couponLimit >= couponTotal"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Next', 'التالي') }}</button>
+                    </div>
+                </div>
+            </section>
+
+            <section *ngSwitchCase="'offers'" class="module-panel rounded-3xl border border-slate-200 bg-white p-6"
+                [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                        <input [(ngModel)]="offerSearch"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm md:w-80"
+                            [placeholder]="t('Search discounted products', 'ابحث في المنتجات المخفضة')" />
+
+                        <label
+                            class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700">
+                            <input type="checkbox" [(ngModel)]="offerActiveOnly" />
+                            {{ t('Active products only', 'المنتجات النشطة فقط') }}
+                        </label>
+
+                        <button type="button" (click)="offerPage = 1; loadOffers()"
+                            class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                            t('Filter', 'تصفية') }}</button>
+                    </div>
+
+                    <button type="button" (click)="setTab('products')"
+                        class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">{{
+                        t('Open products to add offer', 'افتح المنتجات لإضافة عرض') }}</button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-100 text-slate-600" [class.text-right]="isArabic"
+                            [class.text-left]="!isArabic">
+                            <tr>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Product', 'المنتج') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Category', 'الفئة') }}</th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Price', 'السعر') }}</th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Discount', 'الخصم') }}</th>
+                                <th class="px-4 py-3 font-medium text-center">{{ t('Stock', 'المخزون') }}</th>
+                                <th class="px-4 py-3 font-medium" [class.text-right]="isArabic"
+                                    [class.text-left]="!isArabic">{{ t('Actions', 'الإجراءات') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 bg-white">
+                            <tr *ngFor="let offer of offers; trackBy: trackByOfferProductId">
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">
+                                    <p class="font-semibold text-slate-900">{{ displayName(offer.productNameEn,
+                                        offer.productNameAr) }}</p>
+                                    <p class="text-xs text-slate-500">/{{ offer.slug }}</p>
+                                </td>
+                                <td class="px-4 py-3" [class.text-right]="isArabic" [class.text-left]="!isArabic">{{
+                                    displayName(offer.categoryNameEn, offer.categoryNameAr) }}</td>
+                                <td class="px-4 py-3 text-center">
+                                    <p class="font-semibold text-slate-900">{{ offer.price }}</p>
+                                    <p class="text-xs text-slate-500">{{ t('Original', 'الأصلي') }}: {{
+                                        offer.originalPrice }}</p>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <span
+                                        class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">{{
+                                        offer.discountPercentage }}%</span>
+                                </td>
+                                <td class="px-4 py-3 text-center">{{ offer.stockQuantity }}</td>
+                                <td class="px-4 py-3">
+                                    <div class="flex flex-wrap gap-2" [class.justify-start]="isArabic"
+                                        [class.justify-end]="!isArabic">
+                                        <button type="button" (click)="openOfferModal(offer)"
+                                            class="rounded-lg border border-blue-300 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-50">{{
+                                            t('Adjust', 'تعديل') }}</button>
+                                        <button type="button" (click)="clearOffer(offer)"
+                                            class="rounded-lg border border-rose-300 px-3 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50">{{
+                                            t('Clear', 'إزالة') }}</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!loadingOffers && offers.length === 0">
+                                <td colspan="6" class="px-4 py-8 text-center text-slate-500">{{ t('No active offers
+                                    found.', 'لا توجد عروض نشطة.') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between">
+                    <p class="text-sm text-slate-500">{{ t('Total', 'الإجمالي') }}: {{ offerTotal }}</p>
+
+                    <div class="flex gap-2">
+                        <button type="button" (click)="previousOffersPage()" [disabled]="offerPage === 1"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Previous', 'السابق') }}</button>
+                        <button type="button" (click)="nextOffersPage()"
+                            [disabled]="offerPage * offerLimit >= offerTotal"
+                            class="rounded-lg border border-slate-300 px-3 py-1 text-sm disabled:opacity-50">{{
+                            t('Next', 'التالي') }}</button>
+                    </div>
+                </div>
+            </section>
+
+            <section *ngSwitchCase="'analytics'"
+                class="module-panel space-y-6 rounded-3xl border border-slate-200 bg-white p-6"
+                [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <h2 class="text-lg font-bold text-slate-900">{{ t('Detailed analytics', 'التحليلات التفصيلية') }}
+                    </h2>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" (click)="applyAnalyticsPeriod(7)"
+                            [class]="analyticsPeriodDays === 7 ? 'rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white' : 'rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100'">{{
+                            t('7 days', '7 أيام') }}</button>
+                        <button type="button" (click)="applyAnalyticsPeriod(30)"
+                            [class]="analyticsPeriodDays === 30 ? 'rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white' : 'rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100'">{{
+                            t('30 days', '30 يومًا') }}</button>
+                        <button type="button" (click)="applyAnalyticsPeriod(90)"
+                            [class]="analyticsPeriodDays === 90 ? 'rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white' : 'rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100'">{{
+                            t('90 days', '90 يومًا') }}</button>
+                    </div>
+                </div>
+
+                <div *ngIf="loadingAnalytics" class="grid gap-4 md:grid-cols-2">
+                    <div class="h-36 animate-pulse rounded-2xl bg-slate-100"></div>
+                    <div class="h-36 animate-pulse rounded-2xl bg-slate-100"></div>
+                </div>
+
+                <ng-container *ngIf="analytics as data">
+                    <article
+                        class="rounded-3xl border border-sky-200 bg-gradient-to-br from-sky-50 via-white to-indigo-50 p-5 shadow-sm">
+                        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">{{
+                                    t('Analytics pulse', 'نبض التحليلات') }}</p>
+                                <p class="mt-1 text-sm text-slate-600">{{ t('Live commercial momentum for the selected
+                                    period.', 'حركة الأعمال للفترة المحددة بشكل حي.') }}</p>
+                            </div>
+                            <div
+                                class="rounded-full border border-sky-200 bg-white px-3 py-1 text-xs font-semibold text-sky-700">
+                                {{ t('Period', 'الفترة') }}: {{ data.periodDays }} {{ t('days', 'يومًا') }}
+                            </div>
+                        </div>
+
+                        <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                            <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                                <p class="text-[11px] uppercase tracking-[0.14em] text-slate-400">{{ t('Revenue',
+                                    'الإيراد') }}</p>
+                                <p class="mt-2 text-2xl font-bold text-slate-900">{{ data.revenueInPeriod }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                                <p class="text-[11px] uppercase tracking-[0.14em] text-slate-400">{{ t('Orders',
+                                    'الطلبات') }}</p>
+                                <p class="mt-2 text-2xl font-bold text-slate-900">{{ data.ordersInPeriod }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                                <p class="text-[11px] uppercase tracking-[0.14em] text-slate-400">{{ t('AOV', 'متوسط
+                                    الطلب') }}</p>
+                                <p class="mt-2 text-2xl font-bold text-indigo-700">{{ data.averageOrderValue }}</p>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                                <p class="text-[11px] uppercase tracking-[0.14em] text-slate-400">{{ t('Discounts',
+                                    'الخصومات') }}</p>
+                                <p class="mt-2 text-2xl font-bold text-emerald-700">{{ data.discountsInPeriod }}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 grid gap-4 md:grid-cols-2">
+                            <div class="rounded-xl border border-slate-200 bg-white px-4 py-3">
+                                <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+                                    <span>{{ t('Coupon order penetration', 'نسبة الطلبات باستخدام كوبون') }}</span>
+                                    <span class="text-sky-700">{{ toPercentLabel(analyticsCouponOrderRate) }}</span>
+                                </div>
+                                <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-sky-500 to-indigo-500"
+                                        [style.width.%]="analyticsCouponOrderRate"></div>
+                                </div>
+                            </div>
+
+                            <div class="rounded-xl border border-slate-200 bg-white px-4 py-3">
+                                <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+                                    <span>{{ t('Discount pressure vs revenue', 'ضغط الخصم مقابل الإيراد') }}</span>
+                                    <span class="text-emerald-700">{{ toPercentLabel(analyticsDiscountPressureRate)
+                                        }}</span>
+                                </div>
+                                <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-lime-500"
+                                        [style.width.%]="analyticsDiscountPressureRate"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="grid gap-6 xl:grid-cols-2">
+                        <article class="rounded-2xl border border-slate-200 bg-white p-4">
+                            <div class="mb-4 flex items-center justify-between">
+                                <h3 class="text-sm font-bold text-slate-900">{{ t('Daily momentum', 'الزخم اليومي') }}
+                                </h3>
+                                <span class="text-xs font-medium text-slate-500">{{ t('Last 14 points', 'آخر 14 نقطة')
+                                    }}</span>
+                            </div>
+
+                            <div class="max-h-[24rem] space-y-3 overflow-y-auto pr-1">
+                                <div *ngFor="let point of data.dailyTrend | slice:-14"
+                                    class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                                    <div
+                                        class="flex items-center justify-between text-[11px] font-medium text-slate-600">
+                                        <span>{{ point.date | date: 'MMM d' }}</span>
+                                        <span>{{ t('Orders', 'الطلبات') }} {{ point.ordersCount }} • {{ t('Revenue',
+                                            'الإيراد') }} {{ point.revenue }}</span>
+                                    </div>
+
+                                    <div class="mt-2 space-y-1.5">
+                                        <div class="h-2 overflow-hidden rounded-full bg-slate-100">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
+                                                [style.width.%]="dailyRevenueBarWidth(point.revenue)"></div>
+                                        </div>
+                                        <div class="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500"
+                                                [style.width.%]="dailyOrdersBarWidth(point.ordersCount)"></div>
+                                        </div>
+                                        <div class="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-lime-500"
+                                                [style.width.%]="dailyDiscountBarWidth(point.discountAmount)"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="rounded-2xl border border-slate-200 bg-white p-4">
+                            <h3 class="mb-4 text-sm font-bold text-slate-900">{{ t('Order status intensity', 'شدة حالات
+                                الطلبات') }}</h3>
+
+                            <div class="space-y-3">
+                                <div *ngFor="let item of data.orderStatusBreakdown"
+                                    class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="font-semibold text-slate-700">{{ displayOrderStatus(item.status)
+                                            }}</span>
+                                        <span class="text-slate-600">{{ item.count }} • {{ item.revenue }}</span>
+                                    </div>
+                                    <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
+                                        <div class="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-blue-500"
+                                            [style.width.%]="statusBarWidth(item.count)"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="grid gap-6 xl:grid-cols-2">
+                        <article class="rounded-2xl border border-slate-200 bg-white p-4">
+                            <h3 class="mb-4 text-sm font-bold text-slate-900">{{ t('Coupon leaderboard', 'ترتيب
+                                الكوبونات') }}</h3>
+
+                            <div class="space-y-3" *ngIf="data.couponPerformance.length > 0; else noCouponsLeaderboard">
+                                <div *ngFor="let item of data.couponPerformance"
+                                    class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="font-semibold text-slate-700">{{ item.couponCode }}</span>
+                                        <span class="text-slate-600">{{ item.ordersCount }} {{ t('orders', 'طلبات')
+                                            }}</span>
+                                    </div>
+                                    <p class="mt-1 text-[11px] text-slate-500">{{ t('Discount', 'الخصم') }}: {{
+                                        item.totalDiscountAmount }} • {{ t('Revenue', 'الإيراد') }}: {{
+                                        item.totalRevenue }}</p>
+                                    <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                                        <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500"
+                                            [style.width.%]="couponOrdersBarWidth(item.ordersCount)"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ng-template #noCouponsLeaderboard>
+                                <p
+                                    class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
+                                    {{ t('No coupon activity in this period.', 'لا يوجد نشاط كوبونات خلال هذه الفترة.')
+                                    }}
+                                </p>
+                            </ng-template>
+                        </article>
+
+                        <article class="rounded-2xl border border-slate-200 bg-white p-4">
+                            <h3 class="mb-4 text-sm font-bold text-slate-900">{{ t('Top product momentum', 'زخم أفضل
+                                المنتجات') }}</h3>
+
+                            <div class="space-y-3" *ngIf="data.topProducts.length > 0; else noTopProducts">
+                                <div *ngFor="let item of data.topProducts"
+                                    class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="font-semibold text-slate-700">{{ displayName(item.productNameEn,
+                                            item.productNameAr) }}</span>
+                                        <span class="text-slate-600">{{ item.quantitySold }} {{ t('qty', 'قطعة')
+                                            }}</span>
+                                    </div>
+                                    <p class="mt-1 text-[11px] text-slate-500">{{ t('Revenue', 'الإيراد') }}: {{
+                                        item.revenue }}</p>
+                                    <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                                        <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500"
+                                            [style.width.%]="topProductQtyBarWidth(item.quantitySold)"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ng-template #noTopProducts>
+                                <p
+                                    class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
+                                    {{ t('No top products data in this period.', 'لا توجد بيانات لأفضل المنتجات خلال هذه
+                                    الفترة.') }}
+                                </p>
+                            </ng-template>
+                        </article>
+                    </div>
+                </ng-container>
+
+                <p *ngIf="!loadingAnalytics && !analytics"
+                    class="rounded-xl border border-slate-200 bg-slate-100 px-4 py-6 text-center text-sm text-slate-500">
+                    {{ t('No analytics data available.', 'لا توجد بيانات تحليلات متاحة.') }}
+                </p>
+            </section>
+        </ng-container>
+    </div>
+</div>
+
+<div *ngIf="showConfirmModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/45 px-4">
+    <div class="w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-2xl"
+        [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h3 class="text-lg font-bold text-slate-900">{{ t('Confirm action', 'تأكيد الإجراء') }}</h3>
+        </div>
+
+        <div class="px-6 py-5">
+            <p class="text-sm leading-6 text-slate-700">{{ confirmMessage }}</p>
+        </div>
+
+        <div class="flex gap-3 border-t border-slate-200 px-6 py-4">
+            <button type="button" (click)="closeConfirmModal()"
+                class="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                t('Cancel', 'إلغاء') }}</button>
+            <button type="button" (click)="confirmModalAction()"
+                class="flex-1 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700">{{
+                t('Delete', 'حذف') }}</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showUserModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+    <div class="w-full max-w-xl rounded-2xl bg-white shadow-xl">
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h3 class="text-lg font-bold text-slate-900">{{ isEditingUser ? t('Edit user', 'تعديل مستخدم') : t('Create
+                user', 'إنشاء مستخدم') }}</h3>
+        </div>
+
+        <div class="grid gap-4 px-6 py-4 md:grid-cols-2">
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('First name', 'الاسم الأول') }}</span>
+                <input [(ngModel)]="userForm.firstName" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('First name', 'الاسم الأول')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Last name', 'الاسم الأخير') }}</span>
+                <input [(ngModel)]="userForm.lastName" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Last name', 'الاسم الأخير')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700 md:col-span-2">
+                <span>{{ t('Email', 'البريد الإلكتروني') }}</span>
+                <input [(ngModel)]="userForm.email" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Email', 'البريد الإلكتروني')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Phone number', 'رقم الهاتف') }}</span>
+                <input [(ngModel)]="userForm.phoneNumber" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Phone number', 'رقم الهاتف')" />
+            </label>
+            <label *ngIf="!isEditingUser" class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Password', 'كلمة المرور') }}</span>
+                <input [(ngModel)]="userPassword" type="password"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Password', 'كلمة المرور')" />
+            </label>
+        </div>
+
+        <div class="px-6 pb-4">
+            <label class="mb-2 block text-sm font-semibold text-slate-700">{{ t('Roles', 'الأدوار') }}</label>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+                <label *ngFor="let role of roleOptions"
+                    class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm">
+                    <input type="checkbox" [checked]="isRoleSelected(role)" (change)="toggleRoleSelection(role)" />
+                    <span>{{ displayRole(role) }}</span>
+                </label>
+            </div>
+
+            <label class="mt-4 flex items-center gap-2 text-sm text-slate-700">
+                <input type="checkbox" [(ngModel)]="userForm.isActive" />
+                {{ t('Active user', 'مستخدم نشط') }}
+            </label>
+        </div>
+
+        <div class="flex gap-3 border-t border-slate-200 px-6 py-4">
+            <button type="button" (click)="closeUserModal()"
+                class="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                t('Cancel', 'إلغاء') }}</button>
+            <button type="button" (click)="saveUser()"
+                class="flex-1 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">{{
+                t('Save', 'حفظ') }}</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showRoleModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white shadow-xl">
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h3 class="text-lg font-bold text-slate-900">{{ t('Assign role', 'تعيين دور') }}</h3>
+            <p class="mt-1 text-sm text-slate-500" *ngIf="selectedRoleUser">{{ selectedRoleUser.firstName }} {{
+                selectedRoleUser.lastName }}</p>
+        </div>
+
+        <div class="px-6 py-4">
+            <div *ngIf="roleAssignmentError"
+                class="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {{ roleAssignmentError }}
+            </div>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Role', 'الدور') }}</span>
+                <select [(ngModel)]="selectedRole" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                    <option value="">{{ t('Select role', 'اختر الدور') }}</option>
+                    <option *ngFor="let role of roleOptions" [value]="role">{{ displayRole(role) }}</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="flex gap-3 border-t border-slate-200 px-6 py-4">
+            <button type="button" (click)="closeRoleModal()"
+                class="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                t('Cancel', 'إلغاء') }}</button>
+            <button type="button" (click)="assignRoleToUser()" [disabled]="isAssigningRole || !selectedRole"
+                class="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50">{{
+                t('Assign', 'تعيين') }}</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showCategoryModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+    <div class="w-full max-w-xl rounded-2xl bg-white shadow-xl">
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h3 class="text-lg font-bold text-slate-900">{{ isEditingCategory ? t('Edit category', 'تعديل فئة') :
+                t('Create category', 'إنشاء فئة') }}
+            </h3>
+        </div>
+
+        <div class="grid gap-4 px-6 py-4 md:grid-cols-2">
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Name (EN)', 'الاسم (إنجليزي)') }}</span>
+                <input [(ngModel)]="categoryForm.nameEn" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Name (EN)', 'الاسم (إنجليزي)')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Name (AR)', 'الاسم (عربي)') }}</span>
+                <input [(ngModel)]="categoryForm.nameAr" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Name (AR)', 'الاسم (عربي)')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Parent category', 'الفئة الأب') }}</span>
+                <select [(ngModel)]="categoryForm.parentId"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                    <option [ngValue]="undefined">{{ t('Root category', 'فئة جذر') }}</option>
+                    <option *ngFor="let category of categories" [ngValue]="category.id">{{ displayName(category.nameEn,
+                        category.nameAr) }}</option>
+                </select>
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Display order', 'ترتيب العرض') }}</span>
+                <input [(ngModel)]="categoryForm.displayOrder" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Display order', 'ترتيب العرض')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700 md:col-span-2">
+                <span>{{ t('Image URL', 'رابط الصورة') }}</span>
+                <input [(ngModel)]="categoryForm.imageUrl" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Image URL', 'رابط الصورة')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Description (EN)', 'الوصف (إنجليزي)') }}</span>
+                <textarea [(ngModel)]="categoryForm.descriptionEn" rows="2"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Description (EN)', 'الوصف (إنجليزي)')"></textarea>
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Description (AR)', 'الوصف (عربي)') }}</span>
+                <textarea [(ngModel)]="categoryForm.descriptionAr" rows="2"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Description (AR)', 'الوصف (عربي)')"></textarea>
+            </label>
+
+            <label class="flex items-center gap-2 text-sm text-slate-700 md:col-span-2">
+                <input type="checkbox" [(ngModel)]="categoryForm.isActive" />
+                {{ t('Active category', 'فئة نشطة') }}
+            </label>
+        </div>
+
+        <div class="flex gap-3 border-t border-slate-200 px-6 py-4">
+            <button type="button" (click)="closeCategoryModal()"
+                class="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                t('Cancel', 'إلغاء') }}</button>
+            <button type="button" (click)="saveCategory()"
+                class="flex-1 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">{{
+                t('Save', 'حفظ') }}</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showProductModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8">
+    <div class="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-xl">
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h3 class="text-lg font-bold text-slate-900">{{ isEditingProduct ? t('Edit product', 'تعديل منتج') :
+                t('Create product', 'إنشاء منتج') }}</h3>
+        </div>
+
+        <div class="grid gap-4 px-6 py-4 md:grid-cols-2">
+            <div *ngIf="!isEditingProduct" class="md:col-span-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p class="text-sm font-semibold text-slate-900">{{ t('Import product from URL', 'استيراد منتج من رابط')
+                    }}</p>
+                <div class="mt-3 flex flex-col gap-2 md:flex-row">
+                    <div class="flex-1">
+                        <label class="mb-1 block text-xs font-semibold text-slate-600">{{ t('Product page URL', 'رابط
+                            صفحة المنتج') }}</label>
+                        <input [(ngModel)]="productImportUrl"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('https://example.com/product-page', 'https://example.com/product-page')" />
+                    </div>
+                    <button type="button" (click)="importProductFromUrl()" [disabled]="importingProduct"
+                        class="rounded-lg border border-blue-300 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60">
+                        {{ importingProduct ? t('Importing...', 'جاري الاستيراد...') : t('Import preview', 'استيراد
+                        المعاينة') }}
+                    </button>
+                </div>
+                <p class="mt-2 text-xs text-slate-500">{{ t('Importer runs on the server and follows robots.txt and
+                    safety rules.', 'الاستيراد يتم عبر الخادم ويلتزم بسياسات robots.txt وقواعد الأمان.') }}</p>
+            </div>
+
+            <div *ngIf="importWarnings.length > 0"
+                class="md:col-span-2 rounded-xl border border-amber-200 bg-amber-50 p-3">
+                <p class="text-xs font-semibold uppercase tracking-[0.1em] text-amber-700">{{ t('Import warnings',
+                    'ملاحظات الاستيراد') }}</p>
+                <ul class="mt-2 space-y-1 text-xs text-amber-800">
+                    <li *ngFor="let warning of importWarnings">• {{ warning }}</li>
+                </ul>
+            </div>
+
+            <div *ngIf="importedImageUrls.length > 0"
+                class="md:col-span-2 rounded-xl border border-slate-200 bg-white p-3">
+                <div class="mb-2 flex items-center justify-between">
+                    <p class="text-sm font-semibold text-slate-900">{{ t('Imported images', 'الصور المستوردة') }}</p>
+                    <p class="text-xs text-slate-500">{{ importedImageUrls.length }} {{ t('images', 'صورة') }}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                    <img *ngFor="let imageUrl of importedImageUrls" [src]="imageUrl"
+                        class="h-24 w-full rounded-lg border border-slate-200 object-cover"
+                        [alt]="t('Imported image', 'صورة مستوردة')" />
+                </div>
+            </div>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Name (EN)', 'الاسم (إنجليزي)') }}</span>
+                <input [(ngModel)]="productForm.nameEn" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Name (EN)', 'الاسم (إنجليزي)')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Name (AR)', 'الاسم (عربي)') }}</span>
+                <input [(ngModel)]="productForm.nameAr" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Name (AR)', 'الاسم (عربي)')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Description (EN)', 'الوصف (إنجليزي)') }}</span>
+                <textarea [(ngModel)]="productForm.descriptionEn" rows="2"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Description (EN)', 'الوصف (إنجليزي)')"></textarea>
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Description (AR)', 'الوصف (عربي)') }}</span>
+                <textarea [(ngModel)]="productForm.descriptionAr" rows="2"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Description (AR)', 'الوصف (عربي)')"></textarea>
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Price', 'السعر') }}</span>
+                <input [(ngModel)]="productForm.price" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm" [placeholder]="t('Price', 'السعر')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Original price', 'السعر الأصلي') }}</span>
+                <input [(ngModel)]="productForm.originalPrice" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Original price', 'السعر الأصلي')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Stock quantity', 'كمية المخزون') }}</span>
+                <input [(ngModel)]="productForm.stockQuantity" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Stock quantity', 'كمية المخزون')" />
+            </label>
+            <label *ngIf="!isEditingProduct" class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('SKU', 'رمز المنتج') }}</span>
+                <input [(ngModel)]="productSku" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('SKU', 'رمز المنتج')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Category', 'الفئة') }}</span>
+                <select [(ngModel)]="productForm.categoryId"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                    <option [ngValue]="0">{{ t('Select category', 'اختر الفئة') }}</option>
+                    <option *ngFor="let category of categories" [ngValue]="category.id">{{ displayName(category.nameEn,
+                        category.nameAr) }}</option>
+                </select>
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Weight', 'الوزن') }}</span>
+                <input [(ngModel)]="productForm.weight" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm" [placeholder]="t('Weight', 'الوزن')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Dimensions', 'الأبعاد') }}</span>
+                <input [(ngModel)]="productForm.dimensions" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Dimensions', 'الأبعاد')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Material', 'الخامة') }}</span>
+                <input [(ngModel)]="productForm.material" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Material', 'الخامة')" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Origin', 'بلد المنشأ') }}</span>
+                <input [(ngModel)]="productForm.origin" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Origin', 'بلد المنشأ')" />
+            </label>
+
+            <label class="flex items-center gap-2 text-sm text-slate-700">
+                <input type="checkbox" [(ngModel)]="productForm.isFeatured" />
+                {{ t('Featured product', 'منتج مميز') }}
+            </label>
+
+            <label class="flex items-center gap-2 text-sm text-slate-700">
+                <input type="checkbox" [(ngModel)]="productForm.isActive" />
+                {{ t('Active product', 'منتج نشط') }}
+            </label>
+        </div>
+
+        <div class="flex gap-3 border-t border-slate-200 px-6 py-4">
+            <button type="button" (click)="closeProductModal()"
+                class="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                t('Cancel', 'إلغاء') }}</button>
+            <button type="button" (click)="saveProduct()"
+                class="flex-1 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">{{
+                t('Save', 'حفظ') }}</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showCouponModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8">
+    <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-xl"
+        [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h3 class="text-lg font-bold text-slate-900">{{ isEditingCoupon ? t('Edit coupon', 'تعديل كوبون') :
+                t('Create coupon', 'إنشاء كوبون') }}</h3>
+        </div>
+
+        <div class="grid gap-4 px-6 py-4 md:grid-cols-2">
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Coupon code', 'كود الكوبون') }}</span>
+                <input [(ngModel)]="couponForm.code" class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Coupon code', 'كود الكوبون')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Discount type', 'نوع الخصم') }}</span>
+                <select [(ngModel)]="couponForm.discountType"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                    <option *ngFor="let type of couponDiscountTypes" [ngValue]="type">{{
+                        type === 'Percentage' ? t('Percentage', 'نسبة') : t('Fixed amount', 'قيمة ثابتة') }}</option>
+                </select>
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Discount value', 'قيمة الخصم') }}</span>
+                <input [(ngModel)]="couponForm.discountValue" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Discount value', 'قيمة الخصم')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Minimum order amount', 'الحد الأدنى للطلب') }}</span>
+                <input [(ngModel)]="couponForm.minOrderAmount" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Minimum order amount', 'الحد الأدنى للطلب')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Max discount amount', 'الحد الأقصى للخصم') }}</span>
+                <input [(ngModel)]="couponForm.maxDiscountAmount" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Max discount amount', 'الحد الأقصى للخصم')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Usage limit', 'حد الاستخدام') }}</span>
+                <input [(ngModel)]="couponForm.usageLimit" type="number"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Usage limit (0 = unlimited)', 'حد الاستخدام (0 = غير محدود)')" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Start date', 'تاريخ البداية') }}</span>
+                <input [(ngModel)]="couponForm.startsAt" type="datetime-local"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Expiry date', 'تاريخ الانتهاء') }}</span>
+                <input [(ngModel)]="couponForm.expiresAt" type="datetime-local"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+            </label>
+
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Description (EN)', 'الوصف (إنجليزي)') }}</span>
+                <textarea [(ngModel)]="couponForm.descriptionEn" rows="2"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Description (EN)', 'الوصف (إنجليزي)')"></textarea>
+            </label>
+            <label class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Description (AR)', 'الوصف (عربي)') }}</span>
+                <textarea [(ngModel)]="couponForm.descriptionAr" rows="2"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Description (AR)', 'الوصف (عربي)')"></textarea>
+            </label>
+
+            <label class="md:col-span-2 flex items-center gap-2 text-sm text-slate-700">
+                <input type="checkbox" [(ngModel)]="couponForm.isActive" />
+                {{ t('Active coupon', 'كوبون نشط') }}
+            </label>
+        </div>
+
+        <div class="flex gap-3 border-t border-slate-200 px-6 py-4">
+            <button type="button" (click)="closeCouponModal()"
+                class="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                t('Cancel', 'إلغاء') }}</button>
+            <button type="button" (click)="saveCoupon()"
+                class="flex-1 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">{{
+                t('Save', 'حفظ') }}</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showOfferModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white shadow-xl" [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h3 class="text-lg font-bold text-slate-900">{{ t('Apply product offer', 'تطبيق عرض على منتج') }}</h3>
+        </div>
+
+        <div class="space-y-4 px-6 py-4">
+            <div class="flex rounded-lg border border-slate-300 bg-slate-50 p-1 text-xs font-semibold text-slate-700">
+                <button type="button" (click)="offerMode = 'percentage'"
+                    [class]="offerMode === 'percentage' ? 'flex-1 rounded-md bg-white px-3 py-2 text-blue-700' : 'flex-1 rounded-md px-3 py-2'">{{
+                    t('By percentage', 'بالنسبة') }}</button>
+                <button type="button" (click)="offerMode = 'price'"
+                    [class]="offerMode === 'price' ? 'flex-1 rounded-md bg-white px-3 py-2 text-blue-700' : 'flex-1 rounded-md px-3 py-2'">{{
+                    t('By final price', 'بالسعر النهائي') }}</button>
+            </div>
+
+            <label *ngIf="offerMode === 'percentage'" class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Discount percentage', 'نسبة الخصم') }}</span>
+                <input [(ngModel)]="offerForm.discountPercentage" type="number"
+                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Discount percentage (1-99)', 'نسبة الخصم (1-99)')" />
+            </label>
+
+            <label *ngIf="offerMode === 'price'" class="grid gap-1 text-sm font-medium text-slate-700">
+                <span>{{ t('Discounted final price', 'السعر النهائي بعد الخصم') }}</span>
+                <input [(ngModel)]="offerForm.discountedPrice" type="number"
+                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    [placeholder]="t('Discounted final price', 'السعر النهائي بعد الخصم')" />
+            </label>
+        </div>
+
+        <div class="flex gap-3 border-t border-slate-200 px-6 py-4">
+            <button type="button" (click)="closeOfferModal()"
+                class="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                t('Cancel', 'إلغاء') }}</button>
+            <button type="button" (click)="saveOffer()"
+                class="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">{{
+                t('Apply', 'تطبيق') }}</button>
+        </div>
+    </div>
+</div>

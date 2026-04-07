@@ -1,0 +1,91 @@
+<div class="wishlist-page page-shell min-h-screen py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="wishlist-shell bg-white/95 rounded-3xl border border-slate-200 shadow-sm overflow-hidden backdrop-blur">
+      <div class="bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500 text-white p-8 md:p-10">
+        <p class="text-sm uppercase tracking-[0.3em] opacity-80">{{ uiMessages.wishlist.heroKicker }}</p>
+        <h1 class="text-3xl md:text-4xl font-bold font-cairo mt-3">{{ uiMessages.wishlist.heroTitle }}</h1>
+        <p class="mt-4 max-w-2xl text-white/90 leading-relaxed">
+          {{ uiMessages.wishlist.heroSubtitle }}
+        </p>
+      </div>
+
+      <div class="p-8 md:p-10">
+        <div *ngIf="loading" class="mb-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
+          {{ uiMessages.wishlist.loading }}
+        </div>
+
+        <div *ngIf="errorMessage"
+          class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="wishlistItems.length > 0; else emptyState">
+          <div class="mb-6 flex items-center justify-between gap-3">
+            <p class="text-slate-600 font-cairo">{{ uiMessages.wishlist.itemsCountLabel }} {{ wishlistItems.length }}
+            </p>
+            <button type="button" (click)="clearWishlist()" [disabled]="isProcessing"
+              class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-rose-200 text-rose-600 font-bold hover:bg-rose-50 transition disabled:opacity-70 disabled:cursor-not-allowed">
+              {{ uiMessages.wishlist.clearWishlistButton }}
+            </button>
+          </div>
+
+          <ul
+            class="wishlist-items divide-y divide-slate-100 border border-slate-100 rounded-2xl overflow-hidden bg-white">
+            <li *ngFor="let item of wishlistItems"
+              class="p-5 flex flex-col md:flex-row md:items-center gap-4 hover:bg-slate-50 transition">
+              <img [src]="item.imageUrl" [alt]="item.productNameAr"
+                class="w-24 h-24 rounded-lg border border-slate-200 object-cover shrink-0">
+
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-slate-900 font-cairo">{{ item.productNameAr }}</h3>
+                <p class="text-sm text-slate-500 mt-1">{{ item.productNameEn }}</p>
+                <p class="text-xl font-bold text-slate-900 font-cairo mt-2">{{ item.unitPrice |
+                  currency:'EGP':'symbol-narrow':'1.0-0' }}</p>
+                <p class="text-xs mt-1" [class.text-emerald-600]="item.isInStock"
+                  [class.text-red-500]="!item.isInStock">
+                  {{ item.isInStock ? uiMessages.wishlist.inStock : uiMessages.wishlist.outOfStock }}
+                </p>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button type="button" (click)="moveToCart(item.productId)" [disabled]="isProcessing || !item.isInStock"
+                  class="px-4 py-2 rounded-lg bg-gradient-to-r from-sky-500 to-teal-500 text-white font-bold hover:from-sky-400 hover:to-teal-400 transition disabled:opacity-70 disabled:cursor-not-allowed">
+                  {{ uiMessages.wishlist.moveToCartButton }}
+                </button>
+                <button type="button" (click)="removeItem(item.productId)" [disabled]="isProcessing"
+                  class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition disabled:opacity-70 disabled:cursor-not-allowed">
+                  {{ uiMessages.wishlist.removeButton }}
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="wishlist-empty text-center py-12 px-8">
+          <div class="mx-auto w-20 h-20 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mb-5">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900 font-cairo">{{ uiMessages.wishlist.emptyTitle }}</h2>
+          <p class="text-slate-500 mt-3 max-w-xl mx-auto">
+            {{ uiMessages.wishlist.emptySubtitle }}
+          </p>
+          <div class="mt-8 flex items-center justify-center gap-3">
+            <a routerLink="/products"
+              class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 text-white font-bold hover:from-rose-400 hover:to-orange-400 transition shadow-md shadow-rose-400/30">
+              {{ uiMessages.wishlist.exploreProductsButton }}
+            </a>
+            <a routerLink="/"
+              class="inline-flex items-center justify-center px-5 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition">
+              {{ uiMessages.wishlist.backHomeButton }}
+            </a>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

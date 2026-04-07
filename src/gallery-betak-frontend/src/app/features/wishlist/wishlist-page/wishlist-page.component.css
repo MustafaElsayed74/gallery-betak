@@ -1,0 +1,51 @@
+:host {
+    display: block;
+}
+
+.wishlist-page {
+    isolation: isolate;
+}
+
+.wishlist-shell {
+    border-color: rgba(148, 163, 184, 0.28);
+    box-shadow: 0 22px 40px rgba(15, 23, 42, 0.09);
+}
+
+.wishlist-shell>div:first-child {
+    position: relative;
+    overflow: hidden;
+}
+
+.wishlist-shell>div:first-child::after {
+    content: '';
+    position: absolute;
+    inset: auto -10% -50% auto;
+    width: 280px;
+    height: 280px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 65%);
+    pointer-events: none;
+}
+
+.wishlist-items li {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.wishlist-items li:hover {
+    transform: translateY(-1px);
+}
+
+.wishlist-items button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wishlist-items button:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.wishlist-empty {
+    background:
+        radial-gradient(300px circle at 10% 14%, rgba(244, 63, 94, 0.08), transparent 60%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.92));
+    border-top: 1px dashed rgba(148, 163, 184, 0.25);
+}

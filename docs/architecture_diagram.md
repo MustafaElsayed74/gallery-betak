@@ -1,4 +1,4 @@
-# ElMasria E-Commerce — System Architecture
+# GalleryBetak E-Commerce — System Architecture
 
 ## Onion Architecture Diagram
 
@@ -18,7 +18,7 @@
 ╔════════════════════════════════════╪═════════════════════════════════════════╗
 ║  LAYER 4 — API (Presentation)     │                                          ║
 ║  ┌─────────────────────────────────┴──────────────────────────────────────┐  ║
-║  │  ElMasria.API                                                          │  ║
+║  │  GalleryBetak.API                                                          │  ║
 ║  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │  ║
 ║  │  │ Controllers  │ │ Middleware   │ │ Filters      │ │ Swagger      │  │  ║
 ║  │  │ /api/v1/*    │ │ • Exception  │ │ • Validation │ │ • JWT Auth   │  │  ║
@@ -33,7 +33,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║  LAYER 3 — APPLICATION (Use Cases / Business Orchestration)                  ║
 ║  ┌────────────────────────────────────────────────────────────────────────┐  ║
-║  │  ElMasria.Application                                                  │  ║
+║  │  GalleryBetak.Application                                                  │  ║
 ║  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │  ║
 ║  │  │ Services     │ │ DTOs         │ │ Validators   │ │ Mappings     │  │  ║
 ║  │  │ • Product    │ │ • Request    │ │ • Fluent     │ │ • AutoMapper │  │  ║
@@ -53,7 +53,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║  LAYER 1 — DOMAIN (Enterprise Business Rules)        ⚠ ZERO DEPENDENCIES   ║
 ║  ┌────────────────────────────────────────────────────────────────────────┐  ║
-║  │  ElMasria.Domain                                                       │  ║
+║  │  GalleryBetak.Domain                                                       │  ║
 ║  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │  ║
 ║  │  │ Entities     │ │ Enums        │ │ Events       │ │ Exceptions   │  │  ║
 ║  │  │ • Product    │ │ • OrderStatus│ │ • OrderPlaced│ │ • DomainEx   │  │  ║
@@ -74,7 +74,7 @@
 ╔══════════════════════════════════╪═══════════════════════════════════════════╗
 ║  LAYER 2 — INFRASTRUCTURE       │    (External Concerns)                     ║
 ║  ┌───────────────────────────────┴────────────────────────────────────────┐  ║
-║  │  ElMasria.Infrastructure                                               │  ║
+║  │  GalleryBetak.Infrastructure                                               │  ║
 ║  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │  ║
 ║  │  │ Data         │ │ Identity     │ │ Services     │ │ Caching      │  │  ║
 ║  │  │ • DbContext  │ │ • JWT Token  │ │ • Paymob     │ │ • Redis      │  │  ║
@@ -153,10 +153,10 @@ Client Request
 ## Solution Structure
 
 ```
-ElMasria.Ecommerce.sln
+GalleryBetak.Ecommerce.sln
 │
 ├── src/
-│   ├── ElMasria.Domain/                          ← Layer 1 (innermost)
+│   ├── GalleryBetak.Domain/                          ← Layer 1 (innermost)
 │   │   ├── Entities/
 │   │   ├── Enums/
 │   │   ├── Events/
@@ -166,18 +166,18 @@ ElMasria.Ecommerce.sln
 │   │   │   ├── IUnitOfWork.cs
 │   │   │   └── Repositories/
 │   │   ├── Common/
-│   │   └── ElMasria.Domain.csproj               ← NO NuGet packages
+│   │   └── GalleryBetak.Domain.csproj               ← NO NuGet packages
 │   │
-│   ├── ElMasria.Application/                     ← Layer 3
+│   ├── GalleryBetak.Application/                     ← Layer 3
 │   │   ├── DTOs/
 │   │   ├── Services/
 │   │   ├── Interfaces/
 │   │   ├── Validators/
 │   │   ├── Mappings/
 │   │   ├── Common/
-│   │   └── ElMasria.Application.csproj          ← References: Domain only
+│   │   └── GalleryBetak.Application.csproj          ← References: Domain only
 │   │
-│   ├── ElMasria.Infrastructure/                  ← Layer 2
+│   ├── GalleryBetak.Infrastructure/                  ← Layer 2
 │   │   ├── Data/
 │   │   │   ├── AppDbContext.cs
 │   │   │   ├── Configurations/
@@ -186,19 +186,19 @@ ElMasria.Ecommerce.sln
 │   │   ├── Identity/
 │   │   ├── Services/
 │   │   ├── Caching/
-│   │   └── ElMasria.Infrastructure.csproj       ← References: Domain + Application
+│   │   └── GalleryBetak.Infrastructure.csproj       ← References: Domain + Application
 │   │
-│   └── ElMasria.API/                             ← Layer 4 (outermost)
+│   └── GalleryBetak.API/                             ← Layer 4 (outermost)
 │       ├── Controllers/
 │       ├── Middleware/
 │       ├── Extensions/
 │       ├── Filters/
 │       ├── Program.cs
-│       └── ElMasria.API.csproj                  ← References: Application only
+│       └── GalleryBetak.API.csproj                  ← References: Application only
 │
 ├── tests/
-│   ├── ElMasria.UnitTests/
-│   └── ElMasria.IntegrationTests/
+│   ├── GalleryBetak.UnitTests/
+│   └── GalleryBetak.IntegrationTests/
 │
 ├── docs/
 ├── database/
@@ -210,10 +210,10 @@ ElMasria.Ecommerce.sln
 
 ## NuGet Package Map
 
-### ElMasria.Domain — ZERO packages
+### GalleryBetak.Domain — ZERO packages
 No external dependencies whatsoever. Pure C# only.
 
-### ElMasria.Application
+### GalleryBetak.Application
 | Package | Version | Purpose |
 |---------|---------|---------|
 | AutoMapper | 13.0.1 | DTO ↔ Entity mapping |
@@ -222,7 +222,7 @@ No external dependencies whatsoever. Pure C# only.
 | FluentValidation.AspNetCore | 11.3.0 | ASP.NET integration |
 | Microsoft.Extensions.Caching.Abstractions | 8.0.0 | Cache interface |
 
-### ElMasria.Infrastructure
+### GalleryBetak.Infrastructure
 | Package | Version | Purpose |
 |---------|---------|---------|
 | Microsoft.EntityFrameworkCore | 8.0.10 | ORM |
@@ -236,7 +236,7 @@ No external dependencies whatsoever. Pure C# only.
 | Serilog.Sinks.File | 5.0.0 | File logging |
 | Serilog.Sinks.Seq | 7.0.1 | Seq log aggregation |
 
-### ElMasria.API
+### GalleryBetak.API
 | Package | Version | Purpose |
 |---------|---------|---------|
 | Swashbuckle.AspNetCore | 6.8.1 | Swagger/OpenAPI |
@@ -244,7 +244,7 @@ No external dependencies whatsoever. Pure C# only.
 | AspNetCoreRateLimit | 5.0.0 | Rate limiting |
 | Microsoft.AspNetCore.Authentication.JwtBearer | 8.0.10 | JWT middleware |
 
-### ElMasria.UnitTests
+### GalleryBetak.UnitTests
 | Package | Version | Purpose |
 |---------|---------|---------|
 | xunit | 2.9.2 | Test runner |
@@ -253,7 +253,7 @@ No external dependencies whatsoever. Pure C# only.
 | Bogus | 35.6.1 | Fake data (Arabic support) |
 | coverlet.collector | 6.0.2 | Code coverage |
 
-### ElMasria.IntegrationTests
+### GalleryBetak.IntegrationTests
 | Package | Version | Purpose |
 |---------|---------|---------|
 | Microsoft.AspNetCore.Mvc.Testing | 8.0.10 | WebApplicationFactory |
@@ -352,3 +352,4 @@ No external dependencies whatsoever. Pure C# only.
 | Dashboard Stats | < 1s | 3 queries (cached) |
 
 Concurrent user target: 500 (peak Egyptian sales events)
+

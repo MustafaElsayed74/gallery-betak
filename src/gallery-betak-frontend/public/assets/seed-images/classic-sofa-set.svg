@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Classic sofa set">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#243b55"/>
+      <stop offset="100%" stop-color="#141e30"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="960" cy="170" r="110" fill="#f4c95d" opacity="0.25"/>
+  <rect x="160" y="310" width="880" height="220" rx="42" fill="#d8b28a"/>
+  <rect x="230" y="240" width="740" height="140" rx="40" fill="#c79a74"/>
+  <rect x="240" y="540" width="70" height="150" rx="20" fill="#8d5a3b"/>
+  <rect x="890" y="540" width="70" height="150" rx="20" fill="#8d5a3b"/>
+  <rect x="330" y="540" width="70" height="150" rx="20" fill="#8d5a3b"/>
+  <rect x="760" y="540" width="70" height="150" rx="20" fill="#8d5a3b"/>
+  <text x="80" y="120" fill="#ffffff" font-size="72" font-family="Arial, sans-serif" font-weight="700">Classic Sofa Set</text>
+  <text x="82" y="180" fill="#f4c95d" font-size="34" font-family="Arial, sans-serif">Premium seating for modern living</text>
+</svg>

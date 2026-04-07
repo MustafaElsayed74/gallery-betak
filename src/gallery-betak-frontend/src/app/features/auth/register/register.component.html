@@ -1,0 +1,92 @@
+<div class="auth-page register-page page-shell min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="flex justify-center mb-6">
+      <div
+        class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/40">
+        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+        </svg>
+      </div>
+    </div>
+    <h2 class="text-center text-3xl font-extrabold text-slate-900 font-cairo">
+      {{ uiMessages.auth.registerTitle }}
+    </h2>
+    <p class="mt-2 text-center text-sm text-slate-600 font-cairo">
+      {{ uiMessages.auth.registerHasAccount }}
+      <a routerLink="/auth/login"
+        class="font-medium text-cyan-700 hover:text-cyan-600 transition-colors cursor-pointer">
+        {{ uiMessages.auth.registerLoginNow }}
+      </a>
+    </p>
+    <p class="mt-3 text-center text-xs uppercase tracking-[0.2em] text-slate-400">
+      Create your account to sync orders, carts, and wishlist items
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+    <div
+      class="auth-card bg-white/95 py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-slate-200 font-cairo backdrop-blur">
+      <form class="space-y-6" (ngSubmit)="onSubmit()">
+        <div *ngIf="errorMessage" class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {{ errorMessage }}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">{{ uiMessages.auth.firstNameLabel }}</label>
+            <input type="text" autocomplete="given-name" required [(ngModel)]="registerData.firstName" name="firstName"
+              class="w-full px-4 py-3 border border-slate-200 rounded-lg shadow-sm focus:ring-cyan-300 focus:border-cyan-300 outline-none transition">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">{{ uiMessages.auth.lastNameLabel }}</label>
+            <input type="text" autocomplete="family-name" required [(ngModel)]="registerData.lastName" name="lastName"
+              class="w-full px-4 py-3 border border-slate-200 rounded-lg shadow-sm focus:ring-cyan-300 focus:border-cyan-300 outline-none transition">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">{{ uiMessages.auth.egyptPhoneLabel }}</label>
+            <input dir="ltr" type="tel" [placeholder]="uiMessages.auth.phonePlaceholder" inputmode="tel"
+              [(ngModel)]="registerData.phone" name="phone"
+              class="w-full px-4 py-3 border border-slate-200 rounded-lg shadow-sm focus:ring-cyan-300 focus:border-cyan-300 outline-none transition text-left font-sans">
+            <p class="mt-2 text-xs text-slate-500">{{ uiMessages.auth.phoneValidationHint }}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">{{ uiMessages.auth.emailLabel }}</label>
+            <input dir="ltr" type="email" autocomplete="email" required [(ngModel)]="registerData.email" name="email"
+              class="w-full px-4 py-3 border border-slate-200 rounded-lg shadow-sm focus:ring-cyan-300 focus:border-cyan-300 outline-none transition text-left font-sans text-sm">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">{{ uiMessages.auth.passwordLabel }}</label>
+            <input dir="ltr" type="password" required [(ngModel)]="registerData.password" name="password"
+              class="w-full px-4 py-3 border border-slate-200 rounded-lg shadow-sm focus:ring-cyan-300 focus:border-cyan-300 outline-none transition text-left font-sans">
+            <p class="mt-2 text-xs text-slate-500">{{ uiMessages.auth.passwordPolicyHint }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">{{ uiMessages.auth.confirmPasswordLabel
+              }}</label>
+            <input dir="ltr" type="password" required [(ngModel)]="registerData.confirmPassword" name="confirmPassword"
+              class="w-full px-4 py-3 border border-slate-200 rounded-lg shadow-sm focus:ring-cyan-300 focus:border-cyan-300 outline-none transition text-left font-sans">
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" [disabled]="isSubmitting"
+            class="w-full flex items-center justify-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-md hover:shadow-lg text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition-all font-cairo mt-6 disabled:opacity-70 disabled:cursor-not-allowed">
+            <svg *ngIf="isSubmitting" class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            {{ isSubmitting ? uiMessages.auth.registerSubmitting : uiMessages.auth.registerSubmit }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

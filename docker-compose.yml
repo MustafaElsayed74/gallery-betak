@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: gallery-betak-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Pa$$w0rd2026!
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: [ "CMD", "/opt/mssql-tools/bin/sqlcmd", "-U", "sa", "-P", "Pa$$w0rd2026!", "-Q", "SELECT 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:alpine
+    container_name: gallery-betak-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  api:
+    build:
+      context: .
+      dockerfile: ./src/GalleryBetak.API/Dockerfile
+    container_name: gallery-betak-api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development # Using Development so EF migrations run on startup easily or Swagger is exposed
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=GalleryBetakDb;User Id=sa;Password=Pa$$w0rd2026!;TrustServerCertificate=true;MultipleActiveResultSets=true
+      - RedisSettings__ConnectionString=redis:6379
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./src/gallery-betak-frontend
+      dockerfile: Dockerfile
+    container_name: gallery-betak-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
+volumes:
+  sqlserver_data:
+  redis_data:
+

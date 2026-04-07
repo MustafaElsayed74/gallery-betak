@@ -1,0 +1,16 @@
+.session-banner {
+    animation: sessionBannerEnter 220ms ease-out both;
+    box-shadow: inset 0 -1px 0 rgba(245, 158, 11, 0.2), 0 6px 20px rgba(15, 23, 42, 0.06);
+}
+
+@keyframes sessionBannerEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

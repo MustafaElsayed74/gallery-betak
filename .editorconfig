@@ -1,4 +1,4 @@
-# ElMasria E-Commerce .editorconfig
+# GalleryBetak E-Commerce .editorconfig
 # Enforce C# coding conventions across the solution
 
 root = true
@@ -84,3 +84,4 @@ trim_trailing_whitespace = false
 
 [*.sql]
 indent_size = 4
+

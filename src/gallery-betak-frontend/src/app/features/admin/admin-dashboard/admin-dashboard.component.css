@@ -1,0 +1,212 @@
+:host {
+    --admin-ink: #0f172a;
+    --admin-subtle: #5b6b85;
+    --admin-line: rgba(148, 163, 184, 0.35);
+    --admin-glass: rgba(255, 255, 255, 0.78);
+    --admin-blue: #2563eb;
+    --admin-cyan: #0ea5e9;
+    --admin-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+
+    display: block;
+    color: var(--admin-ink);
+}
+
+.admin-shell {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(1100px circle at 100% -10%, rgba(14, 165, 233, 0.25), transparent 40%),
+        radial-gradient(900px circle at -10% 15%, rgba(245, 158, 11, 0.18), transparent 35%),
+        linear-gradient(180deg, #f7f9fc 0%, #eef4ff 55%, #f9fbff 100%);
+}
+
+.admin-shell::before {
+    content: '';
+    position: absolute;
+    inset: -25%;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 30% 40%, rgba(37, 99, 235, 0.08), transparent 30%),
+        radial-gradient(circle at 70% 65%, rgba(14, 165, 233, 0.08), transparent 32%);
+    animation: adminFloat 20s ease-in-out infinite;
+}
+
+.admin-stage {
+    position: relative;
+    z-index: 1;
+}
+
+.admin-shell h1,
+.admin-shell h2,
+.admin-shell h3 {
+    letter-spacing: -0.02em;
+}
+
+.admin-hero {
+    border-color: var(--admin-line) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(248, 252, 255, 0.75)) !important;
+    backdrop-filter: blur(14px);
+    box-shadow: var(--admin-shadow);
+    animation: adminRise 420ms ease both;
+}
+
+.admin-tabs {
+    padding: 0.35rem;
+    border-radius: 1rem;
+    background: rgba(241, 245, 249, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.admin-tabs button {
+    border-radius: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.admin-tabs button:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.admin-tabs button.bg-blue-600 {
+    background: linear-gradient(135deg, var(--admin-cyan), var(--admin-blue)) !important;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+}
+
+.module-panel,
+.module-overview article {
+    border-color: var(--admin-line) !important;
+    background: var(--admin-glass) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--admin-shadow);
+    animation: adminRise 460ms ease both;
+}
+
+.module-overview .rounded-2xl.border {
+    border-color: var(--admin-line) !important;
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.9), rgba(241, 247, 255, 0.7)) !important;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.module-overview .rounded-2xl.border:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 34px rgba(15, 23, 42, 0.1);
+}
+
+.admin-shell table {
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+.admin-shell thead {
+    background: linear-gradient(180deg, rgba(247, 250, 255, 1), rgba(240, 246, 255, 0.9)) !important;
+}
+
+.admin-shell tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.admin-shell tbody tr:hover {
+    background: rgba(236, 246, 255, 0.55);
+}
+
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea {
+    border-color: rgba(148, 163, 184, 0.45) !important;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-shell input:focus,
+.admin-shell select:focus,
+.admin-shell textarea:focus {
+    border-color: rgba(37, 99, 235, 0.8) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    outline: none;
+}
+
+.admin-shell textarea {
+    resize: vertical;
+}
+
+.admin-shell button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.admin-shell button:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.admin-shell button.bg-slate-900 {
+    background: linear-gradient(135deg, #0f172a, #1e293b) !important;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.22);
+}
+
+.admin-shell button.bg-blue-600 {
+    background: linear-gradient(135deg, #0284c7, #2563eb) !important;
+}
+
+.admin-shell .border-red-200.bg-red-50 {
+    border-color: rgba(244, 63, 94, 0.35) !important;
+    background: linear-gradient(145deg, rgba(255, 241, 242, 0.92), rgba(255, 228, 230, 0.85)) !important;
+}
+
+.admin-shell .border-emerald-200.bg-emerald-50 {
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    background: linear-gradient(145deg, rgba(236, 253, 245, 0.94), rgba(209, 250, 229, 0.88)) !important;
+}
+
+div.fixed.inset-0.z-50 {
+    backdrop-filter: blur(5px);
+}
+
+div.fixed.inset-0.z-50>div.bg-white {
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(244, 249, 255, 0.94)) !important;
+    box-shadow: 0 26px 50px rgba(15, 23, 42, 0.2);
+}
+
+@keyframes adminRise {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes adminFloat {
+
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate3d(2%, -1%, 0) scale(1.03);
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-shell {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .admin-hero {
+        padding: 1rem;
+    }
+
+    .admin-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+}

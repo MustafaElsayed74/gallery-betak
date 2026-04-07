@@ -1,0 +1,254 @@
+<div class="account-page page-shell min-h-screen px-4 py-10">
+    <div class="mx-auto max-w-5xl">
+        <ng-container *ngIf="user$ | async as user; else notSignedIn">
+            <div class="account-shell rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-sm backdrop-blur"
+                [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.25em] text-slate-400">{{ t('Profile Settings', 'إعدادات
+                            الملف الشخصي') }}</p>
+                        <h1 class="mt-2 text-3xl font-bold text-slate-900">{{ user.firstName }} {{ user.lastName }}</h1>
+                        <p class="mt-1 text-slate-500">{{ t('Manage your profile, password, and addresses.', 'قم بإدارة
+                            بياناتك الشخصية وكلمة المرور والعناوين.') }}</p>
+                    </div>
+                    <button type="button" (click)="logout()"
+                        class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-black">Log
+                        {{ t('out', 'الخروج') }}</button>
+                </div>
+
+                <div class="mt-6 grid gap-2 rounded-xl bg-slate-100 p-2 sm:grid-cols-3">
+                    <button type="button" (click)="setActiveTab('profile')"
+                        class="rounded-lg px-3 py-2 text-sm font-semibold transition"
+                        [class.bg-white]="activeTab === 'profile'" [class.text-slate-900]="activeTab === 'profile'"
+                        [class.text-slate-600]="activeTab !== 'profile'">
+                        {{ t('Personal Info', 'البيانات الشخصية') }}
+                    </button>
+                    <button type="button" (click)="setActiveTab('password')"
+                        class="rounded-lg px-3 py-2 text-sm font-semibold transition"
+                        [class.bg-white]="activeTab === 'password'" [class.text-slate-900]="activeTab === 'password'"
+                        [class.text-slate-600]="activeTab !== 'password'">
+                        {{ t('Password', 'كلمة المرور') }}
+                    </button>
+                    <button type="button" (click)="setActiveTab('addresses')"
+                        class="rounded-lg px-3 py-2 text-sm font-semibold transition"
+                        [class.bg-white]="activeTab === 'addresses'" [class.text-slate-900]="activeTab === 'addresses'"
+                        [class.text-slate-600]="activeTab !== 'addresses'">
+                        {{ t('Addresses', 'العناوين') }}
+                    </button>
+                </div>
+
+                <div *ngIf="errorMessage"
+                    class="mt-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                    {{ errorMessage }}
+                </div>
+                <div *ngIf="profileMessage"
+                    class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                    {{ profileMessage }}
+                </div>
+                <div *ngIf="passwordMessage"
+                    class="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                    {{ passwordMessage }}
+                </div>
+                <div *ngIf="addressMessage"
+                    class="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                    {{ addressMessage }}
+                </div>
+
+                <div *ngIf="loading" class="mt-8 text-sm text-slate-500">{{ t('Loading your settings...', 'جاري تحميل
+                    إعداداتك...') }}</div>
+
+                <div *ngIf="!loading && activeTab === 'profile'" class="mt-8">
+                    <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <h2 class="text-lg font-bold text-slate-900">{{ t('Personal Information', 'البيانات الشخصية') }}
+                        </h2>
+                        <p class="mt-1 text-sm text-slate-500">{{ t('Update your name, phone, and email address.', 'قم
+                            بتحديث الاسم ورقم الهاتف والبريد الإلكتروني.') }}</p>
+
+                        <div class="mt-4 grid gap-3">
+                            <input [(ngModel)]="profileForm.firstName"
+                                class="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                                [placeholder]="t('First name', 'الاسم الأول')" />
+                            <input [(ngModel)]="profileForm.lastName"
+                                class="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                                [placeholder]="t('Last name', 'الاسم الأخير')" />
+                            <input [(ngModel)]="profileForm.email" type="email"
+                                class="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                                [placeholder]="t('Email', 'البريد الإلكتروني')" />
+                            <input [(ngModel)]="profileForm.phoneNumber"
+                                class="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                                [placeholder]="t('Phone number', 'رقم الهاتف')" />
+                        </div>
+
+                        <button type="button" (click)="saveProfile()" [disabled]="savingProfile"
+                            class="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50">
+                            {{ savingProfile ? t('Saving...', 'جاري الحفظ...') : t('Save profile', 'حفظ الملف الشخصي')
+                            }}
+                        </button>
+                    </section>
+                </div>
+
+                <div *ngIf="!loading && activeTab === 'password'" class="mt-8">
+                    <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <h2 class="text-lg font-bold text-slate-900">{{ t('Change Password', 'تغيير كلمة المرور') }}
+                        </h2>
+                        <p class="mt-1 text-sm text-slate-500">{{ t('Keep your account secure with a strong password.',
+                            'حافظ على أمان حسابك باستخدام كلمة مرور قوية.') }}</p>
+
+                        <div class="mt-4 grid gap-3">
+                            <input [(ngModel)]="passwordForm.currentPassword" type="password"
+                                class="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                                [placeholder]="t('Current password', 'كلمة المرور الحالية')" />
+                            <input [(ngModel)]="passwordForm.newPassword" type="password"
+                                class="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                                [placeholder]="t('New password', 'كلمة المرور الجديدة')" />
+                            <input [(ngModel)]="passwordForm.confirmNewPassword" type="password"
+                                class="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                                [placeholder]="t('Confirm new password', 'تأكيد كلمة المرور الجديدة')" />
+                        </div>
+
+                        <button type="button" (click)="changePassword()" [disabled]="changingPassword"
+                            class="mt-4 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50">
+                            {{ changingPassword ? t('Updating...', 'جاري التحديث...') : t('Change password', 'تغيير كلمة
+                            المرور') }}
+                        </button>
+                    </section>
+                </div>
+
+                <section *ngIf="!loading && activeTab === 'addresses'"
+                    class="mt-8 rounded-2xl border border-slate-200 bg-white p-5">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">{{ t('Addresses', 'العناوين') }}</h2>
+                            <p class="mt-1 text-sm text-slate-500">{{ t('Add or update addresses and choose a priority
+                                address.', 'أضف أو عدل العناوين واختر عنواناً ذا أولوية.') }}</p>
+                        </div>
+                        <button type="button" (click)="openAddAddressModal()"
+                            class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700">
+                            {{ t('Add address', 'إضافة عنوان') }}
+                        </button>
+                    </div>
+
+                    <div *ngIf="addresses.length === 0"
+                        class="mt-4 rounded-xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
+                        {{ t('No saved addresses yet.', 'لا توجد عناوين محفوظة بعد.') }}
+                    </div>
+
+                    <div class="mt-4 grid gap-4 md:grid-cols-2" *ngIf="addresses.length > 0">
+                        <article *ngFor="let address of addresses"
+                            class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <p class="text-base font-semibold text-slate-900">{{ address.label }}</p>
+                                    <p class="text-sm text-slate-500">{{ address.recipientName }} · {{ address.phone }}
+                                    </p>
+                                </div>
+                                <span *ngIf="address.isDefault"
+                                    class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">{{
+                                    t('Priority', 'أولوية') }}</span>
+                            </div>
+
+                            <p class="mt-3 text-sm text-slate-700">
+                                {{ address.streetAddress }}, {{ address.city }}, {{ address.governorate }}
+                                <span *ngIf="address.district">, {{ address.district }}</span>
+                            </p>
+
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <button type="button" (click)="openEditAddressModal(address)"
+                                    class="rounded-lg border border-slate-300 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100">{{
+                                    t('Edit', 'تعديل') }}</button>
+                                <button type="button" *ngIf="!address.isDefault" (click)="makeAddressPriority(address)"
+                                    class="rounded-lg border border-emerald-300 px-3 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-50">{{
+                                    t('Make priority', 'اجعله أولوية') }}</button>
+                                <button type="button" (click)="deleteAddress(address)"
+                                    class="rounded-lg border border-rose-300 px-3 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50">{{
+                                    t('Delete', 'حذف') }}</button>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a routerLink="/products"
+                        class="rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">{{
+                        t('Continue shopping', 'متابعة التسوق') }}</a>
+                    <a routerLink="/wishlist"
+                        class="rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">{{
+                        t('Wishlist', 'المفضلة') }}</a>
+                    <a *ngIf="isAdmin(user.roles)" routerLink="/admin"
+                        class="rounded-xl bg-gradient-to-r from-sky-500 to-teal-500 px-4 py-3 text-sm font-semibold text-white transition hover:from-sky-400 hover:to-teal-400">{{
+                        t('Open admin dashboard', 'فتح لوحة تحكم المشرف') }}</a>
+                </div>
+            </div>
+
+            <div *ngIf="showAddressModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+                <div class="w-full max-w-2xl rounded-2xl bg-white shadow-xl" [attr.dir]="isArabic ? 'rtl' : 'ltr'">
+                    <div class="border-b border-slate-200 px-6 py-4">
+                        <h3 class="text-lg font-bold text-slate-900">{{ editingAddressId ? t('Edit address', 'تعديل
+                            العنوان') : t('Add address', 'إضافة عنوان') }}</h3>
+                    </div>
+
+                    <div class="grid gap-3 px-6 py-4 md:grid-cols-2">
+                        <input [(ngModel)]="addressForm.label"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('Label (Home, Work...)', 'اسم العنوان (المنزل، العمل...)')" />
+                        <input [(ngModel)]="addressForm.recipientName"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('Recipient name', 'اسم المستلم')" />
+                        <input [(ngModel)]="addressForm.phone"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('Phone', 'رقم الهاتف')" />
+                        <input [(ngModel)]="addressForm.governorate"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('Governorate', 'المحافظة')" />
+                        <input [(ngModel)]="addressForm.city"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('City', 'المدينة')" />
+                        <input [(ngModel)]="addressForm.district"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('District (optional)', 'الحي (اختياري)')" />
+                        <input [(ngModel)]="addressForm.streetAddress"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm md:col-span-2"
+                            [placeholder]="t('Street address', 'العنوان التفصيلي')" />
+                        <input [(ngModel)]="addressForm.buildingNo"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('Building no. (optional)', 'رقم المبنى (اختياري)')" />
+                        <input [(ngModel)]="addressForm.apartmentNo"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('Apartment no. (optional)', 'رقم الشقة (اختياري)')" />
+                        <input [(ngModel)]="addressForm.postalCode"
+                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                            [placeholder]="t('Postal code (optional)', 'الرمز البريدي (اختياري)')" />
+
+                        <label class="flex items-center gap-2 text-sm text-slate-700 md:col-span-2">
+                            <input type="checkbox" [(ngModel)]="addressForm.isDefault" />
+                            {{ t('Make this my priority address', 'اجعل هذا عنواني ذو الأولوية') }}
+                        </label>
+                    </div>
+
+                    <div class="flex gap-3 border-t border-slate-200 px-6 py-4">
+                        <button type="button" (click)="closeAddressModal()"
+                            class="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">{{
+                            t('Cancel', 'إلغاء') }}</button>
+                        <button type="button" (click)="saveAddress()" [disabled]="savingAddress"
+                            class="flex-1 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50">
+                            {{ savingAddress ? t('Saving...', 'جاري الحفظ...') : t('Save address', 'حفظ العنوان') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-template #notSignedIn>
+            <div
+                class="account-guest rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
+                <h1 class="text-2xl font-bold text-slate-900">{{ t('You are not signed in', 'أنت غير مسجل الدخول') }}
+                </h1>
+                <p class="mt-2 text-slate-500">{{ t('Please log in to view and manage your account settings.', 'يرجى
+                    تسجيل الدخول لعرض وإدارة إعدادات حسابك.') }}</p>
+                <a routerLink="/auth/login"
+                    class="mt-6 inline-flex rounded-xl bg-gradient-to-r from-sky-500 to-teal-500 px-5 py-3 text-sm font-semibold text-white transition hover:from-sky-400 hover:to-teal-400">{{
+                    t('Go to login', 'الانتقال إلى تسجيل الدخول') }}</a>
+            </div>
+        </ng-template>
+    </div>
+</div>

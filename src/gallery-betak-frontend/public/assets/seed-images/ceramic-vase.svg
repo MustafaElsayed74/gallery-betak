@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Ceramic vase">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2b5876"/>
+      <stop offset="100%" stop-color="#4e4376"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <path d="M600 180 C680 230 720 310 720 400 C720 550 650 650 600 650 C550 650 480 550 480 400 C480 310 520 230 600 180Z" fill="#f5f1ea" opacity="0.95"/>
+  <rect x="545" y="150" width="110" height="70" rx="20" fill="#e1d4c0"/>
+  <circle cx="660" cy="300" r="22" fill="#d8c2a6" opacity="0.7"/>
+  <text x="80" y="120" fill="#ffffff" font-size="72" font-family="Arial, sans-serif" font-weight="700">Ceramic Vase</text>
+  <text x="82" y="180" fill="#e1d4c0" font-size="34" font-family="Arial, sans-serif">Minimal decor with a clean silhouette</text>
+</svg>

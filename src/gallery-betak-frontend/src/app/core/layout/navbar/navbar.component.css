@@ -1,0 +1,138 @@
+:host {
+    display: block;
+}
+
+.site-header {
+    position: sticky;
+    isolation: isolate;
+    overflow: visible;
+}
+
+.site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(480px circle at 12% -60%, rgba(14, 165, 233, 0.2), transparent 55%),
+        radial-gradient(360px circle at 92% -120%, rgba(20, 184, 166, 0.16), transparent 60%);
+    pointer-events: none;
+}
+
+.site-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(14, 165, 233, 0.5),
+            rgba(20, 184, 166, 0.5),
+            transparent);
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.desktop-nav a {
+    position: relative;
+    transform-origin: center;
+}
+
+.desktop-nav a::after {
+    content: '';
+    position: absolute;
+    left: 0.8rem;
+    right: 0.8rem;
+    bottom: 0.35rem;
+    height: 2px;
+    border-radius: 999px;
+    transform: scaleX(0);
+    transform-origin: center;
+    background: linear-gradient(90deg, #0ea5e9, #14b8a6);
+    transition: transform 0.22s ease;
+}
+
+.desktop-nav a:hover::after {
+    transform: scaleX(1);
+}
+
+.desktop-search input {
+    border-color: rgba(148, 163, 184, 0.35);
+}
+
+.desktop-search input:focus {
+    box-shadow:
+        0 0 0 3px rgba(14, 165, 233, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.header-actions>a,
+.header-actions>button {
+    transform: translateY(0);
+}
+
+.header-actions>a:hover,
+.header-actions>button:hover {
+    transform: translateY(-1px);
+}
+
+.user-menu-trigger {
+    min-width: 0;
+}
+
+.user-menu-dropdown {
+    animation: userMenuIn 160ms ease-out both;
+    transform-origin: top right;
+}
+
+@keyframes userMenuIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.mobile-nav-panel {
+    animation: navSlideDown 220ms ease-out both;
+}
+
+@keyframes navSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 1023px) {
+    .desktop-search {
+        margin-left: 0;
+        margin-right: 0;
+        max-width: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mobile-nav-panel {
+        animation: none;
+    }
+
+    .user-menu-dropdown {
+        animation: none;
+    }
+
+    .header-actions>a:hover,
+    .header-actions>button:hover {
+        transform: none;
+    }
+}

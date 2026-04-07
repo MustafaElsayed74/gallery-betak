@@ -1,5 +1,5 @@
 -- =====================================================================
--- ElMasria E-Commerce — Seed Data
+-- GalleryBetak E-Commerce — Seed Data
 -- Execute AFTER 01_DDL_Schema.sql
 -- =====================================================================
 
@@ -202,7 +202,7 @@ VALUES
 -- =====================================================================
 
 -- NOTE: SuperAdmin user is created through ASP.NET Identity in code:
---   Email: admin@elmasria.com
+--   Email: admin@gallery-betak.com
 --   Password: Admin@123456 (changed on first login)
 --   Role: SuperAdmin
 --   FirstName: مدير النظام
@@ -212,3 +212,4 @@ VALUES
 GO
 PRINT N'Seed data inserted successfully.';
 GO
+

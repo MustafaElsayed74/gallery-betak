@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Geometric wall art">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d4350"/>
+      <stop offset="100%" stop-color="#a43931"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect x="360" y="180" width="480" height="440" rx="34" fill="#f3efe8" opacity="0.92"/>
+  <path d="M470 510 L600 260 L730 510 Z" fill="#1d4350" opacity="0.85"/>
+  <circle cx="600" cy="400" r="72" fill="#a43931" opacity="0.82"/>
+  <rect x="520" y="320" width="160" height="26" rx="13" fill="#f2c14e"/>
+  <text x="80" y="120" fill="#ffffff" font-size="72" font-family="Arial, sans-serif" font-weight="700">Geometric Wall Art</text>
+  <text x="82" y="180" fill="#f2c14e" font-size="34" font-family="Arial, sans-serif">Bold shapes for a contemporary space</text>
+</svg>

@@ -1,4 +1,4 @@
-# ElMasria E-Commerce — Entity Relationships
+# GalleryBetak E-Commerce — Entity Relationships
 
 ## Entity Overview
 
@@ -215,3 +215,4 @@ WHERE CreatedAt BETWEEN @from AND @to
   AND IsDeleted = 0
 GROUP BY CAST(CreatedAt AS DATE);
 ```
+

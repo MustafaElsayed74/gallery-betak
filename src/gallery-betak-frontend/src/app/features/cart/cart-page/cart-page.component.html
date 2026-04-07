@@ -1,0 +1,156 @@
+<div class="cart-page page-shell py-12 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <h1 class="text-3xl font-extrabold font-cairo text-slate-900 mb-8">{{ uiMessages.cart.title }}</h1>
+
+    <div *ngIf="error$ | async as error"
+      class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+      {{ error }}
+    </div>
+
+    <div *ngIf="loading$ | async"
+      class="mb-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
+      {{ uiMessages.cart.loading }}
+    </div>
+
+    <ng-container *ngIf="cart$ | async as cart">
+      <div class="lg:grid lg:grid-cols-12 lg:gap-12" *ngIf="cart.items.length > 0; else emptyCart">
+
+        <div class="lg:col-span-8">
+          <div
+            class="cart-items-panel bg-white/95 rounded-2xl shadow-sm border border-slate-200 overflow-hidden backdrop-blur">
+            <ul class="divide-y divide-slate-100">
+              <li *ngFor="let item of cart.items"
+                class="p-6 flex flex-col sm:flex-row gap-6 hover:bg-slate-50 transition-colors group relative">
+                <button (click)="removeItem(item.productId)"
+                  class="absolute top-4 left-4 sm:hidden text-slate-400 hover:text-red-500">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <div class="flex-shrink-0 w-24 h-24 bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
+                  <img [src]="item.productImage" [alt]="item.productNameAr" class="w-full h-full object-cover">
+                </div>
+
+                <div class="flex flex-1 flex-col sm:flex-row justify-between">
+                  <div class="flex flex-col mb-4 sm:mb-0">
+                    <span class="text-xs text-slate-500 font-medium mb-1">{{ uiMessages.cart.productLabel }}</span>
+                    <a [routerLink]="item.productSlug ? ['/products', item.productSlug] : ['/products']"
+                      class="font-bold text-slate-900 font-cairo text-lg hover:text-cyan-700 truncate max-w-sm">{{
+                      item.productNameAr }}</a>
+                    <span class="text-xl font-bold font-cairo text-slate-900 mt-2">{{ item.unitPrice |
+                      currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
+                  </div>
+
+                  <div class="flex flex-col justify-between items-start sm:items-end">
+                    <button (click)="removeItem(item.productId)"
+                      class="hidden sm:flex items-center text-sm font-medium text-slate-400 hover:text-red-500 transition-colors">
+                      <svg class="h-4 w-4 mr-1 rtl:mr-0 rtl:ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      {{ uiMessages.cart.removeButton }}
+                    </button>
+
+                    <div
+                      class="flex items-center border border-slate-200 rounded-lg bg-white h-10 overflow-hidden sm:mt-0 mt-4">
+                      <button (click)="decreaseQuantity(item)"
+                        class="w-10 h-full flex items-center justify-center text-slate-600 hover:bg-slate-100 transition">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                        </svg>
+                      </button>
+                      <span class="w-10 text-center font-bold text-sm">{{ item.quantity }}</span>
+                      <button (click)="increaseQuantity(item)"
+                        class="w-10 h-full flex items-center justify-center text-slate-600 hover:bg-slate-100 transition">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 mt-8 lg:mt-0">
+          <div
+            class="cart-summary-panel bg-white/95 rounded-2xl shadow-sm border border-slate-200 p-6 sticky top-24 backdrop-blur">
+            <h2 class="text-xl font-bold font-cairo text-slate-900 mb-6 border-b border-slate-100 pb-4">{{
+              uiMessages.cart.orderSummaryTitle }}</h2>
+
+            <dl class="space-y-4 text-sm text-slate-600">
+              <div class="flex justify-between items-center">
+                <dt>{{ uiMessages.cart.subtotalLabel }} ({{ cart.items.length }} {{ uiMessages.cart.productsCountSuffix
+                  }})</dt>
+                <dd class="font-bold text-slate-900 text-base font-cairo">{{ getSubtotal(cart) |
+                  currency:'EGP':'symbol-narrow':'1.0-0' }}</dd>
+              </div>
+              <div class="flex justify-between items-center">
+                <dt>{{ uiMessages.cart.shippingEstimateLabel }}</dt>
+                <dd class="font-bold text-slate-900 text-base font-cairo">{{ shippingCost |
+                  currency:'EGP':'symbol-narrow':'1.0-0' }}</dd>
+              </div>
+
+              <div class="pt-4 border-t border-slate-100 mt-4">
+                <label class="block text-sm font-medium text-slate-700 mb-2 font-cairo">{{ uiMessages.cart.couponLabel
+                  }}</label>
+                <div class="flex space-x-2 rtl:space-x-reverse">
+                  <input type="text" [placeholder]="uiMessages.cart.couponPlaceholder"
+                    class="block w-full border-slate-200 rounded-lg focus:ring-cyan-300 focus:border-cyan-300 sm:text-sm px-4 py-2 border shadow-sm outline-none">
+                  <button type="button"
+                    class="bg-slate-900 hover:bg-black text-white font-medium px-4 py-2 rounded-lg transition-colors whitespace-nowrap">{{
+                    uiMessages.cart.applyCouponButton }}</button>
+                </div>
+              </div>
+
+              <div *ngIf="discount > 0" class="flex justify-between items-center text-red-500 font-medium">
+                <dt>{{ uiMessages.cart.activeDiscountLabel }}</dt>
+                <dd class="font-bold font-cairo">-{{ discount | currency:'EGP':'symbol-narrow':'1.0-0' }}</dd>
+              </div>
+            </dl>
+
+            <div class="flex justify-between items-center mt-6 py-6 border-t border-slate-100">
+              <dt class="text-lg font-bold text-slate-900 font-cairo">{{ uiMessages.cart.grandTotalLabel }}</dt>
+              <dd class="text-2xl font-extrabold text-cyan-700 font-cairo">{{ getTotal(cart) |
+                currency:'EGP':'symbol-narrow':'1.0-0' }}</dd>
+            </div>
+
+            <a routerLink="/checkout"
+              class="w-full flex justify-center items-center h-14 bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-400 hover:to-teal-400 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-sky-500/30 transition-all font-cairo text-lg">
+              {{ uiMessages.cart.proceedToCheckoutButton }}
+            </a>
+
+            <div class="mt-6 flex justify-center items-center gap-2">
+              <svg class="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span class="text-xs text-slate-500">{{ uiMessages.cart.securePaymentNote }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #emptyCart>
+      <div
+        class="cart-empty-state text-center py-24 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center">
+        <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+          <svg class="h-12 w-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <h2 class="text-xl font-bold font-cairo text-slate-900 mb-2">{{ uiMessages.cart.emptyTitle }}</h2>
+        <p class="text-slate-500 mb-8 font-cairo">{{ uiMessages.cart.emptySubtitle }}</p>
+        <a routerLink="/products"
+          class="bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-400 hover:to-teal-400 text-white font-bold py-3 px-8 rounded-lg shadow-md transition-all font-cairo">
+          {{ uiMessages.cart.startShoppingButton }}
+        </a>
+      </div>
+    </ng-template>
+  </div>
+</div>

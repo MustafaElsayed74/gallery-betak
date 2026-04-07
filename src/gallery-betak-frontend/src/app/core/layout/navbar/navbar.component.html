@@ -1,0 +1,242 @@
+<header
+  class="site-header sticky top-0 z-50 border-b border-white/70 bg-white/90 backdrop-blur-xl shadow-[0_8px_28px_rgba(15,23,42,0.08)]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20 gap-3">
+
+      <!-- Mobile Menu Button -->
+      <div class="flex items-center md:hidden">
+        <button (click)="toggleMenu()"
+          class="h-10 w-10 rounded-xl border border-gray-200 bg-white/80 text-gray-600 hover:border-sky-300 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-300/50">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path *ngIf="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+            <path *ngIf="isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Logo -->
+      <div class="flex-shrink-0 flex items-center cursor-pointer gap-3" routerLink="/">
+        <span
+          class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 text-white shadow-lg shadow-sky-400/35">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M5 3.5v8.7" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8.1 3.5v8.7" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M11.2 3.5v8.7" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3"
+              d="M5 12.2c0 1.7 1.4 3.1 3.1 3.1s3.1-1.4 3.1-3.1" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8.1 15.3v13.2" />
+
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M22.8 3.5v11.8" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3"
+              d="M22.8 15.3c-2.9 0-5.3 2.5-5.3 5.6s2.4 5.6 5.3 5.6 5.3-2.5 5.3-5.6-2.4-5.6-5.3-5.6z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3"
+              d="M21 22.5c0.4-1.4 1.3-2.5 2.6-3.2" />
+          </svg>
+        </span>
+        <span
+          class="font-cairo font-black tracking-tight text-2xl text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600">{{
+          uiMessages.navbar.brand }}</span>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav
+        class="desktop-nav hidden md:flex items-center rounded-2xl border border-gray-200/80 bg-white/80 px-3 py-2 space-x-2 rtl:space-x-reverse shadow-sm">
+        <a routerLink="/"
+          class="rounded-xl px-3 py-2 text-gray-700 hover:text-sky-700 hover:bg-sky-50 font-semibold transition">{{
+          uiMessages.navbar.navHome
+          }}</a>
+        <a routerLink="/products"
+          class="rounded-xl px-3 py-2 text-gray-700 hover:text-sky-700 hover:bg-sky-50 font-semibold transition">{{
+          uiMessages.navbar.navProducts }}</a>
+        <a routerLink="/categories"
+          class="rounded-xl px-3 py-2 text-gray-700 hover:text-sky-700 hover:bg-sky-50 font-semibold transition">{{
+          uiMessages.navbar.navCategories }}</a>
+        <a routerLink="/offers"
+          class="rounded-xl px-3 py-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50 font-extrabold transition">{{
+          uiMessages.navbar.navOffers }}</a>
+      </nav>
+
+      <!-- Search Bar (Desktop) -->
+      <form class="desktop-search hidden lg:flex flex-1 max-w-md mx-6 relative" (ngSubmit)="onSearchSubmit()">
+        <input type="text" name="navbarSearch" [(ngModel)]="searchTerm"
+          [placeholder]="uiMessages.navbar.searchPlaceholder"
+          class="w-full rounded-2xl py-2.5 px-4 pr-12 bg-gradient-to-r from-slate-50 to-white text-slate-700 placeholder:text-slate-400 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-300/60 focus:border-sky-300 text-sm shadow-inner">
+        <button type="submit"
+          class="absolute right-2 top-2 h-8 w-8 rounded-xl text-gray-500 hover:text-sky-600 hover:bg-sky-50 transition flex items-center justify-center"
+          [attr.aria-label]="uiMessages.navbar.searchPlaceholder">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+      </form>
+
+      <!-- Icons -->
+      <div class="header-actions flex items-center space-x-4 rtl:space-x-reverse">
+        <button type="button" (click)="toggleLanguage()"
+          class="rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-600 hover:border-sky-300 hover:text-sky-600 hover:bg-sky-50 transition"
+          [attr.aria-label]="uiMessages.navbar.languageToggleAriaLabel">
+          {{ (language$ | async) === 'ar' ? 'EN' : 'AR' }}
+        </button>
+
+        <!-- Wishlist -->
+        <a routerLink="/wishlist"
+          class="h-10 w-10 rounded-xl border border-transparent bg-transparent hover:bg-rose-50 hover:border-rose-200 text-gray-500 hover:text-rose-600 transition relative cursor-pointer flex items-center justify-center">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </a>
+
+        <!-- Cart -->
+        <a routerLink="/cart"
+          class="h-10 w-10 rounded-xl border border-transparent bg-transparent hover:bg-sky-50 hover:border-sky-200 text-gray-500 hover:text-sky-600 transition relative cursor-pointer flex items-center justify-center">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span *ngIf="(cartItemsCount$ | async) as count"
+            class="absolute -top-2 -right-2 bg-gradient-to-r from-sky-600 to-teal-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full shadow-md shadow-sky-400/35">
+            {{ count }}
+          </span>
+        </a>
+
+        <!-- Profile/Auth -->
+        <ng-container *ngIf="user$ | async as user; else loggedOutState">
+          <div class="relative user-menu-shell">
+            <button type="button" (click)="toggleUserMenu()"
+              class="user-menu-trigger flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/95 px-2 py-1.5 shadow-sm hover:border-sky-300 hover:shadow-md transition"
+              [attr.aria-expanded]="isUserMenuOpen">
+              <span
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-teal-500 text-xs font-bold text-white shadow-sm">
+                {{ (userInitials$ | async) }}
+              </span>
+              <span class="hidden md:flex flex-col text-right rtl:text-left leading-tight">
+                <span class="text-xs text-gray-500">{{ uiMessages.navbar.account }}</span>
+                <span class="text-sm font-semibold text-gray-900">{{ user.firstName }} {{ user.lastName }}</span>
+              </span>
+              <svg class="h-4 w-4 text-slate-500 transition-transform duration-200" [class.rotate-180]="isUserMenuOpen"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <div *ngIf="isUserMenuOpen"
+              class="user-menu-dropdown absolute end-0 mt-3 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl z-50">
+              <div class="rounded-xl bg-slate-50 px-4 py-3 mb-3">
+                <p class="text-sm font-semibold text-gray-900">{{ user.firstName }} {{ user.lastName }}</p>
+                <p class="text-xs text-gray-500 truncate">{{ user.email }}</p>
+              </div>
+
+              <ul class="space-y-1">
+                <li>
+                  <a routerLink="/account" [queryParams]="{ tab: 'profile' }" (click)="closeUserMenu()"
+                    class="flex items-center rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-700 transition">
+                    {{ uiMessages.navbar.profileSettings }}
+                  </a>
+                </li>
+                <li>
+                  <a routerLink="/account" [queryParams]="{ tab: 'password' }" (click)="closeUserMenu()"
+                    class="flex items-center rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-700 transition">
+                    {{ uiMessages.navbar.passwordSettings }}
+                  </a>
+                </li>
+                <li>
+                  <a routerLink="/account" [queryParams]="{ tab: 'addresses' }" (click)="closeUserMenu()"
+                    class="flex items-center rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-700 transition">
+                    {{ uiMessages.navbar.addressBook }}
+                  </a>
+                </li>
+                <li *ngIf="(isAdmin$ | async)">
+                  <a routerLink="/admin" (click)="closeUserMenu()"
+                    class="flex items-center rounded-xl px-3 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-50 transition">
+                    {{ uiMessages.navbar.adminDashboard }}
+                  </a>
+                </li>
+              </ul>
+
+              <div class="my-2 h-px bg-slate-200"></div>
+
+              <button type="button" (click)="logout()"
+                class="flex w-full items-center justify-center rounded-xl bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-black transition">
+                {{ uiMessages.navbar.logout }}
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #loggedOutState>
+          <a routerLink="/auth/login"
+            class="flex items-center rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 hover:text-sky-600 hover:border-sky-300 transition">
+            <span class="hidden md:block mr-2 text-sky-600 font-bold">{{ uiMessages.navbar.login }}</span>
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </a>
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div *ngIf="isMenuOpen" class="mobile-nav-panel md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-lg">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <!-- Search inside mobile -->
+      <form class="mb-4 relative px-2" (ngSubmit)="onSearchSubmit()">
+        <input type="text" name="mobileNavbarSearch" [(ngModel)]="searchTerm"
+          [placeholder]="uiMessages.navbar.searchPlaceholder"
+          class="w-full bg-slate-50 rounded-xl py-2.5 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-sky-400/50 border border-slate-200 focus:border-sky-300">
+        <button type="submit" class="absolute right-5 top-2.5 text-gray-400 hover:text-sky-600 transition"
+          [attr.aria-label]="uiMessages.navbar.searchPlaceholder">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+      </form>
+      <a routerLink="/" class="block px-3 py-2 rounded-xl text-base font-semibold text-slate-900 bg-slate-50">{{
+        uiMessages.navbar.navHome }}</a>
+      <a routerLink="/products"
+        class="block px-3 py-2 rounded-xl text-base font-medium text-gray-700 hover:bg-slate-50">{{
+        uiMessages.navbar.navProducts }}</a>
+      <a routerLink="/categories"
+        class="block px-3 py-2 rounded-xl text-base font-medium text-gray-700 hover:bg-slate-50">{{
+        uiMessages.navbar.navCategories }}</a>
+      <a routerLink="/offers" class="block px-3 py-2 rounded-xl text-base font-bold text-amber-600 hover:bg-amber-50">{{
+        uiMessages.navbar.navOffers }}</a>
+
+      <ng-container *ngIf="user$ | async as user; else mobileLoggedOut">
+        <div class="mt-4 border-t border-slate-100 pt-4 px-3">
+          <p class="text-xs uppercase tracking-[0.2em] text-gray-400 mb-2">{{ uiMessages.navbar.account }}</p>
+          <p class="text-sm font-semibold text-gray-900">{{ user.firstName }} {{ user.lastName }}</p>
+          <p class="text-xs text-gray-500 mb-4 truncate">{{ user.email }}</p>
+          <a routerLink="/account" [queryParams]="{ tab: 'profile' }"
+            class="block rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-slate-50">{{
+            uiMessages.navbar.profileSettings }}</a>
+          <a routerLink="/account" [queryParams]="{ tab: 'password' }"
+            class="block rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-slate-50">{{
+            uiMessages.navbar.passwordSettings }}</a>
+          <a routerLink="/account" [queryParams]="{ tab: 'addresses' }"
+            class="block rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-slate-50">{{
+            uiMessages.navbar.addressBook }}</a>
+          <a *ngIf="(isAdmin$ | async)" routerLink="/admin"
+            class="block rounded-xl px-3 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-50">{{
+            uiMessages.navbar.adminDashboard }}</a>
+          <button type="button" (click)="logout()"
+            class="mt-2 w-full rounded-xl bg-slate-900 px-3 py-2 text-sm font-semibold text-white">{{
+            uiMessages.navbar.logout }}</button>
+        </div>
+      </ng-container>
+
+      <ng-template #mobileLoggedOut>
+        <a routerLink="/auth/login"
+          class="block px-3 py-2 rounded-xl text-base font-medium text-gray-700 hover:bg-slate-50">{{
+          uiMessages.navbar.login }}</a>
+      </ng-template>
+    </div>
+  </div>
+</header>

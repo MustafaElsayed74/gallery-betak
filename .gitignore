@@ -18,7 +18,7 @@ launchSettings.json
 *.swp
 *.swo
 
-## Secrets — NEVER commit
+## Secrets -- NEVER commit
 appsettings.*.local.json
 *.pfx
 *.key
@@ -49,3 +49,6 @@ dist/
 ## Logs
 logs/
 *.log
+
+## Local temp build output
+temp-build/

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Crystal chandelier">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1b1b2f"/>
+      <stop offset="100%" stop-color="#3b1f2b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="600" cy="150" r="52" fill="#f6d96b"/>
+  <rect x="590" y="160" width="20" height="170" fill="#e7e7e7"/>
+  <circle cx="600" cy="395" r="120" fill="none" stroke="#f6d96b" stroke-width="18"/>
+  <circle cx="600" cy="395" r="82" fill="none" stroke="#f7f7f7" stroke-width="10" opacity="0.9"/>
+  <g fill="#ffffff" opacity="0.9">
+    <circle cx="520" cy="510" r="18"/>
+    <circle cx="600" cy="535" r="18"/>
+    <circle cx="680" cy="510" r="18"/>
+  </g>
+  <text x="80" y="120" fill="#ffffff" font-size="72" font-family="Arial, sans-serif" font-weight="700">Crystal Chandelier</text>
+  <text x="82" y="180" fill="#f6d96b" font-size="34" font-family="Arial, sans-serif">Statement lighting with a warm glow</text>
+</svg>
