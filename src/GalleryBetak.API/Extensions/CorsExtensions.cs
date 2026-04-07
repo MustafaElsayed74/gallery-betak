@@ -17,15 +17,53 @@ public static class CorsExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var allowedOrigins = configuration
+        var configuredOrigins = configuration
             .GetSection("CorsSettings:AllowedOrigins")
-            .Get<string[]>() ?? new[] { "http://localhost:4200" };
+            .Get<string[]>() ?? ["http://localhost:4200"];
+
+        var normalizedOrigins = configuredOrigins
+            .Where(origin => !string.IsNullOrWhiteSpace(origin))
+            .Select(origin => origin.Trim().TrimEnd('/'))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var explicitAllowedOrigins = normalizedOrigins
+            .Where(origin => !origin.Contains('*'))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var allowVercelPreviewOrigins = normalizedOrigins
+            .Any(origin => origin.Equals("https://*.vercel.app", StringComparison.OrdinalIgnoreCase));
 
         services.AddCors(options =>
         {
             options.AddPolicy(PolicyName, policy =>
             {
-                policy.WithOrigins(allowedOrigins)
+                policy.SetIsOriginAllowed(origin =>
+                      {
+                          if (string.IsNullOrWhiteSpace(origin))
+                          {
+                              return false;
+                          }
+
+                          var normalizedOrigin = origin.Trim().TrimEnd('/');
+                          if (explicitAllowedOrigins.Contains(normalizedOrigin))
+                          {
+                              return true;
+                          }
+
+                          if (!allowVercelPreviewOrigins)
+                          {
+                              return false;
+                          }
+
+                          if (!Uri.TryCreate(normalizedOrigin, UriKind.Absolute, out var uri))
+                          {
+                              return false;
+                          }
+
+                          return uri.Scheme == Uri.UriSchemeHttps
+                              && uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase);
+                      })
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials()
