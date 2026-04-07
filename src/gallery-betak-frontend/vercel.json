@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "installCommand": "npm ci",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/gallery-betak-frontend"
+    "version": 2,
+    "installCommand": "npm ci --no-audit --no-fund --loglevel=error",
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist/gallery-betak-frontend"
 }
