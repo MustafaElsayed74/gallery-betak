@@ -38,7 +38,7 @@
 
       <div class="mobile-controls-card">
         <div class="mobile-search-wrap">
-          <label class="mobile-search-field">
+          <label class="mobile-search-field compact">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-4.35-4.35m1.6-5.15a6.75 6.75 0 11-13.5 0 6.75 6.75 0 0113.5 0z" />
@@ -46,42 +46,35 @@
 
             <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChanged($event)"
               (keyup.enter)="applySearch()" [placeholder]="uiMessages.products.searchPlaceholder" class="font-cairo">
+
+            <button *ngIf="searchTerm.trim().length > 0" type="button" (click)="clearSearch()"
+              class="mobile-inline-clear-btn" [attr.aria-label]="uiMessages.products.clearButton">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <button type="button" (click)="applySearch()" class="mobile-inline-search-btn"
+              [attr.aria-label]="uiMessages.products.searchButton">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-4.35-4.35m1.6-5.15a6.75 6.75 0 11-13.5 0 6.75 6.75 0 0113.5 0z" />
+              </svg>
+            </button>
           </label>
-
-          <button type="button" (click)="applySearch()" class="mobile-search-btn">
-            {{ uiMessages.products.searchButton }}
-          </button>
         </div>
 
-        <div class="mobile-controls-row">
-          <button type="button" (click)="clearSearch()" [disabled]="!searchTerm.trim()" class="mobile-tertiary-btn">
-            {{ uiMessages.products.clearButton }}
-          </button>
+        <div class="mobile-controls-inline">
+          <select [(ngModel)]="sortBy" (ngModelChange)="onSortChange($event)" class="mobile-sort-select font-cairo"
+            [attr.aria-label]="uiMessages.products.sortDefault">
+            <option value="default">{{ uiMessages.products.sortDefault }}</option>
+            <option value="price_asc">{{ uiMessages.products.sortPriceAsc }}</option>
+            <option value="price_desc">{{ uiMessages.products.sortPriceDesc }}</option>
+            <option value="newest">{{ uiMessages.products.sortNewest }}</option>
+          </select>
 
-          <button type="button" (click)="clearAllFilters()" [disabled]="!hasActiveFilters" class="mobile-tertiary-btn">
+          <button type="button" (click)="clearAllFilters()" [disabled]="!hasActiveFilters" class="mobile-reset-mini">
             {{ uiMessages.products.resetFiltersButton }}
-          </button>
-        </div>
-
-        <div class="mobile-sort-scroll" role="group" [attr.aria-label]="uiMessages.products.sortDefault">
-          <button type="button" class="mobile-sort-pill" [class.is-active]="sortBy === 'default'"
-            (click)="onSortChange('default')">
-            {{ uiMessages.products.sortDefault }}
-          </button>
-
-          <button type="button" class="mobile-sort-pill" [class.is-active]="sortBy === 'price_asc'"
-            (click)="onSortChange('price_asc')">
-            {{ uiMessages.products.sortPriceAsc }}
-          </button>
-
-          <button type="button" class="mobile-sort-pill" [class.is-active]="sortBy === 'price_desc'"
-            (click)="onSortChange('price_desc')">
-            {{ uiMessages.products.sortPriceDesc }}
-          </button>
-
-          <button type="button" class="mobile-sort-pill" [class.is-active]="sortBy === 'newest'"
-            (click)="onSortChange('newest')">
-            {{ uiMessages.products.sortNewest }}
           </button>
         </div>
       </div>
