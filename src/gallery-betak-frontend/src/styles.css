@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   :root {
     --brand-ink: #0f172a;
     --brand-mint: #14b8a6;

@@ -1,10 +1,10 @@
 <header
   class="site-header sticky top-0 z-50 border-b border-white/70 bg-white/90 backdrop-blur-xl shadow-[0_8px_28px_rgba(15,23,42,0.08)]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-20 gap-3">
+    <div class="flex justify-between items-center h-20 gap-2 md:gap-3 min-w-0">
 
       <!-- Mobile Menu Button -->
-      <div class="flex items-center md:hidden">
+      <div class="flex items-center md:hidden shrink-0">
         <button (click)="toggleMenu()"
           class="h-10 w-10 rounded-xl border border-gray-200 bg-white/80 text-gray-600 hover:border-sky-300 hover:text-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-300/50">
           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -17,9 +17,9 @@
       </div>
 
       <!-- Logo -->
-      <div class="flex-shrink-0 flex items-center cursor-pointer gap-3" routerLink="/">
+      <div class="flex-shrink min-w-0 flex items-center cursor-pointer gap-2 md:gap-3" routerLink="/">
         <span
-          class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 text-white shadow-lg shadow-sky-400/35">
+          class="hidden sm:flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-teal-500 text-white shadow-lg shadow-sky-400/35">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 32 32" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M5 3.5v8.7" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8.1 3.5v8.7" />
@@ -36,8 +36,29 @@
           </svg>
         </span>
         <span
-          class="font-cairo font-black tracking-tight text-2xl text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600">{{
+          class="brand-text truncate font-cairo font-black tracking-tight text-[1.35rem] sm:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600">{{
           uiMessages.navbar.brand }}</span>
+      </div>
+
+      <div class="mobile-actions md:hidden flex items-center gap-2 shrink-0">
+        <button type="button" (click)="toggleLanguage()"
+          class="rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-600 hover:border-sky-300 hover:text-sky-600 hover:bg-sky-50 transition"
+          [attr.aria-label]="uiMessages.navbar.languageToggleAriaLabel">
+          {{ (language$ | async) === 'ar' ? 'EN' : 'AR' }}
+        </button>
+
+        <a routerLink="/cart"
+          class="h-10 w-10 rounded-xl border border-transparent bg-transparent hover:bg-sky-50 hover:border-sky-200 text-gray-500 hover:text-sky-600 transition relative cursor-pointer flex items-center justify-center"
+          [attr.aria-label]="uiMessages.navbar.navCart">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span *ngIf="(cartItemsCount$ | async) as count"
+            class="absolute -top-2 -right-2 bg-gradient-to-r from-sky-600 to-teal-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full shadow-md shadow-sky-400/35">
+            {{ count }}
+          </span>
+        </a>
       </div>
 
       <!-- Desktop Navigation -->
@@ -74,7 +95,7 @@
       </form>
 
       <!-- Icons -->
-      <div class="header-actions flex items-center space-x-4 rtl:space-x-reverse">
+      <div class="header-actions hidden md:flex items-center space-x-4 rtl:space-x-reverse">
         <button type="button" (click)="toggleLanguage()"
           class="rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-600 hover:border-sky-300 hover:text-sky-600 hover:bg-sky-50 transition"
           [attr.aria-label]="uiMessages.navbar.languageToggleAriaLabel">
@@ -208,6 +229,12 @@
         uiMessages.navbar.navCategories }}</a>
       <a routerLink="/offers" class="block px-3 py-2 rounded-xl text-base font-bold text-amber-600 hover:bg-amber-50">{{
         uiMessages.navbar.navOffers }}</a>
+
+      <a routerLink="/wishlist"
+        class="block px-3 py-2 rounded-xl text-base font-medium text-gray-700 hover:bg-slate-50">{{
+        uiMessages.navbar.navWishlist }}</a>
+      <a routerLink="/cart" class="block px-3 py-2 rounded-xl text-base font-medium text-gray-700 hover:bg-slate-50">{{
+        uiMessages.navbar.navCart }}</a>
 
       <ng-container *ngIf="user$ | async as user; else mobileLoggedOut">
         <div class="mt-4 border-t border-slate-100 pt-4 px-3">

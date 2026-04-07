@@ -8,27 +8,27 @@
     style="background-image: linear-gradient(rgba(148,163,184,0.17) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.17) 1px, transparent 1px); background-size: 52px 52px;">
   </div>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24 md:py-32 flex flex-col items-start">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-14 sm:py-20 md:py-32 flex flex-col items-start">
     <span
-      class="inline-block py-1 px-3 rounded-full bg-white/10 text-cyan-100 font-semibold text-sm mb-6 border border-cyan-300/30 backdrop-blur-sm">
+      class="inline-block py-1 px-3 rounded-full bg-white/10 text-cyan-100 font-semibold text-xs sm:text-sm mb-5 sm:mb-6 border border-cyan-300/30 backdrop-blur-sm">
       {{ uiMessages.home.heroBadge }}
     </span>
-    <h1 class="text-4xl md:text-6xl font-bold font-cairo leading-tight mb-6 max-w-2xl">
+    <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold font-cairo leading-tight mb-5 sm:mb-6 max-w-2xl">
       {{ uiMessages.home.heroTitlePrefix }} <span
         class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-teal-200">{{
         uiMessages.home.heroBrand
         }}</span>
     </h1>
-    <p class="text-lg md:text-xl text-slate-200 mb-10 max-w-xl leading-relaxed">
+    <p class="text-base sm:text-lg md:text-xl text-slate-200 mb-7 sm:mb-10 max-w-xl leading-relaxed">
       {{ uiMessages.home.heroSubtitle }}
     </p>
     <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
       <a routerLink="/products"
-        class="bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-400 hover:to-teal-400 text-white font-bold py-3 px-8 rounded-xl shadow-xl shadow-sky-700/30 transition-all text-center">
+        class="w-full sm:w-auto bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-400 hover:to-teal-400 text-white font-bold py-3 px-8 rounded-xl shadow-xl shadow-sky-700/30 transition-all text-center">
         {{ uiMessages.home.shopNow }}
       </a>
       <a routerLink="/categories"
-        class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-bold py-3 px-8 rounded-xl transition-all text-center">
+        class="w-full sm:w-auto bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-bold py-3 px-8 rounded-xl transition-all text-center">
         {{ uiMessages.home.browseCategories }}
       </a>
     </div>
@@ -38,18 +38,20 @@
 <!-- Categories Strip -->
 <section class="home-categories py-12 page-shell">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
       <a *ngFor="let cat of (categories$ | async)?.slice(0, 4)" [routerLink]="['/categories', cat.id]"
-        class="group flex flex-col items-center justify-center p-6 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white to-slate-50 hover:border-cyan-300 hover:bg-cyan-50/30 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer">
+        class="group flex flex-col items-center justify-center p-4 sm:p-6 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white to-slate-50 hover:border-cyan-300 hover:bg-cyan-50/30 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer">
         <div
-          class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-cyan-600 group-hover:scale-110 transition-transform shadow-sm mb-4 overflow-hidden border border-slate-100">
+          class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white flex items-center justify-center text-cyan-600 group-hover:scale-110 transition-transform shadow-sm mb-3 sm:mb-4 overflow-hidden border border-slate-100">
           <img *ngIf="cat.imageUrl" [src]="cat.imageUrl" [alt]="cat.nameAr" class="w-full h-full object-cover">
           <svg *ngIf="!cat.imageUrl" class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
         </div>
-        <h3 class="font-bold text-slate-900 group-hover:text-cyan-700 transition-colors">{{ cat.nameAr }}</h3>
+        <h3
+          class="font-bold text-sm sm:text-base text-center leading-snug text-slate-900 group-hover:text-cyan-700 transition-colors">
+          {{ cat.nameAr }}</h3>
       </a>
     </div>
   </div>

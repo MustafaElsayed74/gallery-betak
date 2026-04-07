@@ -102,6 +102,14 @@
     animation: navSlideDown 220ms ease-out both;
 }
 
+.brand-text {
+    white-space: nowrap;
+}
+
+.mobile-actions {
+    min-width: 0;
+}
+
 @keyframes navSlideDown {
     from {
         opacity: 0;
@@ -119,6 +127,22 @@
         margin-left: 0;
         margin-right: 0;
         max-width: none;
+    }
+
+    .site-header .max-w-7xl {
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 767px) {
+    .brand-text {
+        max-width: 9.2rem;
+    }
+
+    .mobile-nav-panel {
+        max-height: calc(100vh - 5rem);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 }
 

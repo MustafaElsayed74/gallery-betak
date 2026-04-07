@@ -4,6 +4,8 @@ export const UI_MESSAGES = {
         navHome: 'الرئيسية',
         navProducts: 'المنتجات',
         navCategories: 'الأقسام',
+        navWishlist: 'المفضلة',
+        navCart: 'السلة',
         navOffers: 'عروض وخصومات',
         searchPlaceholder: 'ابحث عن منتج...',
         login: 'تسجيل الدخول',

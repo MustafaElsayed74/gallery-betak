@@ -105,3 +105,37 @@
         animation: none;
     }
 }
+
+@media (max-width: 767px) {
+    .home-hero {
+        border-bottom-left-radius: 1.1rem;
+        border-bottom-right-radius: 1.1rem;
+    }
+
+    .home-hero h1 {
+        text-wrap: pretty;
+        line-height: 1.25;
+    }
+
+    .home-hero p {
+        max-width: 100%;
+    }
+
+    .home-hero a {
+        width: 100%;
+    }
+
+    .home-categories {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .home-top-sellers {
+        padding-top: 2rem;
+    }
+
+    .home-features {
+        padding-top: 2.25rem;
+        padding-bottom: 2.25rem;
+    }
+}
