@@ -1,0 +1,6 @@
+{
+    "version": 2,
+    "installCommand": "npm ci --prefix src/gallery-betak-frontend",
+    "buildCommand": "npm run build --prefix src/gallery-betak-frontend",
+    "outputDirectory": "src/gallery-betak-frontend/dist/gallery-betak-frontend"
+}
