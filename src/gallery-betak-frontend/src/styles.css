@@ -654,7 +654,7 @@
     gap: 0.5rem;
   }
 
-  .mobile-noon-price-row > span {
+  .mobile-noon-price-row>span {
     display: none;
   }
 
