@@ -1,4 +1,4 @@
-<div class="product-detail-page page-shell py-8 sm:py-12 min-h-screen">
+<div class="product-detail-page page-shell py-8 sm:py-10 min-h-screen">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
     <div *ngIf="isLoading" class="mb-8 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
@@ -10,195 +10,196 @@
     </div>
 
     <ng-container *ngIf="product as product">
+      <nav class="amazon-breadcrumb mb-5 text-sm text-slate-500 font-medium font-cairo" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 flex-wrap">
+          <li><a routerLink="/" class="hover:text-cyan-700 transition">{{ uiMessages.products.breadcrumbHome }}</a></li>
+          <li class="text-slate-300">/</li>
+          <li>
+            <a [routerLink]="product.categoryId > 0 ? ['/categories', product.categoryId] : ['/products']"
+              class="hover:text-cyan-700 transition">
+              {{ product.categoryName || product.categoryNameAr || product.categoryNameEn }}
+            </a>
+          </li>
+        </ol>
+      </nav>
 
-      <!-- Top Row: Images & Core Details -->
-      <div class="product-detail-top lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-
-        <!-- Image Gallery -->
-        <div class="product-gallery flex flex-col-reverse lg:flex-row gap-4 mb-10 lg:mb-0">
-          <!-- Thumbnails -->
-          <div
-            class="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 hide-scrollbar w-full lg:w-24 shrink-0">
-            <button *ngFor="let img of product.images; let i = index" (click)="setActiveImage(i)"
-              [class.border-blue-600]="activeImage === i"
-              class="relative flex-shrink-0 w-20 h-20 rounded-lg flex items-center justify-center border-2 bg-gray-100 hover:border-gray-300 overflow-hidden transition focus:outline-none">
-              <img [src]="img" class="w-full h-full object-cover">
+      <section class="amazon-layout">
+        <div class="amazon-gallery">
+          <div class="amazon-thumb-strip">
+            <button *ngFor="let img of productImages; let i = index" type="button" class="amazon-thumb"
+              [class.is-active]="activeImage === i" (click)="setActiveImage(i)">
+              <img [src]="img" [alt]="(product.nameAr || product.nameEn) + ' ' + (i + 1)">
             </button>
           </div>
 
-          <!-- Main Image -->
-          <div
-            class="product-main-image relative w-full aspect-square bg-slate-50 rounded-2xl overflow-hidden shadow-sm border border-slate-200">
-            <img [src]="product.images[activeImage] || product.primaryImage" class="w-full h-full object-cover"
-              [alt]="product.nameAr">
-            <span *ngIf="product.discountPercentage > 0"
-              class="absolute top-4 right-4 bg-gradient-to-r from-rose-500 to-orange-500 text-white font-bold px-3 py-1.5 rounded-lg shadow-sm">
+          <div class="amazon-main-image">
+            <img [src]="productImages[activeImage] || productImages[0]" [alt]="product.nameAr || product.nameEn">
+
+            <span *ngIf="product.discountPercentage > 0" class="amazon-offer-badge">
               {{ uiMessages.products.discountPrefix }} {{ product.discountPercentage }}%
             </span>
           </div>
         </div>
 
-        <!-- Product Details Core -->
-        <div class="product-detail-info flex flex-col">
-          <!-- Breadcrumb & Title -->
-          <nav
-            class="text-sm font-medium text-slate-500 mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 rtl:space-x-reverse">
-            <a routerLink="/" class="hover:text-cyan-700">{{ uiMessages.products.breadcrumbHome }}</a>
-            <span class="text-slate-300">/</span>
-            <a [routerLink]="product.categoryId > 0 ? ['/categories', product.categoryId] : ['/products']"
-              class="hover:text-cyan-700 break-all sm:break-normal">{{ product.categoryName }}</a>
-          </nav>
+        <article class="amazon-info">
+          <a [routerLink]="product.categoryId > 0 ? ['/categories', product.categoryId] : ['/products']"
+            class="amazon-category-link">
+            {{ product.categoryName || product.categoryNameAr || product.categoryNameEn }}
+          </a>
 
-          <h1 class="text-3xl sm:text-4xl font-extrabold font-cairo text-slate-900 tracking-tight leading-tight mb-4">
-            {{ product.nameAr }}
-          </h1>
+          <h1 class="amazon-title">{{ product.nameAr || product.nameEn }}</h1>
 
-          <!-- Rating Output -->
-          <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-6 border-b border-slate-100 pb-6">
-            <div class="flex items-center text-amber-500">
-              <svg *ngFor="let i of [1,2,3,4,5]" class="w-5 h-5" [class.text-gray-300]="i > product.averageRating"
+          <div class="amazon-rating-row">
+            <div class="amazon-stars" aria-hidden="true">
+              <svg *ngFor="let i of [1,2,3,4,5]" class="h-4 w-4"
+                [class.filled]="i <= (product.averageRating || 0)" [class.muted]="i > (product.averageRating || 0)"
                 fill="currentColor" viewBox="0 0 20 20">
                 <path
                   d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
             </div>
-            <a href="#reviews" class="text-sm text-cyan-700 hover:text-cyan-800 font-medium font-cairo cursor-pointer">
-              ({{ uiMessages.products.reviewsLabelPrefix }} {{ product.reviewsCount }})
+
+            <a href="#details" class="amazon-reviews-link">
+              {{ uiMessages.products.reviewsLabelPrefix }} ({{ product.reviewsCount }})
             </a>
-            <span class="hidden sm:inline text-slate-300">|</span>
-            <span class="text-xs sm:text-sm font-bold px-2 py-0.5 rounded-full flex items-center"
-              [class.text-emerald-600]="product.stockQuantity > 0" [class.bg-emerald-50]="product.stockQuantity > 0"
-              [class.text-red-600]="product.stockQuantity <= 0" [class.bg-red-50]="product.stockQuantity <= 0">
-              <svg class="w-4 h-4 mr-1 rtl:mr-0 rtl:ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              {{ product.stockQuantity > 0 ? uiMessages.products.inStock : uiMessages.products.outOfStock }}
-            </span>
           </div>
 
-          <!-- Price Panel -->
-          <div class="mb-8">
-            <div class="flex flex-wrap items-end gap-2 sm:gap-4">
-              <span class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-cairo">{{ product.price |
-                currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
-              <span *ngIf="product.originalPrice > product.price"
-                class="text-lg sm:text-xl text-slate-400 line-through font-medium">
+          <div class="amazon-price-block">
+            <div class="amazon-price-line">
+              <span class="amazon-current-price">{{ product.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
+
+              <span *ngIf="product.originalPrice > product.price" class="amazon-original-price">
                 {{ product.originalPrice | currency:'EGP':'symbol-narrow':'1.0-0' }}
               </span>
             </div>
-            <p class="text-sm text-slate-500 mt-2 font-cairo">{{ uiMessages.products.vatIncluded }}</p>
+
+            <p class="amazon-vat">{{ uiMessages.products.vatIncluded }}</p>
+
+            <p class="amazon-stock" [class.out]="product.stockQuantity <= 0">
+              {{ product.stockQuantity > 0 ? uiMessages.products.inStock : uiMessages.products.outOfStock }}
+            </p>
           </div>
 
-          <!-- Quick Summary Desc -->
-          <p class="text-base text-slate-600 font-cairo leading-relaxed mb-8">
-            {{ product.descriptionAr | slice:0:150 }}...
-            <a href="#details" class="text-cyan-700 hover:underline">{{ uiMessages.products.readMore }}</a>
+          <section class="amazon-highlights">
+            <h2>{{ uiMessages.products.detailsTab }}</h2>
+
+            <ul *ngIf="productHighlights.length > 0">
+              <li *ngFor="let highlight of productHighlights">{{ highlight }}</li>
+            </ul>
+
+            <p *ngIf="productHighlights.length === 0" class="amazon-fallback-description">
+              {{ normalizedDescription || uiMessages.products.specsUnavailable }}
+            </p>
+          </section>
+        </article>
+
+        <aside class="amazon-buybox">
+          <p class="amazon-buybox-price">{{ product.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</p>
+          <p class="amazon-buybox-vat">{{ uiMessages.products.vatIncluded }}</p>
+
+          <p class="amazon-buybox-stock" [class.out]="product.stockQuantity <= 0">
+            {{ product.stockQuantity > 0 ? uiMessages.products.inStock : uiMessages.products.outOfStock }}
           </p>
 
-          <!-- Purchase Actions -->
-          <div class="product-actions-shell mt-auto pt-6 border-t border-slate-100">
-            <div class="product-primary-actions">
-              <button (click)="addToCart()" [disabled]="product.stockQuantity <= 0"
-                class="product-cta-btn add bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-400 hover:to-teal-400 text-white shadow-lg shadow-sky-500/30">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                {{ uiMessages.products.addToCart }}
-              </button>
+          <div class="amazon-buybox-qty">
+            <p class="amazon-buybox-label">{{ uiMessages.checkout.quantityLabel }}</p>
 
-              <button (click)="buyNow()" [disabled]="product.stockQuantity <= 0"
-                class="product-cta-btn buy bg-white text-cyan-700 border-2 border-cyan-300 hover:bg-cyan-50 hover:border-cyan-400">
-                {{ uiMessages.products.buyNow }}
-              </button>
-            </div>
-
-            <div class="product-secondary-actions">
-              <div class="product-qty-selector">
-                <button (click)="decreaseQuantity()"
-                  class="flex-1 h-full flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-cyan-700 transition outline-none"
-                  [attr.aria-label]="uiMessages.products.previous">
-                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <span class="w-12 text-center font-bold text-slate-900">{{ quantity }}</span>
-                <button (click)="increaseQuantity()" [disabled]="product.stockQuantity <= 0"
-                  class="flex-1 h-full flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-cyan-700 transition outline-none"
-                  [attr.aria-label]="uiMessages.products.next">
-                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                  </svg>
-                </button>
-              </div>
-
-              <button (click)="addToWishlist()" class="product-icon-action wishlist"
-                [attr.aria-label]="uiMessages.products.addToWishlist" [title]="uiMessages.products.addToWishlist">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            <div class="product-qty-selector">
+              <button type="button" (click)="decreaseQuantity()" [attr.aria-label]="uiMessages.products.previous">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                 </svg>
               </button>
 
-              <button type="button" (click)="shareProduct()" class="product-icon-action share"
-                [attr.aria-label]="uiMessages.products.shareProduct" [title]="uiMessages.products.shareProduct">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8.684 13.342C9.886 12.511 11.34 12 12.912 12c1.572 0 3.026.511 4.228 1.342M8.684 13.342L6.6 14.9m2.084-1.558a3 3 0 10-4.242-4.242A3 3 0 008.684 13.342zm8.456 0l2.084 1.558m-2.084-1.558a3 3 0 114.242-4.242 3 3 0 01-4.242 4.242zM12 21a3 3 0 100-6 3 3 0 000 6z" />
+              <span>{{ quantity }}</span>
+
+              <button type="button" (click)="increaseQuantity()" [disabled]="product.stockQuantity <= 0"
+                [attr.aria-label]="uiMessages.products.next">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
               </button>
             </div>
           </div>
 
-        </div>
-      </div>
+          <button type="button" (click)="addToCart()" [disabled]="product.stockQuantity <= 0" class="amazon-buybox-btn add">
+            {{ uiMessages.products.addToCart }}
+          </button>
 
+          <button type="button" (click)="buyNow()" [disabled]="product.stockQuantity <= 0" class="amazon-buybox-btn buy">
+            {{ uiMessages.products.buyNow }}
+          </button>
+
+          <div class="amazon-buybox-mini-actions">
+            <button type="button" (click)="addToWishlist()" class="product-icon-action wishlist"
+              [attr.aria-label]="uiMessages.products.addToWishlist" [title]="uiMessages.products.addToWishlist">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
+
+            <button type="button" (click)="shareProduct()" class="product-icon-action share"
+              [attr.aria-label]="uiMessages.products.shareProduct" [title]="uiMessages.products.shareProduct">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8.684 13.342C9.886 12.511 11.34 12 12.912 12c1.572 0 3.026.511 4.228 1.342M8.684 13.342L6.6 14.9m2.084-1.558a3 3 0 10-4.242-4.242A3 3 0 008.684 13.342zm8.456 0l2.084 1.558m-2.084-1.558a3 3 0 114.242-4.242 3 3 0 01-4.242 4.242zM12 21a3 3 0 100-6 3 3 0 000 6z" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="amazon-buybox-meta">
+            <p>
+              <span>{{ uiMessages.products.categoriesTitle }}:</span>
+              {{ product.categoryName || product.categoryNameAr || product.categoryNameEn }}
+            </p>
+            <p>
+              <span>{{ uiMessages.products.specWeightLabel }}:</span>
+              <ng-container *ngIf="product.weight !== null && product.weight !== undefined; else noWeight">
+                {{ product.weight }} {{ uiMessages.products.specWeightUnit }}
+              </ng-container>
+              <ng-template #noWeight>-</ng-template>
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section id="details" class="amazon-details mt-14 sm:mt-16">
+        <div class="amazon-details-card">
+          <div class="product-tabs-nav">
+            <button type="button" (click)="activeTab = 'description'" class="product-tab-trigger"
+              [class.active]="activeTab === 'description'">
+              {{ uiMessages.products.detailsTab }}
+            </button>
+
+            <button type="button" (click)="activeTab = 'specs'" class="product-tab-trigger"
+              [class.active]="activeTab === 'specs'">
+              {{ uiMessages.products.specsTab }}
+            </button>
+          </div>
+
+          <div *ngIf="activeTab === 'description'" class="amazon-description">
+            <p>{{ normalizedDescription || uiMessages.products.specsUnavailable }}</p>
+            <p class="mt-4">{{ uiMessages.products.detailWarrantyText }}</p>
+          </div>
+
+          <div *ngIf="activeTab === 'specs'" class="font-cairo">
+            <table *ngIf="technicalSpecs.length > 0" class="specs-table w-full text-right">
+              <tbody>
+                <tr *ngFor="let spec of technicalSpecs">
+                  <td class="spec-label">{{ spec.label }}</td>
+                  <td class="spec-value">{{ spec.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p *ngIf="technicalSpecs.length === 0" class="amazon-no-specs">
+              {{ uiMessages.products.specsUnavailable }}
+            </p>
+          </div>
+        </div>
+      </section>
     </ng-container>
-
-    <!-- Details Tabs Section -->
-    <div id="details" class="product-detail-tabs mt-14 sm:mt-20 border-t border-slate-200 pt-8 sm:pt-10">
-      <div class="max-w-3xl">
-        <div class="product-tabs-nav flex border-b border-slate-200 mb-6 sm:mb-8 gap-4 sm:gap-8">
-          <button (click)="activeTab = 'description'" [class.text-cyan-700]="activeTab === 'description'"
-            [class.border-cyan-600]="activeTab === 'description'"
-            [class.border-transparent]="activeTab !== 'description'"
-            [class.text-slate-500]="activeTab !== 'description'"
-            class="product-tab-trigger pb-3 sm:pb-4 font-bold font-cairo text-base sm:text-lg border-b-2 transition-colors hover:text-gray-700">
-            {{ uiMessages.products.detailsTab }}
-          </button>
-          <button (click)="activeTab = 'specs'" [class.text-cyan-700]="activeTab === 'specs'"
-            [class.border-cyan-600]="activeTab === 'specs'" [class.border-transparent]="activeTab !== 'specs'"
-            [class.text-slate-500]="activeTab !== 'specs'"
-            class="product-tab-trigger pb-3 sm:pb-4 font-bold font-cairo text-base sm:text-lg border-b-2 transition-colors hover:text-gray-700">
-            {{ uiMessages.products.specsTab }}
-          </button>
-        </div>
-
-        <div *ngIf="activeTab === 'description'" class="prose max-w-none font-cairo leading-loose text-slate-700">
-          <p>{{ product?.descriptionAr }}</p>
-          <p class="mt-4">{{ uiMessages.products.detailWarrantyText }}</p>
-        </div>
-
-        <div *ngIf="activeTab === 'specs'" class="font-cairo">
-          <table *ngIf="technicalSpecs.length > 0"
-            class="specs-table w-full text-right bg-white rounded-lg overflow-hidden border border-slate-200">
-            <tbody class="divide-y divide-slate-200">
-              <tr *ngFor="let spec of technicalSpecs">
-                <td class="spec-label px-4 sm:px-6 py-3 sm:py-4 bg-slate-50 text-slate-900 font-bold w-1/3">{{
-                  spec.label }}</td>
-                <td class="spec-value px-4 sm:px-6 py-3 sm:py-4 text-slate-600 break-words">{{ spec.value }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <p *ngIf="technicalSpecs.length === 0"
-            class="rounded-lg border border-slate-200 bg-slate-50 px-6 py-4 text-sm text-slate-600">
-            {{ uiMessages.products.specsUnavailable }}
-          </p>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <div class="product-mobile-quickbar md:hidden" *ngIf="product as quickProduct">

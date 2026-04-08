@@ -37,6 +37,46 @@ export class ProductDetailComponent implements OnInit {
   activeImage = 0;
   activeTab = 'description';
 
+  get productImages(): string[] {
+    if (!this.product) {
+      return ['assets/placeholder.svg'];
+    }
+
+    const images = this.product.images?.filter(image => !!image) ?? [];
+
+    if (images.length > 0) {
+      return images;
+    }
+
+    if (this.product.primaryImage) {
+      return [this.product.primaryImage];
+    }
+
+    return ['assets/placeholder.svg'];
+  }
+
+  get productHighlights(): string[] {
+    const description = this.normalizedDescription;
+
+    if (!description) {
+      return [];
+    }
+
+    return description
+      .split(/[\n\r]+|[\.،؛!?]+/)
+      .map(item => item.trim())
+      .filter(item => item.length >= 8)
+      .slice(0, 6);
+  }
+
+  get normalizedDescription(): string {
+    if (!this.product) {
+      return '';
+    }
+
+    return (this.product.descriptionAr || this.product.descriptionEn || '').replace(/\s+/g, ' ').trim();
+  }
+
   get technicalSpecs(): Array<{ label: string; value: string }> {
     if (!this.product) {
       return [];
