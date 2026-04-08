@@ -126,23 +126,59 @@ export class ProductDetailComponent implements OnInit {
       });
 
     this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
       const slug = params.get('slug');
-      if (!slug) {
+
+      if (idParam) {
+        const parsedId = Number(idParam);
+
+        if (Number.isFinite(parsedId) && parsedId > 0) {
+          this.loadProductById(parsedId);
+          return;
+        }
+
         this.errorMessage = this.uiMessages.products.invalidProductData;
         return;
       }
 
-      this.loadProduct(slug);
+      if (slug) {
+        this.loadProductBySlug(slug);
+        return;
+      }
+
+      if (!slug) {
+        this.errorMessage = this.uiMessages.products.invalidProductData;
+        return;
+      }
     });
   }
 
-  private loadProduct(slug: string) {
+  private resetLoadingState() {
     this.isLoading = true;
     this.errorMessage = '';
     this.quantity = 1;
     this.activeImage = 0;
+  }
+
+  private loadProductBySlug(slug: string) {
+    this.resetLoadingState();
 
     this.productService.getProductBySlug(slug).subscribe({
+      next: product => {
+        this.product = product;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = this.uiMessages.products.loadProductFailed;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private loadProductById(id: number) {
+    this.resetLoadingState();
+
+    this.productService.getProduct(id).subscribe({
       next: product => {
         this.product = product;
         this.isLoading = false;
@@ -213,7 +249,7 @@ export class ProductDetailComponent implements OnInit {
       return;
     }
 
-    const shareUrl = this.buildShareUrl(this.product.slug);
+    const shareUrl = this.buildShareUrl(this.product.id);
     const shareTitle = this.product.nameAr || this.product.nameEn || this.uiMessages.products.listTitle;
 
     if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
@@ -235,14 +271,14 @@ export class ProductDetailComponent implements OnInit {
     await this.copyShareLink(shareUrl);
   }
 
-  private buildShareUrl(slug: string): string {
-    const encodedSlug = encodeURIComponent(slug);
+  private buildShareUrl(productId: number): string {
+    const normalizedId = Math.max(1, Math.trunc(productId));
 
     if (typeof window === 'undefined') {
-      return `/products/${encodedSlug}`;
+      return `/p/${normalizedId}`;
     }
 
-    return `${window.location.origin}/products/${encodedSlug}`;
+    return `${window.location.origin}/p/${normalizedId}`;
   }
 
   private async copyShareLink(url: string): Promise<void> {
