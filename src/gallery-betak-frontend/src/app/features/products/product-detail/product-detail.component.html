@@ -91,78 +91,6 @@
             </p>
           </section>
         </article>
-
-        <aside class="amazon-buybox">
-          <p class="amazon-buybox-price">{{ product.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</p>
-          <p class="amazon-buybox-vat">{{ uiMessages.products.vatIncluded }}</p>
-
-          <p class="amazon-buybox-stock" [class.out]="product.stockQuantity <= 0">
-            {{ product.stockQuantity > 0 ? uiMessages.products.inStock : uiMessages.products.outOfStock }}
-          </p>
-
-          <div class="amazon-buybox-qty">
-            <p class="amazon-buybox-label">{{ uiMessages.checkout.quantityLabel }}</p>
-
-            <div class="product-qty-selector">
-              <button type="button" (click)="decreaseQuantity()" [attr.aria-label]="uiMessages.products.previous">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-              </button>
-
-              <span>{{ quantity }}</span>
-
-              <button type="button" (click)="increaseQuantity()" [disabled]="product.stockQuantity <= 0"
-                [attr.aria-label]="uiMessages.products.next">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <button type="button" (click)="addToCart()" [disabled]="product.stockQuantity <= 0"
-            class="amazon-buybox-btn add">
-            {{ uiMessages.products.addToCart }}
-          </button>
-
-          <button type="button" (click)="buyNow()" [disabled]="product.stockQuantity <= 0"
-            class="amazon-buybox-btn buy">
-            {{ uiMessages.products.buyNow }}
-          </button>
-
-          <div class="amazon-buybox-mini-actions">
-            <button type="button" (click)="addToWishlist()" class="product-icon-action wishlist"
-              [attr.aria-label]="uiMessages.products.addToWishlist" [title]="uiMessages.products.addToWishlist">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </button>
-
-            <button type="button" (click)="shareProduct()" class="product-icon-action share"
-              [attr.aria-label]="uiMessages.products.shareProduct" [title]="uiMessages.products.shareProduct">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8.684 13.342C9.886 12.511 11.34 12 12.912 12c1.572 0 3.026.511 4.228 1.342M8.684 13.342L6.6 14.9m2.084-1.558a3 3 0 10-4.242-4.242A3 3 0 008.684 13.342zm8.456 0l2.084 1.558m-2.084-1.558a3 3 0 114.242-4.242 3 3 0 01-4.242 4.242zM12 21a3 3 0 100-6 3 3 0 000 6z" />
-              </svg>
-            </button>
-          </div>
-
-          <div class="amazon-buybox-meta">
-            <p>
-              <span>{{ uiMessages.products.categoriesTitle }}:</span>
-              {{ product.categoryName || product.categoryNameAr || product.categoryNameEn }}
-            </p>
-            <p>
-              <span>{{ uiMessages.products.specWeightLabel }}:</span>
-              <ng-container *ngIf="product.weight !== null && product.weight !== undefined; else noWeight">
-                {{ product.weight }} {{ uiMessages.products.specWeightUnit }}
-              </ng-container>
-              <ng-template #noWeight>-</ng-template>
-            </p>
-          </div>
-        </aside>
       </section>
 
       <section id="details" class="amazon-details mt-14 sm:mt-16">
@@ -203,22 +131,4 @@
     </ng-container>
   </div>
 
-  <div class="product-mobile-quickbar md:hidden" *ngIf="product as quickProduct">
-    <div class="product-mobile-quickbar-inner">
-      <p class="product-mobile-quickbar-price">{{ quickProduct.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</p>
-
-      <button type="button" (click)="addToCart()" [disabled]="quickProduct.stockQuantity <= 0"
-        class="product-mobile-quickbar-btn add">
-        {{ uiMessages.products.addToCart }}
-      </button>
-
-      <button type="button" (click)="shareProduct()" [attr.aria-label]="uiMessages.products.shareProduct"
-        [title]="uiMessages.products.shareProduct" class="product-mobile-quickbar-btn share">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8.684 13.342C9.886 12.511 11.34 12 12.912 12c1.572 0 3.026.511 4.228 1.342M8.684 13.342L6.6 14.9m2.084-1.558a3 3 0 10-4.242-4.242A3 3 0 008.684 13.342zm8.456 0l2.084 1.558m-2.084-1.558a3 3 0 114.242-4.242 3 3 0 01-4.242 4.242zM12 21a3 3 0 100-6 3 3 0 000 6z" />
-        </svg>
-      </button>
-    </div>
-  </div>
 </div>
