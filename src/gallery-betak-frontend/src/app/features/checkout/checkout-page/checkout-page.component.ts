@@ -7,7 +7,12 @@ import { CartActions } from '../../../core/store/cart/cart.actions';
 import { selectCart } from '../../../core/store/cart/cart.reducer';
 import { CartDto } from '../../../core/services/api/cart.service';
 import { AuthService } from '../../../core/services/api/auth.service';
-import { CreateOrderRequest, OrderService } from '../../../core/services/api/order.service';
+import {
+  CreateOrderRequest,
+  OrderDto,
+  OrderService,
+  PaymentInitiationResponse
+} from '../../../core/services/api/order.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthRedirectService } from '../../../core/services/auth-redirect.service';
 import { UiTextService } from '../../../core/services/ui-text.service';
@@ -115,8 +120,12 @@ export class CheckoutPageComponent implements OnInit {
       : this.baseDeliveryCost;
   }
 
+  get taxCharge() {
+    return this.subtotal * 0.14;
+  }
+
   get total() {
-    return this.subtotal + this.shippingCharge;
+    return this.subtotal + this.shippingCharge + this.taxCharge;
   }
 
   nextStep() {
@@ -141,8 +150,13 @@ export class CheckoutPageComponent implements OnInit {
       return;
     }
 
+    if (!this.validateShippingStep()) {
+      this.currentStep = 1;
+      return;
+    }
+
     if (!this.checkoutData.addressId || this.checkoutData.addressId < 1) {
-      this.toastService.error(this.uiMessages.checkout.invalidAddressId);
+      this.createAddressFromShippingDetailsAndSubmit();
       return;
     }
 
@@ -307,6 +321,38 @@ export class CheckoutPageComponent implements OnInit {
       });
   }
 
+  private createAddressFromShippingDetailsAndSubmit() {
+    this.isSubmitting = true;
+
+    const request: UpsertAddressRequest = {
+      label: this.uiMessages.checkout.newAddressLabel,
+      recipientName: `${this.checkoutData.firstName} ${this.checkoutData.lastName}`.trim(),
+      phone: this.checkoutData.phone,
+      governorate: this.checkoutData.governorate,
+      city: this.checkoutData.city,
+      district: null,
+      streetAddress: this.checkoutData.street,
+      buildingNo: null,
+      apartmentNo: null,
+      postalCode: null,
+      isDefault: this.savedAddresses.length === 0
+    };
+
+    this.authService.createAddress(request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: createdAddress => {
+          this.savedAddresses = [createdAddress, ...this.savedAddresses];
+          this.selectAddress(createdAddress);
+          this.createOrder();
+        },
+        error: () => {
+          this.isSubmitting = false;
+          this.toastService.error(this.uiMessages.checkout.addressSyncFailed);
+        }
+      });
+  }
+
   private createOrder() {
     if (!this.checkoutData.addressId) {
       this.isSubmitting = false;
@@ -320,17 +366,60 @@ export class CheckoutPageComponent implements OnInit {
     };
 
     this.orderService.createOrder(request).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.toastService.success(this.uiMessages.checkout.orderCreated);
-        this.store.dispatch(CartActions.initializeCart());
-        this.router.navigate(['/'], { replaceUrl: true });
+      next: order => {
+        this.handleOrderCreated(order);
       },
       error: () => {
         this.isSubmitting = false;
         this.toastService.error(this.uiMessages.checkout.orderFailed);
       }
     });
+  }
+
+  private handleOrderCreated(order: OrderDto) {
+    this.store.dispatch(CartActions.initializeCart());
+
+    if (this.checkoutData.paymentMethod === 'cod') {
+      this.isSubmitting = false;
+      this.toastService.success(this.uiMessages.checkout.orderCreated);
+      this.router.navigate(['/'], { replaceUrl: true });
+      return;
+    }
+
+    this.orderService.initiatePayment(order.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: payment => {
+          this.isSubmitting = false;
+          this.handlePaymentInitiationResponse(payment);
+        },
+        error: () => {
+          this.isSubmitting = false;
+          this.toastService.error(this.uiMessages.checkout.paymentInitiationFailed);
+        }
+      });
+  }
+
+  private handlePaymentInitiationResponse(response: PaymentInitiationResponse) {
+    const redirectUrl = response.redirectUrl?.trim();
+
+    if (redirectUrl) {
+      this.toastService.success(this.uiMessages.checkout.redirectingToPayment);
+
+      if (typeof window !== 'undefined') {
+        window.location.assign(redirectUrl);
+      }
+
+      return;
+    }
+
+    if (response.referenceCode) {
+      this.toastService.success(`${this.uiMessages.checkout.paymentReferencePrefix} ${response.referenceCode}`);
+      this.router.navigate(['/'], { replaceUrl: true });
+      return;
+    }
+
+    this.toastService.error(this.uiMessages.checkout.paymentInitiationFailed);
   }
 
   private validateShippingStep(): boolean {

@@ -208,6 +208,7 @@ export const UI_MESSAGES_EN = {
         autoFillHint: 'Your details were auto-filled from your default address. You can still edit them before placing the order.',
         noSavedAddressHint: 'You do not have a saved address in your profile yet.',
         manageAddressesLink: 'Manage addresses',
+        newAddressLabel: 'Checkout Address',
         requiredFieldsHint: 'Complete all required fields before continuing.',
         governorateLabel: 'Governorate *',
         governoratePlaceholder: 'Select governorate...',
@@ -245,6 +246,7 @@ export const UI_MESSAGES_EN = {
         quantityLabel: 'Qty:',
         subtotalLabel: 'Subtotal',
         shippingLabel: 'Shipping',
+        taxLabel: 'VAT (14%)',
         shippingFree: 'Free',
         totalLabel: 'Total',
         governorates: ['Cairo', 'Giza', 'Alexandria', 'Sharqia', 'Dakahlia', 'Qalyubia', 'Red Sea'],
@@ -254,6 +256,9 @@ export const UI_MESSAGES_EN = {
         shippingDetailsMissing: 'Please complete the required shipping details.',
         invalidEmail: 'Email format is invalid.',
         addressSyncFailed: 'Could not save address updates. Please try again.',
+        redirectingToPayment: 'Redirecting to secure payment...',
+        paymentReferencePrefix: 'Payment reference code:',
+        paymentInitiationFailed: 'Order was created, but payment initiation failed. Please try again from your account orders.',
         orderCreated: 'Order created successfully.',
         orderFailed: 'Could not complete the order. Verify the saved address and try again.'
     }

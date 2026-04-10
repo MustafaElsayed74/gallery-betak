@@ -212,6 +212,7 @@ export const UI_MESSAGES = {
         autoFillHint: 'تم تعبئة البيانات تلقائياً من عنوانك الافتراضي ويمكنك تعديلها قبل تأكيد الطلب.',
         noSavedAddressHint: 'لا يوجد عنوان محفوظ في حسابك حالياً.',
         manageAddressesLink: 'إدارة العناوين',
+        newAddressLabel: 'عنوان الطلب',
         requiredFieldsHint: 'أكمل جميع الحقول المطلوبة قبل المتابعة.',
         governorateLabel: 'المحافظة *',
         governoratePlaceholder: 'اختر المحافظة...',
@@ -249,6 +250,7 @@ export const UI_MESSAGES = {
         quantityLabel: 'الكمية:',
         subtotalLabel: 'المجموع',
         shippingLabel: 'الشحن',
+        taxLabel: 'ضريبة القيمة المضافة (14%)',
         shippingFree: 'مجاني',
         totalLabel: 'الإجمالي',
         governorates: ['القاهرة', 'الجيزة', 'الإسكندرية', 'الشرقية', 'الدقهلية', 'القليوبية', 'البحر الأحمر'],
@@ -258,6 +260,9 @@ export const UI_MESSAGES = {
         shippingDetailsMissing: 'يرجى استكمال بيانات التوصيل المطلوبة.',
         invalidEmail: 'صيغة البريد الإلكتروني غير صحيحة.',
         addressSyncFailed: 'تعذر حفظ تعديلات العنوان. حاول مرة أخرى.',
+        redirectingToPayment: 'جاري تحويلك إلى صفحة الدفع الآمنة...',
+        paymentReferencePrefix: 'كود مرجع الدفع:',
+        paymentInitiationFailed: 'تم إنشاء الطلب ولكن تعذر بدء عملية الدفع. حاول مرة أخرى من صفحة الطلبات في حسابك.',
         orderCreated: 'تم إنشاء الطلب بنجاح.',
         orderFailed: 'تعذر إتمام الطلب. تحقق من صحة العنوان المحفوظ ثم أعد المحاولة.'
     }

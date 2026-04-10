@@ -17,6 +17,11 @@ export interface CreateOrderRequest {
   notes?: string;
 }
 
+export interface PaymentInitiationResponse {
+  redirectUrl: string;
+  referenceCode: string | null;
+}
+
 export interface OrderItem {
   productId: number;
   productNameAr: string;
@@ -64,6 +69,7 @@ export interface OrderSummaryDto {
 })
 export class OrderService {
   private readonly URL = `${environment.apiUrl}/Orders`;
+  private readonly PAYMENTS_URL = `${environment.apiUrl}/Payments`;
 
   constructor(private http: HttpClient) { }
 
@@ -72,6 +78,18 @@ export class OrderService {
       map(response => {
         if (!response.data) {
           throw new Error('Order payload missing.');
+        }
+
+        return response.data;
+      })
+    );
+  }
+
+  initiatePayment(orderId: number): Observable<PaymentInitiationResponse> {
+    return this.http.post<ApiResponse<PaymentInitiationResponse>>(`${this.PAYMENTS_URL}/${orderId}/initiate`, {}).pipe(
+      map(response => {
+        if (!response.data) {
+          throw new Error('Payment initiation payload missing.');
         }
 
         return response.data;

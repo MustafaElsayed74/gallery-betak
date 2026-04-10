@@ -83,5 +83,24 @@ public class CartsController : BaseApiController
         var result = await _cartService.ClearCartAsync(GetUserId(), GetSessionId());
         return StatusCode(result.StatusCode, result);
     }
+
+    /// <summary>Merges guest cart into authenticated user cart.</summary>
+    /// <response code="200">Cart merged successfully.</response>
+    [HttpPost("merge")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> MergeGuestCart()
+    {
+        var userId = GetUserId();
+        if (string.IsNullOrWhiteSpace(userId))
+            return Unauthorized(ApiResponse<object>.Fail(401, "غير مصرح", "Unauthorized."));
+
+        var sessionId = GetSessionId();
+        if (string.IsNullOrWhiteSpace(sessionId))
+            return BadRequest(ApiResponse<object>.Fail(400, "معرّف جلسة الضيف مفقود", "Guest session ID is required."));
+
+        var result = await _cartService.MergeCartAsync(userId, sessionId);
+        return StatusCode(result.StatusCode, result);
+    }
 }
 

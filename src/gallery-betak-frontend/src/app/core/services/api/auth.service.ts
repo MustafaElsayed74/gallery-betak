@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 interface ApiResponse<T> {
@@ -113,6 +113,7 @@ export interface LoginRequest {
 })
 export class AuthService {
   private readonly AUTH_URL = `${environment.apiUrl}/Auth`;
+  private readonly CART_URL = `${environment.apiUrl}/Carts`;
   private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -131,7 +132,13 @@ export class AuthService {
         tap(response => {
           this.setAuthData(response);
           this.currentUserSubject.next(response);
-        })
+        }),
+        switchMap(response =>
+          this.mergeGuestCartIfNeeded().pipe(
+            map(() => response),
+            catchError(() => of(response))
+          )
+        )
       );
   }
 
@@ -142,7 +149,13 @@ export class AuthService {
         tap(response => {
           this.setAuthData(response);
           this.currentUserSubject.next(response);
-        })
+        }),
+        switchMap(response =>
+          this.mergeGuestCartIfNeeded().pipe(
+            map(() => response),
+            catchError(() => of(response))
+          )
+        )
       );
   }
 
@@ -280,5 +293,20 @@ export class AuthService {
     }
 
     return response.data;
+  }
+
+  private mergeGuestCartIfNeeded(): Observable<boolean> {
+    const sessionId = localStorage.getItem('cart_session_id');
+    if (!sessionId) {
+      return of(true);
+    }
+
+    return this.http.post<ApiResponse<boolean>>(
+      `${this.CART_URL}/merge`,
+      {},
+      { headers: { 'X-Guest-Session-Id': sessionId } }
+    ).pipe(
+      map(response => response.data ?? true)
+    );
   }
 }
