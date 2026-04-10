@@ -291,18 +291,19 @@
 
             <div class="mobile-noon-body">
               <p class="mobile-noon-category">{{ p.categoryName || p.categoryNameAr || p.categoryNameEn }}</p>
-              <h3 class="mobile-noon-title">{{ p.nameAr || p.nameEn }}</h3>
-
-              <div class="mobile-noon-meta">
-                <span class="mobile-noon-rating">{{ (p.avgRating ?? p.averageRating) | number:'1.1-1' }}</span>
-                <span class="mobile-noon-reviews">({{ p.reviewsCount }})</span>
-              </div>
 
               <div class="mobile-noon-price-row">
                 <span class="mobile-noon-price">{{ p.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
                 <span *ngIf="p.originalPrice > p.price" class="mobile-noon-original">
                   {{ p.originalPrice | currency:'EGP':'symbol-narrow':'1.0-0' }}
                 </span>
+              </div>
+
+              <h3 class="mobile-noon-title">{{ p.nameAr || p.nameEn }}</h3>
+
+              <div class="mobile-noon-meta">
+                <span class="mobile-noon-rating">{{ (p.avgRating ?? p.averageRating) | number:'1.1-1' }}</span>
+                <span class="mobile-noon-reviews">({{ p.reviewsCount }})</span>
               </div>
             </div>
 

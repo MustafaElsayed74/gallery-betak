@@ -347,13 +347,14 @@
 
     .mobile-noon-price-row {
         display: flex;
-        flex-direction: column;
-        gap: 0.06rem;
+        align-items: baseline;
+        gap: 0.35rem;
+        margin: 0.15rem 0 0.1rem;
         padding-inline-end: 1.85rem;
     }
 
     .mobile-noon-price {
-        font-size: 1.02rem;
+        font-size: 0.98rem;
         line-height: 1.05;
         font-weight: 900;
         color: #111827;
