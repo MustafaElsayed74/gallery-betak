@@ -17,6 +17,14 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
+    var useInMemoryDatabase = builder.Configuration.GetValue<bool>("Database:UseInMemoryDatabase");
+    if (useInMemoryDatabase && !builder.Environment.IsDevelopment())
+    {
+        throw new InvalidOperationException(
+            "Database:UseInMemoryDatabase=true is only allowed in Development. " +
+            "Configure a persistent SQL Server connection for non-development environments.");
+    }
+
     // ── Serilog ──────────────────────────────────────────────────────
     builder.Host.UseSerilog((context, loggerConfig) =>
         loggerConfig.ReadFrom.Configuration(context.Configuration));

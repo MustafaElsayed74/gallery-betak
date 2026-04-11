@@ -32,13 +32,19 @@ public static class DependencyInjection
         var useInMemoryDatabase = configuration.GetValue<bool>("Database:UseInMemoryDatabase");
         services.AddDbContext<AppDbContext>(options =>
         {
-            if (!useInMemoryDatabase && !string.IsNullOrWhiteSpace(connectionString))
+            if (useInMemoryDatabase)
             {
-                options.UseSqlServer(connectionString);
+                options.UseInMemoryDatabase("GalleryBetakDb");
                 return;
             }
 
-            options.UseInMemoryDatabase("GalleryBetakDb");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException(
+                    "Database:UseInMemoryDatabase is false but ConnectionStrings:DefaultConnection is missing.");
+            }
+
+            options.UseSqlServer(connectionString);
         });
 
         // ── ASP.NET Identity ──────────────────────────────────────────
