@@ -21,6 +21,56 @@ namespace GalleryBetak.Infrastructure;
 /// </summary>
 public static class DependencyInjection
 {
+    private static string ResolveHostedSqlitePath(IHostEnvironment environment, string configuredPath)
+    {
+        if (Path.IsPathRooted(configuredPath))
+        {
+            var rootedDirectory = Path.GetDirectoryName(configuredPath);
+            if (!string.IsNullOrWhiteSpace(rootedDirectory))
+            {
+                Directory.CreateDirectory(rootedDirectory);
+            }
+
+            return configuredPath;
+        }
+
+        var fileName = Path.GetFileName(configuredPath);
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            fileName = "gallerybetak.db";
+        }
+
+        var candidates = new List<string>
+        {
+            Path.Combine(environment.ContentRootPath, "App_Data"),
+            Path.Combine(Path.GetTempPath(), "GalleryBetak")
+        };
+
+        var homePath = Environment.GetEnvironmentVariable("HOME");
+        if (!string.IsNullOrWhiteSpace(homePath))
+        {
+            candidates.Insert(0, Path.Combine(homePath, "App_Data"));
+        }
+
+        foreach (var candidate in candidates)
+        {
+            try
+            {
+                Directory.CreateDirectory(candidate);
+                var probeFile = Path.Combine(candidate, ".probe");
+                File.WriteAllText(probeFile, "ok");
+                File.Delete(probeFile);
+                return Path.Combine(candidate, fileName);
+            }
+            catch
+            {
+                // Try next writable location.
+            }
+        }
+
+        return Path.Combine(Path.GetTempPath(), fileName);
+    }
+
     /// <summary>
     /// Registers all Infrastructure layer services: DbContext, Identity, Redis, repositories, UoW.
     /// </summary>
@@ -57,12 +107,7 @@ public static class DependencyInjection
 
             if (shouldUseHostedSqliteFallback)
             {
-                var absoluteSqlitePath = Path.Combine(environment.ContentRootPath, hostedSqlitePath);
-                var directory = Path.GetDirectoryName(absoluteSqlitePath);
-                if (!string.IsNullOrWhiteSpace(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
+                var absoluteSqlitePath = ResolveHostedSqlitePath(environment, hostedSqlitePath);
 
                 options.UseSqlite($"Data Source={absoluteSqlitePath}");
                 return;
