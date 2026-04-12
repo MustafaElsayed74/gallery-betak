@@ -248,8 +248,8 @@ function Build-CreateRequest {
         isFeatured    = [bool]$Detail.isFeatured
         tagIds        = @($tagIds)
         imageUrls     = @($imageUrls)
-        sourceUrl     = $null
-        importedAt    = [DateTime]::UtcNow.ToString("o")
+        sourceUrl     = $Detail.sourceUrl
+        importedAt    = $Detail.importedAt
     }
 }
 

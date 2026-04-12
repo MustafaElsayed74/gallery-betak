@@ -8,6 +8,42 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+$BlockedKeywords = @(
+    "كاميرا", "camera", "هودي", "hoodie", "تي شيرت", "t-shirt", "shirt", "ملابس", "fashion",
+    "موضة", "موبايل", "mobile", "phone", "laptop", "computer", "الكترونيات", "إلكترونيات",
+    "electronics", "tablet", "تابلت", "security", "surveillance", "مراقبة", "كاميرات",
+    "هيكفيجن", "hikvision", "nvr", "dvr", "cctv", "ان في ار", "إن في ار",
+    "إسدال", "سيدات",
+    "women", "women's", "ladies", "dress", "skirt", "مَرتبة", "مرتبة", "mattress",
+    "bed", "blanket", "duvet", "coverlet", "pillow", "sheet", "rug", "carpet",
+    "sofa", "couch", "chair", "wardrobe", "dresser", "curtain", "bedding", "furniture"
+)
+
+function Test-ProductRelevance {
+    param([object]$Preview)
+
+    $text = @(
+        $Preview.nameAr,
+        $Preview.nameEn,
+        $Preview.descriptionAr,
+        $Preview.descriptionEn,
+        $Preview.material,
+        $Preview.origin
+    ) -join ' '
+
+    if ([string]::IsNullOrWhiteSpace($text)) {
+        return $false
+    }
+
+    foreach ($term in $BlockedKeywords) {
+        if ($text.IndexOf($term, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+            return $false
+        }
+    }
+
+    return $true
+}
+
 function Get-AdminHeaders {
     param([string]$BaseUrl)
 
@@ -150,6 +186,18 @@ while ($created -lt $needed -and $page -le $MaxPages) {
             }
 
             $categoryId = $PreferredCategoryId
+
+            if (-not (Test-ProductRelevance -Preview $preview)) {
+                $skipped++
+                $failures.Add("Irrelevant preview: $link")
+                continue
+            }
+
+            if (-not $preview.imageUrls -or @($preview.imageUrls).Count -eq 0) {
+                $skipped++
+                $failures.Add("Missing images: $link")
+                continue
+            }
             if ($preview.suggestedCategoryId -and [int]$preview.suggestedCategoryId -gt 0) {
                 $categoryId = [int]$preview.suggestedCategoryId
             }

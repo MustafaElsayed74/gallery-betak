@@ -118,6 +118,12 @@ public sealed record ProductDetailDto
     /// <summary>Tags.</summary>
     public IReadOnlyList<ProductTagDto> Tags { get; init; } = [];
 
+    /// <summary>External source URL when imported.</summary>
+    public string? SourceUrl { get; init; }
+
+    /// <summary>UTC timestamp when imported.</summary>
+    public DateTime? ImportedAt { get; init; }
+
     /// <summary>Creation date.</summary>
     public DateTime CreatedAt { get; init; }
 }

@@ -42,6 +42,10 @@ public sealed class ProductMappingProfile : Profile
                 opt.MapFrom(s => s.OriginalPrice.HasValue && s.OriginalPrice > 0
                     ? (int)Math.Round((1 - s.Price / s.OriginalPrice.Value) * 100)
                     : (int?)null))
+            .ForMember(d => d.SourceUrl, opt =>
+                opt.MapFrom(s => s.SourceUrl))
+            .ForMember(d => d.ImportedAt, opt =>
+                opt.MapFrom(s => s.ImportedAt))
             .ForMember(d => d.Tags, opt =>
                 opt.MapFrom(s => s.ProductTags.Select(pt => pt.Tag)));
 
