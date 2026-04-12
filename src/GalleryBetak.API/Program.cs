@@ -34,7 +34,7 @@ try
     // ================================================================
 
     // 1. Infrastructure services (DbContext, Identity, Redis, Repos)
-    builder.Services.AddInfrastructureServices(builder.Configuration);
+    builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 
     // 2. Application services (AutoMapper, Validators, Services)
     builder.Services.AddApplicationServices();
@@ -84,7 +84,10 @@ try
     {
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<GalleryBetak.Infrastructure.Data.AppDbContext>();
-        if (context.Database.IsRelational())
+        var providerName = context.Database.ProviderName ?? string.Empty;
+        var isSqliteProvider = providerName.Contains("Sqlite", StringComparison.OrdinalIgnoreCase);
+
+        if (context.Database.IsRelational() && !isSqliteProvider)
         {
             var hasMigrations = context.Database.GetMigrations().Any();
             if (hasMigrations)

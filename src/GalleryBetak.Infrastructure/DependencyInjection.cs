@@ -7,6 +7,7 @@ using GalleryBetak.Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
@@ -25,16 +26,45 @@ public static class DependencyInjection
     /// </summary>
     public static IServiceCollection AddInfrastructureServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IHostEnvironment environment)
     {
         // ── Database ──────────────────────────────────────────────────
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         var useInMemoryDatabase = configuration.GetValue<bool>("Database:UseInMemoryDatabase");
+        var enableHostedSqliteFallback = configuration.GetValue("Database:EnableHostedSqliteFallback", true);
+        var hostedSqlitePath = configuration.GetValue<string>("Database:HostedSqlitePath") ?? "App_Data/gallerybetak.db";
+
+        var looksLikeLocalSqlConnection =
+            !string.IsNullOrWhiteSpace(connectionString) &&
+            (connectionString.Contains("(localdb)", StringComparison.OrdinalIgnoreCase) ||
+             connectionString.Contains("localhost", StringComparison.OrdinalIgnoreCase) ||
+             connectionString.Contains("127.0.0.1", StringComparison.OrdinalIgnoreCase));
+
+        var shouldUseHostedSqliteFallback =
+            !useInMemoryDatabase &&
+            !environment.IsDevelopment() &&
+            enableHostedSqliteFallback &&
+            looksLikeLocalSqlConnection;
+
         services.AddDbContext<AppDbContext>(options =>
         {
             if (useInMemoryDatabase)
             {
                 options.UseInMemoryDatabase("GalleryBetakDb");
+                return;
+            }
+
+            if (shouldUseHostedSqliteFallback)
+            {
+                var absoluteSqlitePath = Path.Combine(environment.ContentRootPath, hostedSqlitePath);
+                var directory = Path.GetDirectoryName(absoluteSqlitePath);
+                if (!string.IsNullOrWhiteSpace(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                options.UseSqlite($"Data Source={absoluteSqlitePath}");
                 return;
             }
 
