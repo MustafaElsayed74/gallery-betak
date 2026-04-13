@@ -87,6 +87,21 @@
             {{ isSubmitting ? uiMessages.auth.loginSubmitting : uiMessages.auth.loginSubmit }}
           </button>
         </div>
+
+        <div class="auth-divider" aria-hidden="true">
+          <span>or</span>
+        </div>
+
+        <div class="google-signin-wrap">
+          <div id="google-signin-button" class="google-signin-slot" [class.hidden]="googleUnavailable"></div>
+          <button type="button" *ngIf="!googleUnavailable" (click)="onGoogleFallbackClick()"
+            class="google-fallback-btn">
+            Continue with Google
+          </button>
+          <p *ngIf="googleUnavailable" class="google-unavailable-note">
+            Google login is currently unavailable. Please use email and password.
+          </p>
+        </div>
       </form>
     </div>
   </div>

@@ -73,6 +73,18 @@ export class AuthEffects {
     )
   );
 
+  googleLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.googleLogin),
+      mergeMap(({ idToken, returnUrl }) =>
+        this.authService.googleLogin({ idToken }).pipe(
+          map(response => AuthActions.loginSuccess({ response, returnUrl })),
+          catchError(error => of(AuthActions.loginFailure({ error: this.getErrorMessage(error, 'Google login failed') })))
+        )
+      )
+    )
+  );
+
   register$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.register),

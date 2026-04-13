@@ -25,6 +25,11 @@ export const authFeature = createFeature({
       loading: true,
       error: null
     })),
+    on(AuthActions.googleLogin, (state) => ({
+      ...state,
+      loading: true,
+      error: null
+    })),
     on(AuthActions.loginSuccess, (state, { response }) => ({
       ...state,
       user: response,

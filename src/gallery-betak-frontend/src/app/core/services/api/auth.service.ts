@@ -108,6 +108,10 @@ export interface LoginRequest {
   password?: string;
 }
 
+export interface GoogleLoginRequest {
+  idToken: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -127,6 +131,23 @@ export class AuthService {
 
   login(model: LoginRequest): Observable<AuthResponse> {
     return this.http.post<ApiResponse<BackendAuthResponse>>(`${this.AUTH_URL}/login`, model)
+      .pipe(
+        map(response => this.normalizeAuthResponse(response.data)),
+        tap(response => {
+          this.setAuthData(response);
+          this.currentUserSubject.next(response);
+        }),
+        switchMap(response =>
+          this.mergeGuestCartIfNeeded().pipe(
+            map(() => response),
+            catchError(() => of(response))
+          )
+        )
+      );
+  }
+
+  googleLogin(model: GoogleLoginRequest): Observable<AuthResponse> {
+    return this.http.post<ApiResponse<BackendAuthResponse>>(`${this.AUTH_URL}/google/login`, model)
       .pipe(
         map(response => this.normalizeAuthResponse(response.data)),
         tap(response => {

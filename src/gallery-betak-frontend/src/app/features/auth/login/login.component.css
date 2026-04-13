@@ -50,3 +50,56 @@
 .auth-card button[type='submit']:hover:not(:disabled) {
     transform: translateY(-1px);
 }
+
+.auth-divider {
+    position: relative;
+    text-align: center;
+    margin: 0.75rem 0;
+    color: #64748b;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.auth-divider::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    border-top: 1px solid rgba(148, 163, 184, 0.35);
+    transform: translateY(-50%);
+}
+
+.auth-divider span {
+    position: relative;
+    background: #fff;
+    padding: 0 0.6rem;
+}
+
+.google-signin-wrap {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.google-signin-slot {
+    min-height: 42px;
+    display: flex;
+    justify-content: center;
+}
+
+.google-fallback-btn {
+    min-height: 2.6rem;
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    border-radius: 999px;
+    background: #fff;
+    color: #0f172a;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.google-unavailable-note {
+    margin: 0;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.8rem;
+}

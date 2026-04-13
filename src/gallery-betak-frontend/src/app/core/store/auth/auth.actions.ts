@@ -5,6 +5,7 @@ export const AuthActions = createActionGroup({
   source: 'Auth',
   events: {
     'Login': props<{ request: LoginRequest; returnUrl?: string }>(),
+    'Google Login': props<{ idToken: string; returnUrl?: string }>(),
     'Login Success': props<{ response: AuthResponse; returnUrl?: string }>(),
     'Login Failure': props<{ error: string }>(),
 

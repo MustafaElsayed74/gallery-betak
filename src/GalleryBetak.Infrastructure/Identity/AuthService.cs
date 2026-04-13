@@ -624,7 +624,17 @@ public sealed class AuthService : IAuthService
         }
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        await SendVerificationEmailAsync(targetEmail, token, cancellationToken);
+        try
+        {
+            await SendVerificationEmailAsync(targetEmail, token, cancellationToken);
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(ex, "Email verification configuration is incomplete.");
+            return ApiResponse<bool>.Fail(500,
+                "خدمة البريد الإلكتروني غير مفعّلة",
+                "Email verification is not configured.");
+        }
 
         return ApiResponse<bool>.Ok(true,
             "تم إرسال كود التحقق إلى البريد الإلكتروني",
