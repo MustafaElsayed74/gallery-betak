@@ -15,6 +15,9 @@ public interface IAuthService
     /// <summary>Registers a new user account.</summary>
     Task<ApiResponse<AuthResponse>> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default);
 
+    /// <summary>Authenticates or creates user account from Google identity token.</summary>
+    Task<ApiResponse<AuthResponse>> GoogleLoginAsync(GoogleLoginRequest request, CancellationToken cancellationToken = default);
+
     /// <summary>Refreshes an expired access token using a valid refresh token.</summary>
     Task<ApiResponse<AuthResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellationToken = default);
 
@@ -44,5 +47,17 @@ public interface IAuthService
 
     /// <summary>Deletes an address for the current user.</summary>
     Task<ApiResponse<bool>> DeleteAddressAsync(string userId, int addressId, CancellationToken cancellationToken = default);
+
+    /// <summary>Sends email verification code to the user email.</summary>
+    Task<ApiResponse<bool>> SendEmailVerificationAsync(string userId, SendEmailVerificationRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Verifies email confirmation code and confirms user email.</summary>
+    Task<ApiResponse<bool>> VerifyEmailAsync(string userId, VerifyEmailRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Sends mobile OTP via Twilio Verify.</summary>
+    Task<ApiResponse<bool>> SendPhoneOtpAsync(string userId, SendPhoneOtpRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Verifies mobile OTP and confirms phone number for the user.</summary>
+    Task<ApiResponse<bool>> VerifyPhoneOtpAsync(string userId, VerifyPhoneOtpRequest request, CancellationToken cancellationToken = default);
 }
 

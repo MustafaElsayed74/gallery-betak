@@ -3,9 +3,15 @@ using GalleryBetak.Application.DTOs.Auth;
 using GalleryBetak.Application.Interfaces;
 using GalleryBetak.Domain.Entities;
 using GalleryBetak.Domain.Interfaces;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Mail;
+using System.Text;
+using System.Text.Json;
 
 namespace GalleryBetak.Infrastructure.Identity;
 
@@ -19,6 +25,7 @@ public sealed class AuthService : IAuthService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IJwtTokenService _jwtTokenService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthService> _logger;
 
@@ -28,6 +35,7 @@ public sealed class AuthService : IAuthService
         SignInManager<ApplicationUser> signInManager,
         IJwtTokenService jwtTokenService,
         IUnitOfWork unitOfWork,
+        IHttpClientFactory httpClientFactory,
         IConfiguration configuration,
         ILogger<AuthService> logger)
     {
@@ -35,6 +43,7 @@ public sealed class AuthService : IAuthService
         _signInManager = signInManager;
         _jwtTokenService = jwtTokenService;
         _unitOfWork = unitOfWork;
+        _httpClientFactory = httpClientFactory;
         _configuration = configuration;
         _logger = logger;
     }
@@ -140,6 +149,94 @@ public sealed class AuthService : IAuthService
         return ApiResponse<AuthResponse>.Created(authResponse,
             "تم إنشاء الحساب بنجاح",
             "Account created successfully.");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ApiResponse<AuthResponse>> GoogleLoginAsync(GoogleLoginRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var clientId = _configuration["Authentication:Google:ClientId"];
+        if (string.IsNullOrWhiteSpace(clientId))
+        {
+            return ApiResponse<AuthResponse>.Fail(500,
+                "Google authentication غير مفعّل",
+                "Google authentication is not configured.");
+        }
+
+        GoogleJsonWebSignature.Payload payload;
+        try
+        {
+            payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken,
+                new GoogleJsonWebSignature.ValidationSettings { Audience = [clientId] });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Invalid Google ID token.");
+            return ApiResponse<AuthResponse>.Fail(401,
+                "رمز Google غير صالح",
+                "Invalid Google token.");
+        }
+
+        if (!payload.EmailVerified)
+        {
+            return ApiResponse<AuthResponse>.Fail(401,
+                "البريد الإلكتروني من Google غير موثّق",
+                "Google email is not verified.");
+        }
+
+        var normalizedEmail = payload.Email.Trim().ToLowerInvariant();
+        var user = await _userManager.FindByEmailAsync(normalizedEmail);
+
+        if (user is null)
+        {
+            var firstName = string.IsNullOrWhiteSpace(payload.GivenName) ? "Google" : payload.GivenName.Trim();
+            var lastName = string.IsNullOrWhiteSpace(payload.FamilyName) ? "User" : payload.FamilyName.Trim();
+
+            user = ApplicationUser.Create(normalizedEmail, firstName, lastName);
+            user.EmailConfirmed = true;
+
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                var errors = createResult.Errors
+                    .Select(e => new ApiError { Field = e.Code, Message = e.Description })
+                    .ToList();
+
+                return ApiResponse<AuthResponse>.Fail(400,
+                    "فشل إنشاء حساب Google",
+                    "Failed to create Google account.",
+                    errors);
+            }
+
+            await _userManager.AddToRoleAsync(user, "Customer");
+        }
+
+        if (user.IsDeleted)
+        {
+            return ApiResponse<AuthResponse>.Fail(403,
+                "الحساب غير متاح",
+                "Account is not available.");
+        }
+
+        if (!user.IsActive)
+        {
+            return ApiResponse<AuthResponse>.Fail(403,
+                "تم تعطيل حسابك",
+                "Your account has been deactivated.");
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            user.EmailConfirmed = true;
+        }
+
+        user.RecordLogin();
+        var authResponse = await GenerateAuthResponseAsync(user);
+        await _userManager.UpdateAsync(user);
+
+        return ApiResponse<AuthResponse>.Ok(authResponse,
+            "تم تسجيل الدخول عبر Google بنجاح",
+            "Google login successful.");
     }
 
     /// <inheritdoc/>
@@ -498,6 +595,194 @@ public sealed class AuthService : IAuthService
             "Address deleted.");
     }
 
+    /// <inheritdoc/>
+    public async Task<ApiResponse<bool>> SendEmailVerificationAsync(string userId, SendEmailVerificationRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null || user.IsDeleted)
+        {
+            return ApiResponse<bool>.Fail(404, "المستخدم غير موجود", "User not found.");
+        }
+
+        var targetEmail = string.IsNullOrWhiteSpace(request.Email)
+            ? (user.Email ?? string.Empty)
+            : request.Email.Trim().ToLowerInvariant();
+
+        if (string.IsNullOrWhiteSpace(targetEmail))
+        {
+            return ApiResponse<bool>.Fail(400,
+                "لا يوجد بريد إلكتروني صالح",
+                "No valid email found for verification.");
+        }
+
+        if (!string.Equals(user.Email, targetEmail, StringComparison.OrdinalIgnoreCase))
+        {
+            return ApiResponse<bool>.Fail(400,
+                "يجب التحقق من البريد الإلكتروني المسجل فقط",
+                "Only the account email can be verified.");
+        }
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        await SendVerificationEmailAsync(targetEmail, token, cancellationToken);
+
+        return ApiResponse<bool>.Ok(true,
+            "تم إرسال كود التحقق إلى البريد الإلكتروني",
+            "Email verification code sent.");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ApiResponse<bool>> VerifyEmailAsync(string userId, VerifyEmailRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null || user.IsDeleted)
+        {
+            return ApiResponse<bool>.Fail(404, "المستخدم غير موجود", "User not found.");
+        }
+
+        var normalizedEmail = request.Email.Trim().ToLowerInvariant();
+        if (!string.Equals(user.Email, normalizedEmail, StringComparison.OrdinalIgnoreCase))
+        {
+            return ApiResponse<bool>.Fail(400,
+                "البريد الإلكتروني غير مطابق للحساب",
+                "Email does not match current account.");
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, request.Code.Trim());
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors
+                .Select(e => new ApiError { Field = e.Code, Message = e.Description })
+                .ToList();
+
+            return ApiResponse<bool>.Fail(400,
+                "كود التحقق غير صالح أو منتهي",
+                "Invalid or expired verification code.",
+                errors);
+        }
+
+        return ApiResponse<bool>.Ok(true,
+            "تم تأكيد البريد الإلكتروني بنجاح",
+            "Email verified successfully.");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ApiResponse<bool>> SendPhoneOtpAsync(string userId, SendPhoneOtpRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null || user.IsDeleted)
+        {
+            return ApiResponse<bool>.Fail(404, "المستخدم غير موجود", "User not found.");
+        }
+
+        var normalizedPhone = NormalizePhoneNumber(request.PhoneNumber);
+        var verifySid = _configuration["Twilio:VerifyServiceSid"];
+        var accountSid = _configuration["Twilio:AccountSID"];
+        var authToken = _configuration["Twilio:AuthToken"];
+
+        if (string.IsNullOrWhiteSpace(verifySid) || string.IsNullOrWhiteSpace(accountSid) || string.IsNullOrWhiteSpace(authToken))
+        {
+            return ApiResponse<bool>.Fail(500,
+                "Twilio verification غير مفعّل",
+                "Twilio verification is not configured.");
+        }
+
+        var client = _httpClientFactory.CreateClient();
+        var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{accountSid}:{authToken}"));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+
+        var response = await client.PostAsync(
+            $"https://verify.twilio.com/v2/Services/{verifySid}/Verifications",
+            new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                ["To"] = normalizedPhone,
+                ["Channel"] = "sms"
+            }),
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var body = await response.Content.ReadAsStringAsync(cancellationToken);
+            _logger.LogWarning("Twilio send OTP failed: {Status} {Body}", response.StatusCode, body);
+
+            return ApiResponse<bool>.Fail(400,
+                "فشل إرسال رمز التحقق",
+                "Failed to send OTP code.");
+        }
+
+        return ApiResponse<bool>.Ok(true,
+            "تم إرسال رمز التحقق إلى الهاتف",
+            "OTP sent successfully.");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ApiResponse<bool>> VerifyPhoneOtpAsync(string userId, VerifyPhoneOtpRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null || user.IsDeleted)
+        {
+            return ApiResponse<bool>.Fail(404, "المستخدم غير موجود", "User not found.");
+        }
+
+        var normalizedPhone = NormalizePhoneNumber(request.PhoneNumber);
+        var verifySid = _configuration["Twilio:VerifyServiceSid"];
+        var accountSid = _configuration["Twilio:AccountSID"];
+        var authToken = _configuration["Twilio:AuthToken"];
+
+        if (string.IsNullOrWhiteSpace(verifySid) || string.IsNullOrWhiteSpace(accountSid) || string.IsNullOrWhiteSpace(authToken))
+        {
+            return ApiResponse<bool>.Fail(500,
+                "Twilio verification غير مفعّل",
+                "Twilio verification is not configured.");
+        }
+
+        var client = _httpClientFactory.CreateClient();
+        var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{accountSid}:{authToken}"));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+
+        var response = await client.PostAsync(
+            $"https://verify.twilio.com/v2/Services/{verifySid}/VerificationCheck",
+            new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                ["To"] = normalizedPhone,
+                ["Code"] = request.Code.Trim()
+            }),
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var body = await response.Content.ReadAsStringAsync(cancellationToken);
+            _logger.LogWarning("Twilio verify OTP failed: {Status} {Body}", response.StatusCode, body);
+            return ApiResponse<bool>.Fail(400,
+                "رمز التحقق غير صالح",
+                "Invalid verification code.");
+        }
+
+        var json = await response.Content.ReadAsStringAsync(cancellationToken);
+        using var doc = JsonDocument.Parse(json);
+        var status = doc.RootElement.TryGetProperty("status", out var statusElement)
+            ? statusElement.GetString()
+            : null;
+
+        if (!string.Equals(status, "approved", StringComparison.OrdinalIgnoreCase))
+        {
+            return ApiResponse<bool>.Fail(400,
+                "رمز التحقق غير صالح أو منتهي",
+                "Invalid or expired verification code.");
+        }
+
+        user.PhoneNumber = normalizedPhone;
+        user.PhoneNumberConfirmed = true;
+        await _userManager.UpdateAsync(user);
+
+        return ApiResponse<bool>.Ok(true,
+            "تم توثيق رقم الهاتف بنجاح",
+            "Phone number verified successfully.");
+    }
+
     // ── Private Helpers ───────────────────────────────────────────
 
     private async Task<AuthResponse> GenerateAuthResponseAsync(ApplicationUser user)
@@ -549,6 +834,65 @@ public sealed class AuthService : IAuthService
             PostalCode = address.PostalCode,
             IsDefault = address.IsDefault
         };
+    }
+
+    private async Task SendVerificationEmailAsync(string targetEmail, string token, CancellationToken cancellationToken)
+    {
+        var smtpHost = _configuration["EmailConfiguration:SmtpServer"] ?? _configuration["SmtpSettings:Host"];
+        var smtpPortRaw = _configuration["EmailConfiguration:Port"] ?? _configuration["SmtpSettings:Port"];
+        var username = _configuration["EmailConfiguration:UserName"] ?? _configuration["SmtpSettings:Username"];
+        var password = _configuration["EmailConfiguration:Password"] ?? _configuration["SmtpSettings:Password"];
+        var from = _configuration["EmailConfiguration:From"] ?? _configuration["SmtpSettings:FromEmail"] ?? username;
+
+        if (string.IsNullOrWhiteSpace(smtpHost) ||
+            string.IsNullOrWhiteSpace(username) ||
+            string.IsNullOrWhiteSpace(password) ||
+            string.IsNullOrWhiteSpace(from))
+        {
+            throw new InvalidOperationException("Email SMTP configuration is incomplete.");
+        }
+
+        var port = int.TryParse(smtpPortRaw, out var parsedPort) ? parsedPort : 587;
+        var enableSsl = port == 465;
+
+        using var message = new MailMessage(from, targetEmail)
+        {
+            Subject = "GalleryBetak Email Verification",
+            Body = $"Your verification code is:\n{token}\n\nIf you did not request this, ignore this email.",
+            IsBodyHtml = false
+        };
+
+        using var smtp = new SmtpClient(smtpHost, port)
+        {
+            EnableSsl = enableSsl,
+            Credentials = new NetworkCredential(username, password)
+        };
+
+        using var registration = cancellationToken.Register(() => smtp.SendAsyncCancel());
+        await smtp.SendMailAsync(message, cancellationToken);
+    }
+
+    private static string NormalizePhoneNumber(string phoneNumber)
+    {
+        var value = phoneNumber.Trim().Replace(" ", string.Empty);
+        if (value.StartsWith("00", StringComparison.Ordinal))
+        {
+            value = "+" + value[2..];
+        }
+
+        if (!value.StartsWith("+", StringComparison.Ordinal))
+        {
+            if (value.StartsWith("0", StringComparison.Ordinal))
+            {
+                value = "+2" + value;
+            }
+            else
+            {
+                value = "+" + value;
+            }
+        }
+
+        return value;
     }
 }
 

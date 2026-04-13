@@ -74,6 +74,19 @@ public class AuthController : BaseApiController
     }
 
     /// <summary>
+    /// Authenticates user using Google ID token.
+    /// </summary>
+    [HttpPost("google/login")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResponse<AuthResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+    {
+        var result = await _authService.GoogleLoginAsync(request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
     /// Refreshes an expired access token using a valid refresh token.
     /// Implements token rotation (old refresh token is invalidated).
     /// </summary>
@@ -170,6 +183,74 @@ public class AuthController : BaseApiController
             return Unauthorized(ApiResponse<object>.Fail(401, "غير مصرح", "Unauthorized."));
 
         var result = await _authService.ChangePasswordAsync(userId, request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Sends email verification code to the current user.
+    /// </summary>
+    [HttpPost("email/send-verification")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> SendEmailVerification([FromBody] SendEmailVerificationRequest request)
+    {
+        var userId = CurrentUserId;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized(ApiResponse<object>.Fail(401, "غير مصرح", "Unauthorized."));
+
+        var result = await _authService.SendEmailVerificationAsync(userId, request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Verifies email confirmation code for the current user.
+    /// </summary>
+    [HttpPost("email/verify")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequest request)
+    {
+        var userId = CurrentUserId;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized(ApiResponse<object>.Fail(401, "غير مصرح", "Unauthorized."));
+
+        var result = await _authService.VerifyEmailAsync(userId, request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Sends mobile OTP via Twilio Verify for the current user.
+    /// </summary>
+    [HttpPost("phone/send-otp")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> SendPhoneOtp([FromBody] SendPhoneOtpRequest request)
+    {
+        var userId = CurrentUserId;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized(ApiResponse<object>.Fail(401, "غير مصرح", "Unauthorized."));
+
+        var result = await _authService.SendPhoneOtpAsync(userId, request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Verifies mobile OTP code and confirms phone number.
+    /// </summary>
+    [HttpPost("phone/verify-otp")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> VerifyPhoneOtp([FromBody] VerifyPhoneOtpRequest request)
+    {
+        var userId = CurrentUserId;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized(ApiResponse<object>.Fail(401, "غير مصرح", "Unauthorized."));
+
+        var result = await _authService.VerifyPhoneOtpAsync(userId, request);
         return StatusCode(result.StatusCode, result);
     }
 
