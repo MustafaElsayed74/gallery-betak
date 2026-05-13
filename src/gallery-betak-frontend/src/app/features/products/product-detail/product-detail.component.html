@@ -92,27 +92,29 @@
           </section>
         </article>
 
-        <aside class="amazon-buybox">
-          <p class="amazon-buybox-price">{{ product.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</p>
-          <p class="amazon-buybox-vat">{{ uiMessages.products.vatIncluded }}</p>
+        <aside class="product-buybox surface-panel p-5 rounded-2xl flex flex-col gap-4">
+          <div>
+            <p class="text-3xl font-black text-slate-900 leading-tight">{{ product.price | currency:'EGP':'symbol-narrow':'1.0-0' }}</p>
+            <p class="text-xs text-slate-500 mt-1">{{ uiMessages.products.vatIncluded }}</p>
+          </div>
 
-          <p class="amazon-buybox-stock" [class.out]="product.stockQuantity <= 0">
+          <p class="text-sm font-bold mt-1" [ngClass]="product.stockQuantity > 0 ? 'text-teal-600' : 'text-rose-600'">
             {{ product.stockQuantity > 0 ? uiMessages.products.inStock : uiMessages.products.outOfStock }}
           </p>
 
-          <div class="amazon-buybox-qty">
-            <p class="amazon-buybox-label">{{ uiMessages.checkout.quantityLabel }}</p>
+          <div class="mt-2">
+            <p class="text-xs font-bold text-slate-600 mb-2">{{ uiMessages.checkout.quantityLabel }}</p>
 
-            <div class="product-qty-selector">
-              <button type="button" (click)="decreaseQuantity()" [attr.aria-label]="uiMessages.products.previous">
+            <div class="product-qty-selector border border-slate-200 rounded-xl bg-white h-11 flex overflow-hidden shadow-sm">
+              <button type="button" (click)="decreaseQuantity()" class="w-11 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition" [attr.aria-label]="uiMessages.products.previous">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                 </svg>
               </button>
 
-              <span>{{ quantity }}</span>
+              <span class="flex-1 flex items-center justify-center font-bold text-slate-900">{{ quantity }}</span>
 
-              <button type="button" (click)="increaseQuantity()" [disabled]="product.stockQuantity <= 0"
+              <button type="button" (click)="increaseQuantity()" [disabled]="product.stockQuantity <= 0" class="w-11 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition disabled:opacity-50 disabled:bg-slate-50"
                 [attr.aria-label]="uiMessages.products.next">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -122,17 +124,17 @@
           </div>
 
           <button type="button" (click)="addToCart()" [disabled]="product.stockQuantity <= 0"
-            class="amazon-buybox-btn add">
+            class="cta-gradient text-white font-bold h-12 rounded-xl mt-3 flex items-center justify-center w-full transition disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none">
             {{ uiMessages.products.addToCart }}
           </button>
 
           <button type="button" (click)="buyNow()" [disabled]="product.stockQuantity <= 0"
-            class="amazon-buybox-btn buy">
+            class="bg-slate-800 hover:bg-slate-900 text-white font-bold h-12 rounded-xl flex items-center justify-center w-full transition disabled:opacity-60 disabled:cursor-not-allowed shadow-md">
             {{ uiMessages.products.buyNow }}
           </button>
 
-          <div class="amazon-buybox-mini-actions">
-            <button type="button" (click)="addToWishlist()" class="product-icon-action wishlist"
+          <div class="grid grid-cols-2 gap-3 mt-1">
+            <button type="button" (click)="addToWishlist()" class="h-11 border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:border-rose-300 hover:text-rose-500 hover:bg-rose-50 transition bg-white"
               [attr.aria-label]="uiMessages.products.addToWishlist" [title]="uiMessages.products.addToWishlist">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -140,7 +142,7 @@
               </svg>
             </button>
 
-            <button type="button" (click)="shareProduct()" class="product-icon-action share"
+            <button type="button" (click)="shareProduct()" class="h-11 border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:border-sky-300 hover:text-sky-600 hover:bg-sky-50 transition bg-white"
               [attr.aria-label]="uiMessages.products.shareProduct" [title]="uiMessages.products.shareProduct">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -149,13 +151,13 @@
             </button>
           </div>
 
-          <div class="amazon-buybox-meta">
+          <div class="pt-4 mt-2 border-t border-slate-200 flex flex-col gap-1 text-xs text-slate-500">
             <p>
-              <span>{{ uiMessages.products.categoriesTitle }}:</span>
+              <span class="font-bold text-slate-800">{{ uiMessages.products.categoriesTitle }}:</span>
               {{ product.categoryName || product.categoryNameAr || product.categoryNameEn }}
             </p>
             <p>
-              <span>{{ uiMessages.products.specWeightLabel }}:</span>
+              <span class="font-bold text-slate-800">{{ uiMessages.products.specWeightLabel }}:</span>
               <ng-container *ngIf="product.weight !== null && product.weight !== undefined; else noWeight">
                 {{ product.weight }} {{ uiMessages.products.specWeightUnit }}
               </ng-container>

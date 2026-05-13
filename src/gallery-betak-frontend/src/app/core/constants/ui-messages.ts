@@ -31,7 +31,7 @@ export const UI_MESSAGES = {
         customerServiceReturns: 'سياسة الاسترجاع',
         customerServiceTerms: 'الشروط والأحكام',
         contactTitle: 'تواصل معنا',
-        contactAddress: 'القاهرة، مصر - مدينة النصر',
+        contactAddress: 'مركز ديرب نجم، شارع السنترال',
         paymentMeeza: 'ميزة',
         rightsReserved: 'جميع الحقوق محفوظة.'
     },

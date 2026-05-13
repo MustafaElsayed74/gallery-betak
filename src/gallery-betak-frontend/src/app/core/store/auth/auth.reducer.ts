@@ -18,7 +18,7 @@ export const authFeature = createFeature({
   name: 'auth',
   reducer: createReducer(
     initialState,
-    
+
     // Login
     on(AuthActions.login, (state) => ({
       ...state,
@@ -41,7 +41,7 @@ export const authFeature = createFeature({
       loading: false,
       error
     })),
-    
+
     // Register
     on(AuthActions.register, (state) => ({
       ...state,
@@ -59,14 +59,14 @@ export const authFeature = createFeature({
       loading: false,
       error
     })),
-    
+
     // Logout
     on(AuthActions.logout, (state) => ({
       ...state,
       user: null,
       error: null
     })),
-    
+
     // Load existing via effect injection
     on(AuthActions.loadUserFromStorage, (state) => {
       const userStr = localStorage.getItem('user');

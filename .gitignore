@@ -52,3 +52,6 @@ logs/
 
 ## Local temp build output
 temp-build/
+
+# Production secrets - never commit
+appsettings.Production.json

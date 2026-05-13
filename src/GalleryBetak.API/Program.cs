@@ -83,50 +83,59 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<GalleryBetak.Infrastructure.Data.AppDbContext>();
-        var providerName = context.Database.ProviderName ?? string.Empty;
-        var isSqliteProvider = providerName.Contains("Sqlite", StringComparison.OrdinalIgnoreCase);
-
-        if (context.Database.IsRelational() && !isSqliteProvider)
+        try
         {
-            var hasMigrations = context.Database.GetMigrations().Any();
-            if (hasMigrations)
+            var context = services.GetRequiredService<GalleryBetak.Infrastructure.Data.AppDbContext>();
+            var providerName = context.Database.ProviderName ?? string.Empty;
+            var isSqliteProvider = providerName.Contains("Sqlite", StringComparison.OrdinalIgnoreCase);
+
+            if (context.Database.IsRelational() && !isSqliteProvider)
             {
-                await context.Database.MigrateAsync();
+                var hasMigrations = context.Database.GetMigrations().Any();
+                if (hasMigrations)
+                {
+                    await context.Database.MigrateAsync();
+                }
+                else
+                {
+                    await context.Database.EnsureCreatedAsync();
+                }
+
+                // Safety net: ensure schema exists even when migrations are missing or database is newly provisioned.
+                await context.Database.EnsureCreatedAsync();
+
+                // SQL Server can report success from EnsureCreated when partial tables already exist.
+                // For local development, recover by rebuilding schema if a core table is still missing.
+                var categoriesTableExists = true;
+                try
+                {
+                    await context.Database.ExecuteSqlRawAsync("SELECT TOP (1) 1 FROM [Categories]");
+                }
+                catch
+                {
+                    categoriesTableExists = false;
+                }
+
+                if (!categoriesTableExists && app.Environment.IsDevelopment())
+                {
+                    await context.Database.EnsureDeletedAsync();
+                    await context.Database.EnsureCreatedAsync();
+                }
             }
             else
             {
                 await context.Database.EnsureCreatedAsync();
             }
-
-            // Safety net: ensure schema exists even when migrations are missing or database is newly provisioned.
-            await context.Database.EnsureCreatedAsync();
-
-            // SQL Server can report success from EnsureCreated when partial tables already exist.
-            // For local development, recover by rebuilding schema if a core table is still missing.
-            var categoriesTableExists = true;
-            try
-            {
-                await context.Database.ExecuteSqlRawAsync("SELECT TOP (1) 1 FROM [Categories]");
-            }
-            catch
-            {
-                categoriesTableExists = false;
-            }
-
-            if (!categoriesTableExists && app.Environment.IsDevelopment())
-            {
-                await context.Database.EnsureDeletedAsync();
-                await context.Database.EnsureCreatedAsync();
-            }
+            await GalleryBetak.Infrastructure.Data.AppDbContextSeeder.SeedAsync(context);
+            
+            await GalleryBetak.Infrastructure.Identity.IdentitySeeder.SeedAsync(services);
         }
-        else
+        catch (Exception dbEx)
         {
-            await context.Database.EnsureCreatedAsync();
+            Log.Warning(dbEx,
+                "Database initialization failed — the remote SQL Server may be unreachable. " +
+                "The API will still start but database-dependent features will be unavailable until the connection is restored.");
         }
-        await GalleryBetak.Infrastructure.Data.AppDbContextSeeder.SeedAsync(context);
-        
-        await GalleryBetak.Infrastructure.Identity.IdentitySeeder.SeedAsync(services);
     }
 
     // ================================================================

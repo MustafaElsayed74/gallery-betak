@@ -32,7 +32,6 @@ export class ProductDetailComponent implements OnInit {
   uiMessages = this.uiTextService.getCurrentMessages();
   isLoading = false;
   errorMessage = '';
-
   quantity = 1;
   activeImage = 0;
   activeTab = 'description';
@@ -190,6 +189,10 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  setActiveImage(index: number) {
+    this.activeImage = index;
+  }
+
   increaseQuantity() {
     if (!this.product) {
       return;
@@ -202,10 +205,6 @@ export class ProductDetailComponent implements OnInit {
 
   decreaseQuantity() {
     if (this.quantity > 1) this.quantity--;
-  }
-
-  setActiveImage(index: number) {
-    this.activeImage = index;
   }
 
   addToCart() {

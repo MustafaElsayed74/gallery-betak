@@ -22,17 +22,20 @@ public sealed class OrderService : IOrderService
     private readonly ICartService _cartService;
     private readonly IMapper _mapper;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IEmailService _emailService;
 
     public OrderService(
         IUnitOfWork unitOfWork,
         ICartService cartService,
         IMapper mapper,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        IEmailService emailService)
     {
         _unitOfWork = unitOfWork;
         _cartService = cartService;
         _mapper = mapper;
         _userManager = userManager;
+        _emailService = emailService;
     }
 
     private string GenerateOrderNumber()
@@ -231,6 +234,34 @@ public sealed class OrderService : IOrderService
             }
 
             await _unitOfWork.SaveChangesAsync(ct);
+
+            if (!string.IsNullOrEmpty(order.UserId))
+            {
+                var user = await _userManager.FindByIdAsync(order.UserId);
+                if (user != null && !string.IsNullOrEmpty(user.Email))
+                {
+                    string statusAr = newStatus switch
+                    {
+                        OrderStatus.Confirmed => "مؤكد",
+                        OrderStatus.Processing => "قيد التجهيز",
+                        OrderStatus.Shipped => "تم الشحن",
+                        OrderStatus.Delivered => "تم التوصيل",
+                        OrderStatus.Cancelled => "تم الإلغاء",
+                        OrderStatus.Refunded => "تم الاسترجاع",
+                        _ => newStatus.ToString()
+                    };
+
+                    try
+                    {
+                        await _emailService.SendOrderTrackingEmailAsync(user.Email, order.OrderNumber, statusAr, trackingNumber, ct);
+                    }
+                    catch
+                    {
+                        // Log or ignore email failures to prevent blocking order status update
+                    }
+                }
+            }
+
             return ApiResponse<bool>.Ok(true, "تم تحديث حالة الطلب", "Status updated successfully.");
         }
         catch (BusinessRuleException ex)

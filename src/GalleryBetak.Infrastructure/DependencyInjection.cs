@@ -188,6 +188,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderService, Services.OrderService>();
         services.AddScoped<IPaymentService, Services.PaymentService>();
         services.AddScoped<IAdminDashboardService, Services.AdminDashboardService>();
+        services.AddScoped<IEmailService, Services.EmailService>();
         
         // Paymob Integrations
         services.Configure<GalleryBetak.Infrastructure.Settings.PaymobSettings>(

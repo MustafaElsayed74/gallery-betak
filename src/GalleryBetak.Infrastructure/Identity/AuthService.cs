@@ -28,6 +28,7 @@ public sealed class AuthService : IAuthService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthService> _logger;
+    private readonly IEmailService _emailService;
 
     /// <summary>Initializes AuthService with required dependencies.</summary>
     public AuthService(
@@ -37,7 +38,8 @@ public sealed class AuthService : IAuthService
         IUnitOfWork unitOfWork,
         IHttpClientFactory httpClientFactory,
         IConfiguration configuration,
-        ILogger<AuthService> logger)
+        ILogger<AuthService> logger,
+        IEmailService emailService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -46,6 +48,7 @@ public sealed class AuthService : IAuthService
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
         _logger = logger;
+        _emailService = emailService;
     }
 
     /// <inheritdoc/>
@@ -626,14 +629,16 @@ public sealed class AuthService : IAuthService
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         try
         {
-            await SendVerificationEmailAsync(targetEmail, token, cancellationToken);
+            var subject = "GalleryBetak Email Verification";
+            var body = $"Your verification code is:\n{token}\n\nIf you did not request this, ignore this email.";
+            await _emailService.SendEmailAsync(targetEmail, subject, body, cancellationToken);
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Email verification configuration is incomplete.");
+            _logger.LogWarning(ex, "Failed to send verification email.");
             return ApiResponse<bool>.Fail(500,
-                "خدمة البريد الإلكتروني غير مفعّلة",
-                "Email verification is not configured.");
+                "حدث خطأ أثناء إرسال البريد الإلكتروني",
+                "Email sending failed.");
         }
 
         return ApiResponse<bool>.Ok(true,
@@ -846,41 +851,7 @@ public sealed class AuthService : IAuthService
         };
     }
 
-    private async Task SendVerificationEmailAsync(string targetEmail, string token, CancellationToken cancellationToken)
-    {
-        var smtpHost = _configuration["EmailConfiguration:SmtpServer"] ?? _configuration["SmtpSettings:Host"];
-        var smtpPortRaw = _configuration["EmailConfiguration:Port"] ?? _configuration["SmtpSettings:Port"];
-        var username = _configuration["EmailConfiguration:UserName"] ?? _configuration["SmtpSettings:Username"];
-        var password = _configuration["EmailConfiguration:Password"] ?? _configuration["SmtpSettings:Password"];
-        var from = _configuration["EmailConfiguration:From"] ?? _configuration["SmtpSettings:FromEmail"] ?? username;
 
-        if (string.IsNullOrWhiteSpace(smtpHost) ||
-            string.IsNullOrWhiteSpace(username) ||
-            string.IsNullOrWhiteSpace(password) ||
-            string.IsNullOrWhiteSpace(from))
-        {
-            throw new InvalidOperationException("Email SMTP configuration is incomplete.");
-        }
-
-        var port = int.TryParse(smtpPortRaw, out var parsedPort) ? parsedPort : 587;
-        var enableSsl = port == 465;
-
-        using var message = new MailMessage(from, targetEmail)
-        {
-            Subject = "GalleryBetak Email Verification",
-            Body = $"Your verification code is:\n{token}\n\nIf you did not request this, ignore this email.",
-            IsBodyHtml = false
-        };
-
-        using var smtp = new SmtpClient(smtpHost, port)
-        {
-            EnableSsl = enableSsl,
-            Credentials = new NetworkCredential(username, password)
-        };
-
-        using var registration = cancellationToken.Register(() => smtp.SendAsyncCancel());
-        await smtp.SendMailAsync(message, cancellationToken);
-    }
 
     private static string NormalizePhoneNumber(string phoneNumber)
     {
