@@ -1,0 +1,1629 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GalleryBetak.Domain</name>
+    </assembly>
+    <members>
+        <member name="T:GalleryBetak.Domain.Entities.Address">
+            <summary>
+            Customer delivery address with Egyptian location format.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.Label">
+            <summary>Label (e.g. "المنزل", "العمل").</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.RecipientName">
+            <summary>Recipient full name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.Phone">
+            <summary>Egyptian mobile phone (01XXXXXXXXX).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.Governorate">
+            <summary>Egyptian governorate (محافظة).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.City">
+            <summary>City name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.District">
+            <summary>District/neighborhood (الحي).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.StreetAddress">
+            <summary>Street address.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.BuildingNo">
+            <summary>Building number.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.ApartmentNo">
+            <summary>Apartment/floor number.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.PostalCode">
+            <summary>Postal code.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.IsDefault">
+            <summary>Whether this is the user's default address.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Address.UserId">
+            <summary>Owning user ID.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Address.Create(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>Creates a new delivery address with Egyptian phone validation.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Address.Update(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Updates address details.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Address.SetDefault">
+            <summary>Sets this as the default address.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Address.ClearDefault">
+            <summary>Removes default status.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.BaseEntity">
+            <summary>
+            Base entity with common audit fields. All domain entities inherit from this.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.BaseEntity.Id">
+            <summary>Primary key.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.BaseEntity.CreatedAt">
+            <summary>UTC timestamp when the entity was created.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.BaseEntity.UpdatedAt">
+            <summary>UTC timestamp of last modification.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.BaseEntity.IsDeleted">
+            <summary>Soft delete flag.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.BaseEntity.DeletedAt">
+            <summary>UTC timestamp when soft deleted.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.BaseEntity.CreatedBy">
+            <summary>User ID of the creator.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.BaseEntity.SetCreatedAt(System.DateTime)">
+            <summary>Sets the creation timestamp. Called by DbContext on save.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.BaseEntity.SetUpdatedAt(System.DateTime)">
+            <summary>Sets the update timestamp. Called by DbContext on save.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.BaseEntity.SetCreatedBy(System.String)">
+            <summary>Sets the creator user ID.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.BaseEntity.SoftDelete">
+            <summary>Marks the entity as soft-deleted.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.BaseEntity.Restore">
+            <summary>Restores a soft-deleted entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.ApplicationUser">
+            <summary>
+            Extended ASP.NET Identity user with profile fields and refresh token support.
+            Uses DDD patterns: private setters, factory method, domain methods.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.FirstName">
+            <summary>User's first name (supports Arabic).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.LastName">
+            <summary>User's last name (supports Arabic).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.ProfileImageUrl">
+            <summary>Profile image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.RefreshToken">
+            <summary>Hashed refresh token (SHA-256).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.RefreshTokenExpiryTime">
+            <summary>Refresh token expiry time (UTC).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.IsActive">
+            <summary>Whether the user account is active.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.LastLoginAt">
+            <summary>Last login timestamp (UTC).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.CreatedAt">
+            <summary>Account creation timestamp (UTC).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.UpdatedAt">
+            <summary>Last update timestamp (UTC).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.IsDeleted">
+            <summary>Soft delete flag.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.DeletedAt">
+            <summary>Soft delete timestamp (UTC).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ApplicationUser.FullName">
+            <summary>Full name computed from first and last name.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ApplicationUser.Create(System.String,System.String,System.String)">
+            <summary>
+            Factory method to create a new user with validated input.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ApplicationUser.UpdateProfile(System.String,System.String,System.String)">
+            <summary>Updates the user's profile information.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ApplicationUser.SetRefreshToken(System.String,System.DateTime)">
+            <summary>Sets a hashed refresh token with expiry.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ApplicationUser.RecordLogin">
+            <summary>Records a successful login.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ApplicationUser.RevokeRefreshToken">
+            <summary>Clears the refresh token (logout).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ApplicationUser.Deactivate">
+            <summary>Deactivates the user account.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ApplicationUser.Activate">
+            <summary>Reactivates the user account.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ApplicationUser.MarkDeleted">
+            <summary>Soft deletes the user.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Cart">
+            <summary>
+            Shopping cart. Supports both authenticated users (UserId) and guests (SessionId).
+            Each user/session has at most one active cart.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.UserId">
+            <summary>User ID (null for guest carts).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.SessionId">
+            <summary>Session ID for guest carts.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.CouponId">
+            <summary>Applied coupon ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.ExpiresAt">
+            <summary>Cart expiry time (for cleanup).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.UpdatedAt">
+            <summary>Last update timestamp.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.Items">
+            <summary>Items in the cart.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.Coupon">
+            <summary>Applied coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Cart.CreateForUser(System.String,System.Nullable{System.TimeSpan})">
+            <summary>Creates a cart for an authenticated user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Cart.CreateForGuest(System.String,System.Nullable{System.TimeSpan})">
+            <summary>Creates a cart for a guest session.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Cart.AddItem(System.Int32,System.Decimal,System.Int32)">
+            <summary>Adds a product to the cart or increments quantity if it already exists.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Cart.RemoveItem(System.Int32)">
+            <summary>Removes an item from the cart.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Cart.ApplyCoupon(System.Int32)">
+            <summary>Applies a coupon to the cart.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Cart.RemoveCoupon">
+            <summary>Removes the applied coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Cart.AssignToUser(System.String)">
+            <summary>Transfers a guest cart to an authenticated user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Cart.Clear">
+            <summary>Clears all items from the cart.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.SubTotal">
+            <summary>Calculates the cart subtotal.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.TotalItems">
+            <summary>Total number of items.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.IsEmpty">
+            <summary>Whether the cart is empty.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Cart.IsExpired">
+            <summary>Whether the cart has expired.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.CartItem">
+            <summary>Individual item in a shopping cart.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.Id">
+            <summary>Primary key.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.CartId">
+            <summary>Cart ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.ProductId">
+            <summary>Product ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.Quantity">
+            <summary>Quantity (1-99).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.UnitPrice">
+            <summary>Unit price snapshot at add time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.AddedAt">
+            <summary>When the item was added.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.Product">
+            <summary>The product.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.Cart">
+            <summary>The cart.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CartItem.TotalPrice">
+            <summary>Line total (UnitPrice × Quantity).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.CartItem.Create(System.Int32,System.Int32,System.Decimal,System.Int32)">
+            <summary>Creates a cart item.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.CartItem.UpdateQuantity(System.Int32)">
+            <summary>Updates the quantity.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.CartItem.IncrementQuantity(System.Int32)">
+            <summary>Increments quantity by the specified amount.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Category">
+            <summary>
+            Product category with self-referencing hierarchy (max 3 levels).
+            Root → Sub → Sub-sub.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.NameAr">
+            <summary>Category name in Arabic.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.NameEn">
+            <summary>Category name in English.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.Slug">
+            <summary>URL-friendly slug (unique, lowercase, hyphenated).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.DescriptionAr">
+            <summary>Description in Arabic.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.DescriptionEn">
+            <summary>Description in English.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.ImageUrl">
+            <summary>Category image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.ParentId">
+            <summary>Parent category ID (null for root categories).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.DisplayOrder">
+            <summary>Display order for UI sorting.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.IsActive">
+            <summary>Whether the category is visible to customers.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.Parent">
+            <summary>Parent category (null for root).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.Children">
+            <summary>Child subcategories.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Category.Products">
+            <summary>Products in this category.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Category.Create(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.String,System.Int32)">
+            <summary>
+            Factory method to create a category.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Category.Update(System.String,System.String,System.String,System.String,System.String,System.String,System.Int32)">
+            <summary>Updates category details.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Category.Activate">
+            <summary>Activates the category.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Category.Deactivate">
+            <summary>Deactivates the category.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Category.SetParent(System.Nullable{System.Int32})">
+            <summary>Changes the parent category.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Coupon">
+            <summary>
+            Discount coupon with flexible rules (percentage or fixed, usage limits, date range).
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.Code">
+            <summary>Unique coupon code (e.g., "WELCOME10").</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.DescriptionAr">
+            <summary>Description in Arabic.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.DescriptionEn">
+            <summary>Description in English.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.DiscountType">
+            <summary>Discount type: Percentage or FixedAmount.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.DiscountValue">
+            <summary>Discount value (percentage 1-100 or fixed EGP amount).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.MinOrderAmount">
+            <summary>Minimum order amount required to use coupon.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.MaxDiscountAmount">
+            <summary>Maximum discount cap for percentage coupons (null = no cap).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.UsageLimit">
+            <summary>Maximum number of uses (0 = unlimited).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.UsedCount">
+            <summary>Number of times used.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.StartsAt">
+            <summary>Coupon validity start date.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.ExpiresAt">
+            <summary>Coupon expiry date.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.IsActive">
+            <summary>Whether the coupon is active.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.Usages">
+            <summary>Usage tracking records.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Coupon.Create(System.String,GalleryBetak.Domain.Enums.DiscountType,System.Decimal,System.DateTime,System.DateTime,System.Decimal,System.Nullable{System.Decimal},System.Int32)">
+            <summary>Creates a new coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Coupon.SetDescriptions(System.String,System.String)">
+            <summary>Sets optional coupon descriptions.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Coupon.Update(System.String,GalleryBetak.Domain.Enums.DiscountType,System.Decimal,System.DateTime,System.DateTime,System.Decimal,System.Nullable{System.Decimal},System.Int32)">
+            <summary>Updates coupon rules and validity window.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Coupon.SetActive(System.Boolean)">
+            <summary>Toggles coupon active state.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Coupon.Activate">
+            <summary>Activates coupon usage.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Coupon.Deactivate">
+            <summary>Deactivates coupon usage.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Coupon.CalculateDiscount(System.Decimal)">
+            <summary>Calculates the discount amount for a given order subtotal.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Coupon.Use(System.String,System.Int32)">
+            <summary>Validates and records a coupon usage. Throws if invalid.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Coupon.IsValid">
+            <summary>Whether the coupon is currently valid for use.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.CouponUsage">
+            <summary>Tracks individual coupon usage per user per order.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CouponUsage.Id">
+            <summary>Primary key.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CouponUsage.CouponId">
+            <summary>Coupon ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CouponUsage.UserId">
+            <summary>User who used the coupon.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CouponUsage.OrderId">
+            <summary>Order where coupon was applied.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CouponUsage.DiscountAmount">
+            <summary>Discount amount applied.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CouponUsage.UsedAt">
+            <summary>Timestamp of usage.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CouponUsage.Coupon">
+            <summary>The coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.CouponUsage.Create(System.Int32,System.String,System.Int32,System.Decimal)">
+            <summary>Records a coupon usage.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.CustomerServiceMessage">
+            <summary>
+            Customer service message submitted from storefront users or guests.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.Name">
+            <summary>Sender display name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.Email">
+            <summary>Sender email address.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.PhoneNumber">
+            <summary>Sender phone number if provided.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.Subject">
+            <summary>Short issue subject.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.Message">
+            <summary>Full customer message body.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.Status">
+            <summary>Current handling status.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.AdminNotes">
+            <summary>Internal admin notes for resolution history.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.HandledByUserId">
+            <summary>User id of admin/agent who handled the message last.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.CustomerServiceMessage.ResolvedAt">
+            <summary>UTC timestamp when message reached resolved/closed state.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.CustomerServiceMessage.Create(System.String,System.String,System.String,System.String,System.String)">
+            <summary>Creates a new customer service message.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.CustomerServiceMessage.UpdateStatus(GalleryBetak.Domain.Enums.CustomerServiceMessageStatus,System.String,System.String)">
+            <summary>Updates handling status and optional notes.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Notification">
+            <summary>
+            User notification with bilingual messages and reference linking.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.Id">
+            <summary>Primary key.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.UserId">
+            <summary>Target user ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.TitleAr">
+            <summary>Title in Arabic.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.TitleEn">
+            <summary>Title in English.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.MessageAr">
+            <summary>Message body in Arabic.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.MessageEn">
+            <summary>Message body in English.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.Type">
+            <summary>Notification type (OrderUpdate, Payment, Promotion, System).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.ReferenceId">
+            <summary>Referenced entity ID (e.g., OrderId).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.ReferenceType">
+            <summary>Referenced entity type (e.g., "Order").</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.IsRead">
+            <summary>Whether the notification has been read.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.ReadAt">
+            <summary>When the notification was read.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Notification.CreatedAt">
+            <summary>Creation timestamp.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Notification.Create(System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.String)">
+            <summary>Creates a notification.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Notification.MarkAsRead">
+            <summary>Marks as read.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.AuditLog">
+            <summary>
+            Immutable audit log entry. No update or delete operations.
+            Tracks all admin/system actions for compliance.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.UserId">
+            <summary>User who performed the action.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.UserEmail">
+            <summary>User email for quick reference.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.Action">
+            <summary>Action performed (e.g., "CreateProduct").</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.EntityType">
+            <summary>Entity type (e.g., "Product", "Order").</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.EntityId">
+            <summary>Entity ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.OldValues">
+            <summary>Old values as JSON (for updates).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.NewValues">
+            <summary>New values as JSON.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.IpAddress">
+            <summary>Client IP address.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.UserAgent">
+            <summary>Client user agent string.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.AuditLog.Timestamp">
+            <summary>Event timestamp.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.AuditLog.Create(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Creates an audit log entry.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.SearchLog">
+            <summary>
+            Search query log for analytics (popular searches, zero-result queries).
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.SearchLog.Id">
+            <summary>Primary key (BIGINT).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.SearchLog.Query">
+            <summary>Search query text.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.SearchLog.ResultCount">
+            <summary>Number of results returned.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.SearchLog.UserId">
+            <summary>Searching user ID (null for guests).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.SearchLog.Language">
+            <summary>Search language (ar/en).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.SearchLog.Timestamp">
+            <summary>Search timestamp.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.SearchLog.Create(System.String,System.Int32,System.String,System.String)">
+            <summary>Creates a search log entry.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Order">
+            <summary>
+            Customer order with frozen address snapshot, state machine transitions,
+            and domain event raising. Contains full order lifecycle management.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.OrderNumber">
+            <summary>Formatted order number (ORD-YYYYMM-NNNNN).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.UserId">
+            <summary>Customer user ID. SET NULL on user deletion (financial records preserved).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.Status">
+            <summary>Current order status.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.SubTotal">
+            <summary>Subtotal before shipping, tax, and discounts.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingCost">
+            <summary>Shipping cost in EGP.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.TaxAmount">
+            <summary>Tax amount.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.DiscountAmount">
+            <summary>Discount amount applied via coupon.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.TotalAmount">
+            <summary>Final total = SubTotal + Shipping + Tax - Discount.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.CouponId">
+            <summary>Applied coupon ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.CouponCode">
+            <summary>Coupon code snapshot (preserved after coupon deletion).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.PaymentMethod">
+            <summary>Payment method used.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.PaymentStatus">
+            <summary>Payment status.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.Notes">
+            <summary>Customer notes.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingRecipientName">
+            <summary>Recipient name at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingPhone">
+            <summary>Phone at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingGovernorate">
+            <summary>Governorate at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingCity">
+            <summary>City at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingDistrict">
+            <summary>District at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingStreetAddress">
+            <summary>Street address at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingBuildingNo">
+            <summary>Building number at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingApartmentNo">
+            <summary>Apartment number at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippingPostalCode">
+            <summary>Postal code at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.TrackingNumber">
+            <summary>Tracking number from shipping provider.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.ShippedAt">
+            <summary>When the order was shipped.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.DeliveredAt">
+            <summary>When the order was delivered.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.CancelledAt">
+            <summary>When the order was cancelled.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.CancellationReason">
+            <summary>Cancellation reason.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.DomainEvents">
+            <summary>Pending domain events.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.ClearDomainEvents">
+            <summary>Clears domain events after dispatch.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.Items">
+            <summary>Order line items.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Order.Payments">
+            <summary>Payment records.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.Create(System.String,System.String,GalleryBetak.Domain.Entities.Address,GalleryBetak.Domain.Enums.PaymentMethod,System.String)">
+            <summary>
+            Factory method to create a new order with address snapshot from an Address entity.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.AddItem(GalleryBetak.Domain.Entities.OrderItem)">
+            <summary>Adds a line item to the order.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.SetFinancials(System.Decimal,System.Decimal,System.Decimal,System.Nullable{System.Int32},System.String)">
+            <summary>Sets financial details (called during order creation).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.RecalculateTotals">
+            <summary>Recalculates subtotal and total from items.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.PlaceOrder">
+            <summary>Finalizes order placement and raises OrderPlacedEvent.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.Confirm">
+            <summary>Confirms the order (by admin or auto after payment).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.StartProcessing">
+            <summary>Moves order to processing.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.Ship(System.String)">
+            <summary>Ships the order with a tracking number.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.Deliver">
+            <summary>Marks the order as delivered.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.Cancel(System.String)">
+            <summary>Cancels the order with a reason.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.Refund">
+            <summary>Marks the order as refunded.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Order.UpdatePaymentStatus(GalleryBetak.Domain.Enums.PaymentStatus)">
+            <summary>Updates the payment status.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.OrderItem">
+            <summary>
+            Order line item with frozen product snapshot.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.Id">
+            <summary>Primary key.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.OrderId">
+            <summary>Order ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.ProductId">
+            <summary>Product ID (SET NULL on product deletion, snapshot preserved).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.ProductNameAr">
+            <summary>Product name in Arabic (snapshot).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.ProductNameEn">
+            <summary>Product name in English (snapshot).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.ProductSKU">
+            <summary>Product SKU (snapshot).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.ProductImageUrl">
+            <summary>Product image URL (snapshot).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.UnitPrice">
+            <summary>Unit price frozen at order time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.Quantity">
+            <summary>Ordered quantity.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.TotalPrice">
+            <summary>Line total = UnitPrice × Quantity.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.Order">
+            <summary>The order.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.OrderItem.Product">
+            <summary>The product reference (may be null if product deleted).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.OrderItem.Create(GalleryBetak.Domain.Entities.Product,System.Int32)">
+            <summary>Creates an order item with a product snapshot.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Payment">
+            <summary>
+            Payment transaction linked to an order. Supports multiple payment attempts
+            and stores full gateway response for audit.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.OrderId">
+            <summary>Order ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.TransactionId">
+            <summary>Paymob transaction ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.GatewayOrderId">
+            <summary>Paymob order ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.Amount">
+            <summary>Payment amount in EGP.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.Currency">
+            <summary>Currency code (always EGP).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.Method">
+            <summary>Payment method used.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.Status">
+            <summary>Payment status.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.GatewayResponse">
+            <summary>Full gateway JSON response for audit.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.PaidAt">
+            <summary>When payment was confirmed.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.FailureReason">
+            <summary>Failure reason from gateway.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.RefundedAt">
+            <summary>When refund was processed.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.RefundAmount">
+            <summary>Refund amount (may be partial).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.UpdatedAt">
+            <summary>Last update timestamp.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.Order">
+            <summary>The order.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Payment.DomainEvents">
+            <summary>Pending domain events.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Payment.ClearDomainEvents">
+            <summary>Clears domain events.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Payment.Create(System.Int32,System.Decimal,GalleryBetak.Domain.Enums.PaymentMethod)">
+            <summary>Creates a payment record.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Payment.StartProcessing(System.String)">
+            <summary>Marks payment as processing (gateway initiated).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Payment.Confirm(System.String,System.String)">
+            <summary>Confirms payment success from gateway callback.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Payment.Fail(System.String,System.String)">
+            <summary>Records payment failure.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Payment.Refund(System.Decimal)">
+            <summary>Processes a refund.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Product">
+            <summary>
+            Core product entity with DDD patterns: private setters, domain methods,
+            stock management, rating calculation, and event raising.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.NameAr">
+            <summary>Product name in Arabic (primary).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.NameEn">
+            <summary>Product name in English.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Slug">
+            <summary>SEO-friendly URL slug (unique).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.DescriptionAr">
+            <summary>Detailed description in Arabic.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.DescriptionEn">
+            <summary>Detailed description in English.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Price">
+            <summary>Current selling price in EGP. Must be > 0.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.OriginalPrice">
+            <summary>Original price before discount (null if no discount).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.SKU">
+            <summary>Stock Keeping Unit (unique per product).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.StockQuantity">
+            <summary>Current stock quantity. Must be >= 0.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.CategoryId">
+            <summary>Category this product belongs to.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.IsFeatured">
+            <summary>Whether featured on homepage.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.IsActive">
+            <summary>Whether visible to customers.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Weight">
+            <summary>Product weight in kg.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Dimensions">
+            <summary>Dimensions (e.g., "30x40x10 سم").</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Material">
+            <summary>Material composition.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Origin">
+            <summary>Country/region of origin.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.SourceUrl">
+            <summary>External source URL when product is imported.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.ImportedAt">
+            <summary>UTC timestamp when product was imported from external source.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.AverageRating">
+            <summary>Calculated average rating (0.00 to 5.00).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.ReviewCount">
+            <summary>Total number of approved reviews.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.ViewCount">
+            <summary>Total page view count.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.DomainEvents">
+            <summary>Domain events raised by this entity.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.ClearDomainEvents">
+            <summary>Clears all domain events (called by DbContext after dispatch).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Category">
+            <summary>Parent category.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Images">
+            <summary>Product images.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.ProductTags">
+            <summary>Product tags (M:N).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.Reviews">
+            <summary>Product reviews.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.Create(System.String,System.String,System.String,System.String,System.Decimal,System.Int32,System.Int32)">
+            <summary>
+            Factory method to create a product with validated input.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.Create(System.String,System.String,System.String,System.String,System.Decimal,System.String,System.Int32,System.Int32)">
+            <summary>
+            Factory overload that auto-generates slug from English name.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.Update(System.String,System.String,System.String,System.String,System.String,System.Decimal,System.Nullable{System.Decimal},System.String,System.String,System.String,System.Nullable{System.Decimal},System.Int32)">
+            <summary>Updates product details.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.SetPrice(System.Decimal)">
+            <summary>Sets the selling price. Must be > 0.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.SetDiscount(System.Decimal)">
+            <summary>Sets a discount by providing the original (before-discount) price.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.RemoveDiscount">
+            <summary>Removes any active discount.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.DeductStock(System.Int32)">
+            <summary>
+            Deducts stock for an order. Raises LowStockEvent if at or below threshold (2).
+            </summary>
+            <param name="quantity">Quantity to deduct.</param>
+            <exception cref="T:GalleryBetak.Domain.Exceptions.InsufficientStockException">When requested quantity exceeds available stock.</exception>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.ReduceStock(System.Int32)">
+            <summary>Public wrapper for DeductStock to reduce inventory when order is placed.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.AddStock(System.Int32)">
+            <summary>Adds stock (restock or return).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.RecalculateRating(System.Decimal,System.Int32)">
+            <summary>Recalculates average rating from approved reviews.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.IncrementViewCount">
+            <summary>Increments the page view counter.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.SetFeatured(System.Boolean)">
+            <summary>Marks product as featured.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.SetActive(System.Boolean)">
+            <summary>Sets active/inactive status.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.Activate">
+            <summary>Activates the product (visible to customers).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.Deactivate">
+            <summary>Deactivates the product (hidden from customers).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.UpdatePrice(System.Decimal,System.Nullable{System.Decimal})">
+            <summary>Updates the price and optional original price.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.UpdateStock(System.Int32)">
+            <summary>Sets stock quantity directly (admin recount).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.AddTag(System.Int32)">
+            <summary>Adds a tag association to this product.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.ClearTags">
+            <summary>Removes all tag associations.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.Update(System.String,System.String,System.String,System.String,System.Int32)">
+            <summary>Updates basic product info (simplified overload for service layer).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Product.SetImportMetadata(System.String,System.Nullable{System.DateTime})">
+            <summary>Sets import metadata for products created through importer flow.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.HasDiscount">
+            <summary>Whether the product has a discount.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.DiscountPercentage">
+            <summary>Discount percentage (0 if no discount).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Product.IsInStock">
+            <summary>Whether the product is in stock.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.ProductImage">
+            <summary>
+            Product image with thumbnail support and alt text for SEO.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.Id">
+            <summary>Primary key.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.ProductId">
+            <summary>Owning product ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.ImageUrl">
+            <summary>Full-size image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.ThumbnailUrl">
+            <summary>Thumbnail (300px) URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.AltTextAr">
+            <summary>Alt text in Arabic (SEO).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.AltTextEn">
+            <summary>Alt text in English (SEO).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.DisplayOrder">
+            <summary>Display order in image gallery.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.IsPrimary">
+            <summary>Whether this is the primary (hero) image.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.CreatedAt">
+            <summary>Upload timestamp.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductImage.Product">
+            <summary>Owning product.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ProductImage.Create(System.Int32,System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
+            <summary>Creates a product image.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ProductImage.SetAsPrimary">
+            <summary>Sets this image as the primary thumbnail.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ProductImage.ClearPrimary">
+            <summary>Removes primary designation.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ProductImage.SetDisplayOrder(System.Int32)">
+            <summary>Updates display order.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Review">
+            <summary>
+            Product review with rating, moderation status, and verified purchase tracking.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Review.ProductId">
+            <summary>Product being reviewed.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Review.UserId">
+            <summary>Reviewer user ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Review.Rating">
+            <summary>Rating (1-5 stars).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Review.Comment">
+            <summary>Review comment (supports Arabic).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Review.IsVerifiedPurchase">
+            <summary>Whether the reviewer actually purchased the product.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Review.Status">
+            <summary>Moderation status (Pending, Approved, Rejected).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Review.Product">
+            <summary>The product.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Review.Images">
+            <summary>Review images.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Review.Create(System.Int32,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>Creates a new review.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Review.Approve">
+            <summary>Approves the review for public display.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Review.Reject">
+            <summary>Rejects the review.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Review.Update(System.Int32,System.String)">
+            <summary>Updates the review content.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.ReviewImage">
+            <summary>Image attached to a review.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ReviewImage.Id">
+            <summary>Primary key.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ReviewImage.ReviewId">
+            <summary>Review ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ReviewImage.ImageUrl">
+            <summary>Image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ReviewImage.DisplayOrder">
+            <summary>Display order.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ReviewImage.CreatedAt">
+            <summary>Upload timestamp.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ReviewImage.Review">
+            <summary>The review.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ReviewImage.Create(System.Int32,System.String,System.Int32)">
+            <summary>Creates a review image.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Tag">
+            <summary>
+            Product tag for filtering and categorization (e.g., "جديد", "الأكثر طلباً").
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Tag.NameAr">
+            <summary>Tag name in Arabic.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Tag.NameEn">
+            <summary>Tag name in English.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Tag.Slug">
+            <summary>URL-friendly slug.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Tag.ProductTags">
+            <summary>Products with this tag (M:N via ProductTag).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Tag.Create(System.String,System.String,System.String)">
+            <summary>Creates a new tag.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Tag.Update(System.String,System.String,System.String)">
+            <summary>Updates tag details.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.ProductTag">
+            <summary>Junction entity for Product ↔ Tag many-to-many relationship.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductTag.ProductId">
+            <summary>Product ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductTag.TagId">
+            <summary>Tag ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductTag.Product">
+            <summary>The product.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.ProductTag.Tag">
+            <summary>The tag.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.ProductTag.Create(System.Int32,System.Int32)">
+            <summary>Creates a product-tag association.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.Wishlist">
+            <summary>
+            Per-user wishlist. Each user has exactly one wishlist (auto-created).
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Wishlist.UserId">
+            <summary>Owning user ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Wishlist.CreatedAt">
+            <summary>Creation timestamp.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.Wishlist.Items">
+            <summary>Wishlist items.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Wishlist.Create(System.String)">
+            <summary>Creates a wishlist for a user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Wishlist.AddItem(System.Int32)">
+            <summary>Adds a product to the wishlist.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Wishlist.RemoveItem(System.Int32)">
+            <summary>Removes a product from the wishlist.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.Wishlist.ContainsProduct(System.Int32)">
+            <summary>Checks if a product is in the wishlist.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Entities.WishlistItem">
+            <summary>Individual item in a wishlist.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.WishlistItem.Id">
+            <summary>Primary key.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.WishlistItem.WishlistId">
+            <summary>Wishlist ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.WishlistItem.ProductId">
+            <summary>Product ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.WishlistItem.AddedAt">
+            <summary>When the item was added.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.WishlistItem.Wishlist">
+            <summary>The wishlist.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Entities.WishlistItem.Product">
+            <summary>The product.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Entities.WishlistItem.Create(System.Int32,System.Int32)">
+            <summary>Creates a wishlist item.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Enums.OrderStatus">
+            <summary>Order lifecycle status.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.OrderStatus.Pending">
+            <summary>Order created, awaiting payment or confirmation.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.OrderStatus.Confirmed">
+            <summary>Payment received or admin confirmed.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.OrderStatus.Processing">
+            <summary>Order being prepared for shipping.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.OrderStatus.Shipped">
+            <summary>Order shipped to customer.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.OrderStatus.Delivered">
+            <summary>Order delivered to customer.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.OrderStatus.Cancelled">
+            <summary>Order cancelled by customer or admin.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.OrderStatus.Refunded">
+            <summary>Order refunded after delivery.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Enums.PaymentMethod">
+            <summary>Available payment methods for Egyptian market.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentMethod.VodafoneCash">
+            <summary>Vodafone Cash mobile wallet.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentMethod.OrangeCash">
+            <summary>Orange Cash mobile wallet.</summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:GalleryBetak.Domain.Enums.PaymentMethod.EtisalatCash" -->
+        <member name="F:GalleryBetak.Domain.Enums.PaymentMethod.Fawry">
+            <summary>Fawry payment at retail outlets.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentMethod.COD">
+            <summary>Cash on Delivery.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentMethod.Card">
+            <summary>Credit/Debit card via Paymob.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Enums.PaymentStatus">
+            <summary>Payment transaction status.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentStatus.Pending">
+            <summary>Payment initiated, awaiting completion.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentStatus.Processing">
+            <summary>Payment being processed by gateway.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentStatus.Success">
+            <summary>Payment completed successfully.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentStatus.Failed">
+            <summary>Payment failed.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.PaymentStatus.Refunded">
+            <summary>Payment refunded.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Enums.DiscountType">
+            <summary>Coupon discount calculation type.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.DiscountType.Percentage">
+            <summary>Percentage off the order total.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.DiscountType.FixedAmount">
+            <summary>Fixed amount off the order total (in EGP).</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Enums.ReviewStatus">
+            <summary>Product review moderation status.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.ReviewStatus.Pending">
+            <summary>Review awaiting admin approval.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.ReviewStatus.Approved">
+            <summary>Review approved and visible.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.ReviewStatus.Rejected">
+            <summary>Review rejected by admin.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Enums.CustomerServiceMessageStatus">
+            <summary>Customer service message lifecycle.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.CustomerServiceMessageStatus.New">
+            <summary>New incoming message.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.CustomerServiceMessageStatus.InProgress">
+            <summary>Message is being handled by support/admin.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.CustomerServiceMessageStatus.Resolved">
+            <summary>Issue solved for the customer.</summary>
+        </member>
+        <member name="F:GalleryBetak.Domain.Enums.CustomerServiceMessageStatus.Closed">
+            <summary>Conversation closed with final notes.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Events.BaseDomainEvent">
+            <summary>
+            Base class for all domain events. Raised by entities and dispatched by DbContext.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.BaseDomainEvent.EventId">
+            <summary>Unique event ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.BaseDomainEvent.OccurredAt">
+            <summary>UTC timestamp when the event occurred.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Events.OrderPlacedEvent">
+            <summary>Raised when a new order is placed successfully.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.OrderPlacedEvent.OrderId">
+            <summary>The order ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.OrderPlacedEvent.OrderNumber">
+            <summary>The formatted order number.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.OrderPlacedEvent.UserId">
+            <summary>The customer user ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.OrderPlacedEvent.TotalAmount">
+            <summary>Total order amount in EGP.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Events.OrderPlacedEvent.#ctor(System.Int32,System.String,System.String,System.Decimal)">
+            <summary>Creates an OrderPlacedEvent.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Events.OrderShippedEvent">
+            <summary>Raised when an order is shipped.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.OrderShippedEvent.OrderId">
+            <summary>The order ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.OrderShippedEvent.TrackingNumber">
+            <summary>Shipping tracking number.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Events.OrderShippedEvent.#ctor(System.Int32,System.String)">
+            <summary>Creates an OrderShippedEvent.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Events.OrderCancelledEvent">
+            <summary>Raised when an order is cancelled.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.OrderCancelledEvent.OrderId">
+            <summary>The order ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.OrderCancelledEvent.Reason">
+            <summary>Reason for cancellation.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Events.OrderCancelledEvent.#ctor(System.Int32,System.String)">
+            <summary>Creates an OrderCancelledEvent.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Events.PaymentConfirmedEvent">
+            <summary>Raised when a payment is confirmed by the gateway.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.PaymentConfirmedEvent.OrderId">
+            <summary>The order ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.PaymentConfirmedEvent.Amount">
+            <summary>Payment amount in EGP.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.PaymentConfirmedEvent.TransactionId">
+            <summary>Gateway transaction ID.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Events.PaymentConfirmedEvent.#ctor(System.Int32,System.Decimal,System.String)">
+            <summary>Creates a PaymentConfirmedEvent.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Events.ProductStockLowEvent">
+            <summary>Raised when product stock drops below threshold (5 units).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.ProductStockLowEvent.ProductId">
+            <summary>The product ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.ProductStockLowEvent.ProductNameAr">
+            <summary>Product name in Arabic.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Events.ProductStockLowEvent.RemainingStock">
+            <summary>Current remaining stock quantity.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Events.ProductStockLowEvent.#ctor(System.Int32,System.String,System.Int32)">
+            <summary>Creates a ProductStockLowEvent.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Exceptions.DomainException">
+            <summary>
+            Base domain exception. All domain-specific exceptions inherit from this.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Exceptions.DomainException.MessageEn">
+            <summary>English message for server-side logging.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Exceptions.DomainException.#ctor(System.String,System.String)">
+            <summary>
+            Creates a domain exception with Arabic (primary) and English messages.
+            </summary>
+            <param name="messageAr">Arabic user-facing message.</param>
+            <param name="messageEn">English message for logging.</param>
+        </member>
+        <member name="T:GalleryBetak.Domain.Exceptions.NotFoundException">
+            <summary>Thrown when a requested resource is not found.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Exceptions.NotFoundException.#ctor(System.String,System.String)">
+            <summary>Creates a not found exception.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Exceptions.NotFoundException.#ctor(System.String,System.Object)">
+            <summary>Creates a not found exception for a specific entity type and ID.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Exceptions.UnauthorizedException">
+            <summary>Thrown when the user lacks permission.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Exceptions.UnauthorizedException.#ctor(System.String,System.String)">
+            <summary>Creates an unauthorized exception.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Exceptions.BusinessRuleException">
+            <summary>Thrown when a business rule is violated.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Exceptions.BusinessRuleException.#ctor(System.String,System.String)">
+            <summary>Creates a business rule exception.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Exceptions.InsufficientStockException">
+            <summary>Thrown when there is insufficient stock for an operation.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Exceptions.InsufficientStockException.AvailableQuantity">
+            <summary>Available quantity at the time of the exception.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Exceptions.InsufficientStockException.RequestedQuantity">
+            <summary>Requested quantity that exceeded stock.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Exceptions.InsufficientStockException.#ctor(System.Int32,System.Int32)">
+            <summary>Creates an insufficient stock exception.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Exceptions.CouponExpiredException">
+            <summary>Thrown when attempting to use an expired coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Exceptions.CouponExpiredException.#ctor(System.String)">
+            <summary>Creates a coupon expired exception.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Exceptions.CouponAlreadyUsedException">
+            <summary>Thrown when attempting to reuse a coupon beyond its limit.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Exceptions.CouponAlreadyUsedException.#ctor(System.String)">
+            <summary>Creates a coupon already used exception.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Interfaces.ICategoryRepository">
+            <summary>
+            Category specific repository interface adding eager loading for hierarchies.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.ICategoryRepository.GetByIdWithSubcategoriesAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Gets a category by ID and eager-loads its children subcategories.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Interfaces.IGenericRepository`1">
+            <summary>
+            Generic repository interface. Defines common data access operations
+            implemented in Infrastructure layer via EF Core.
+            </summary>
+            <typeparam name="T">Entity type inheriting from BaseEntity.</typeparam>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets entity by its primary key.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.GetAllAsync(System.Threading.CancellationToken)">
+            <summary>Gets all entities (use sparingly — prefer filtered/paged queries).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.FindAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <summary>Finds entities matching a predicate.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <summary>Gets a single entity matching a predicate.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.AnyAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <summary>Checks if any entity matches the predicate.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.CountAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <summary>Counts entities matching the predicate.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.GetEntityWithSpecAsync(GalleryBetak.Domain.Interfaces.ISpecification{`0},System.Threading.CancellationToken)">
+            <summary>Gets a single entity matching the specification.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.ListAsync(GalleryBetak.Domain.Interfaces.ISpecification{`0},System.Threading.CancellationToken)">
+            <summary>Gets a list of entities matching the specification.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.CountAsync(GalleryBetak.Domain.Interfaces.ISpecification{`0},System.Threading.CancellationToken)">
+            <summary>Counts entities matching the specification.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.AddAsync(`0,System.Threading.CancellationToken)">
+            <summary>Adds a new entity.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.AddRangeAsync(System.Collections.Generic.IEnumerable{`0},System.Threading.CancellationToken)">
+            <summary>Adds multiple entities.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.Update(`0)">
+            <summary>Updates an existing entity.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.Remove(`0)">
+            <summary>Removes an entity.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IGenericRepository`1.RemoveRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary>Removes multiple entities.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Interfaces.IUnitOfWork">
+            <summary>
+            Unit of Work pattern. Coordinates multiple repository operations
+            within a single database transaction.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Products">
+            <summary>Product repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Carts">
+            <summary>Cart repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Wishlists">
+            <summary>Wishlist repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Addresses">
+            <summary>Addresses repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Payments">
+            <summary>Payments repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.AuditLogs">
+            <summary>AuditLogs repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Categories">
+            <summary>Category repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Orders">
+            <summary>Order repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Tags">
+            <summary>Tag repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Coupons">
+            <summary>Coupon repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.Reviews">
+            <summary>Review repository.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.IUnitOfWork.CustomerServiceMessages">
+            <summary>Customer service messages repository.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IUnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">
+            <summary>Commits all pending changes to the database.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IUnitOfWork.BeginTransactionAsync(System.Threading.CancellationToken)">
+            <summary>Begins a database transaction.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IUnitOfWork.CommitTransactionAsync(System.Threading.CancellationToken)">
+            <summary>Commits the current transaction.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IUnitOfWork.RollbackTransactionAsync(System.Threading.CancellationToken)">
+            <summary>Rolls back the current transaction.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Interfaces.IProductRepository">
+            <summary>
+            Product-specific repository with domain-optimized query methods.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IProductRepository.GetBySlugAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets a product by slug with images and category.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IProductRepository.GetBySKUAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets a product by SKU.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IProductRepository.GetFeaturedAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets featured products.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IProductRepository.GetByCategoryAsync(System.Int32,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets products by category with pagination.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IProductRepository.SearchAsync(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Searches products by name (bilingual) with full-text search.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IProductRepository.GetLowStockAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets products with low stock (below threshold).</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IProductRepository.GetDetailAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets a product with all includes (images, tags, reviews) for detail page.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Interfaces.IOrderRepository">
+            <summary>
+            Order-specific repository with domain-optimized query methods.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IOrderRepository.GetByOrderNumberAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets an order by order number.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IOrderRepository.GetByUserAsync(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets orders for a specific user with pagination.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IOrderRepository.GetByStatusAsync(GalleryBetak.Domain.Enums.OrderStatus,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets orders by status for admin dashboard.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IOrderRepository.GetDetailAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets full order details with items and payments.</summary>
+        </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IOrderRepository.GenerateOrderNumberAsync(System.Threading.CancellationToken)">
+            <summary>Generates the next order number (ORD-YYYYMM-NNNNN).</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Interfaces.ISpecification`1">
+            <summary>
+            Encapsulates query logic (filtering, sorting, including, paging) into a reusable specification.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.ISpecification`1.Criteria">
+            <summary>The filter criteria (WHERE clause).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.ISpecification`1.Includes">
+            <summary>Navigational properties to eager-load (INCLUDE).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.ISpecification`1.IncludeStrings">
+            <summary>String-based navigational properties to eager-load.</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.ISpecification`1.OrderBy">
+            <summary>Sorting (ORDER BY ASC).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.ISpecification`1.OrderByDescending">
+            <summary>Sorting (ORDER BY DESC).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.ISpecification`1.Skip">
+            <summary>Pagination (SKIP).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.ISpecification`1.Take">
+            <summary>Pagination (TAKE).</summary>
+        </member>
+        <member name="P:GalleryBetak.Domain.Interfaces.ISpecification`1.IsPagingEnabled">
+            <summary>Whether paging is enabled for this specification.</summary>
+        </member>
+        <member name="T:GalleryBetak.Domain.Specifications.BaseSpecification`1">
+            <summary>
+            Base class providing a default implementation of ISpecification.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -97,12 +97,23 @@ export class AuthEffects {
     )
   );
 
-  authSuccess$ = createEffect(() =>
+  loginSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.loginSuccess, AuthActions.registerSuccess),
+      ofType(AuthActions.loginSuccess),
       tap(({ returnUrl }) => {
         this.sessionBannerService.dismiss();
         this.router.navigateByUrl(returnUrl ?? '/');
+      })
+    ),
+    { dispatch: false }
+  );
+
+  registerSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.registerSuccess),
+      tap(() => {
+        this.sessionBannerService.dismiss();
+        this.router.navigate(['/auth/verify-email']);
       })
     ),
     { dispatch: false }

@@ -1,0 +1,1468 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GalleryBetak.Application</name>
+    </assembly>
+    <members>
+        <member name="T:GalleryBetak.Application.Common.ApiResponse`1">
+            <summary>
+            Standard API response envelope wrapping all API responses.
+            Provides consistent structure for success and error scenarios.
+            </summary>
+            <typeparam name="T">The type of the data payload.</typeparam>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiResponse`1.Success">
+            <summary>
+            Indicates whether the request was successful.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiResponse`1.StatusCode">
+            <summary>
+            HTTP status code of the response.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiResponse`1.Message">
+            <summary>
+            Arabic user-facing message.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiResponse`1.MessageEn">
+            <summary>
+            English message for developer/debugging purposes.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiResponse`1.Data">
+            <summary>
+            The response data payload. Null on error responses.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiResponse`1.Errors">
+            <summary>
+            List of field-level validation errors.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiResponse`1.Meta">
+            <summary>
+            Pagination metadata, if applicable.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Common.ApiResponse`1.Ok(`0,System.String,System.String)">
+            <summary>
+            Creates a successful response with data.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Common.ApiResponse`1.Ok(`0,GalleryBetak.Application.Common.PaginationMeta,System.String,System.String)">
+            <summary>
+            Creates a successful response with data and pagination metadata.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Common.ApiResponse`1.Created(`0,System.String,System.String)">
+            <summary>
+            Creates a 201 Created response.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Common.ApiResponse`1.Fail(System.Int32,System.String,System.String,System.Collections.Generic.List{GalleryBetak.Application.Common.ApiError})">
+            <summary>
+            Creates an error response.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Common.ApiError">
+            <summary>
+            Represents a single field-level validation error.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiError.Field">
+            <summary>
+            The field name that caused the error.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.ApiError.Message">
+            <summary>
+            Arabic error message for the field.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Common.PaginationMeta">
+            <summary>
+            Pagination metadata included in paginated API responses.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PaginationMeta.CurrentPage">
+            <summary>
+            Current page number (1-indexed).
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PaginationMeta.PageSize">
+            <summary>
+            Number of items per page.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PaginationMeta.TotalCount">
+            <summary>
+            Total number of items across all pages.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PaginationMeta.TotalPages">
+            <summary>
+            Total number of pages.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PaginationMeta.HasPrevious">
+            <summary>
+            Whether there is a previous page.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PaginationMeta.HasNext">
+            <summary>
+            Whether there is a next page.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Common.PagedResult`1">
+            <summary>
+            Generic paged result returned by service layer queries.
+            </summary>
+            <typeparam name="T">The type of items in the page.</typeparam>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PagedResult`1.Items">
+            <summary>
+            The items in the current page.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PagedResult`1.TotalCount">
+            <summary>
+            Total number of items across all pages.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PagedResult`1.PageNumber">
+            <summary>
+            Current page number.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Common.PagedResult`1.PageSize">
+            <summary>
+            Number of items per page.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Common.PagedResult`1.ToMeta">
+            <summary>
+            Creates pagination metadata from this result.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DependencyInjection">
+            <summary>
+            Extension methods for registering Application layer services.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.DependencyInjection.AddApplicationServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registers all Application layer services: AutoMapper, FluentValidation, application services.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.DashboardMetricsDto">
+            <summary>High-level dashboard KPIs.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.AnalyticsDailyPointDto">
+            <summary>Time-series analytics point for dashboard charts.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.AnalyticsOrderStatusBreakdownDto">
+            <summary>Order status distribution in an analytics window.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.CouponPerformanceDto">
+            <summary>Coupon performance aggregate for the selected analytics window.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.TopProductPerformanceDto">
+            <summary>Top-selling products aggregate for the selected analytics window.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.DetailedAnalyticsDto">
+            <summary>Detailed analytics dataset for admin dashboard.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.CouponAdminDto">
+            <summary>Coupon projection for admin management.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.CreateCouponRequest">
+            <summary>Request payload for creating admin coupons.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.UpdateCouponRequest">
+            <summary>Request payload for updating admin coupons.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.SetCouponStatusRequest">
+            <summary>Simple coupon status toggle request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.DTOs.Admin.SetCouponStatusRequest.#ctor(System.Boolean)">
+            <summary>Simple coupon status toggle request.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.OfferAdminDto">
+            <summary>Discounted product projection for offer management.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.ApplyProductDiscountRequest">
+            <summary>Request payload to apply/adjust a discount on a product.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.AuditLogDto">
+            <summary>Audit log response transfer object.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.UserManagementDto">
+            <summary>User management projection.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.CreateAdminUserRequest">
+            <summary>Request payload for creating users from admin panel.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.UpdateAdminUserRequest">
+            <summary>Request payload for updating users from admin panel.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.SetUserStatusRequest">
+            <summary>Simple user status toggle request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.DTOs.Admin.SetUserStatusRequest.#ctor(System.Boolean)">
+            <summary>Simple user status toggle request.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.CustomerServiceMessageDto">
+            <summary>Customer service message projected for admin handling.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.CreateCustomerServiceMessageRequest">
+            <summary>Public request to submit customer service message.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Admin.UpdateCustomerServiceMessageRequest">
+            <summary>Admin request to update support message status and notes.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.LoginRequest">
+            <summary>Login request DTO.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.LoginRequest.Email">
+            <summary>User email.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.LoginRequest.Password">
+            <summary>Password.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.RegisterRequest">
+            <summary>User registration request DTO.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.RegisterRequest.FirstName">
+            <summary>First name (supports Arabic).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.RegisterRequest.LastName">
+            <summary>Last name (supports Arabic).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.RegisterRequest.Email">
+            <summary>Email address.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.RegisterRequest.Password">
+            <summary>Password (min 8 chars, uppercase, lowercase, digit, special).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.RegisterRequest.ConfirmPassword">
+            <summary>Password confirmation.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.RegisterRequest.PhoneNumber">
+            <summary>Egyptian phone number (01XXXXXXXXX).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.RefreshTokenRequest">
+            <summary>Refresh token request DTO.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.RefreshTokenRequest.AccessToken">
+            <summary>The expired access token.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.RefreshTokenRequest.RefreshToken">
+            <summary>The refresh token.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.AuthResponse">
+            <summary>Authentication response DTO.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.AuthResponse.AccessToken">
+            <summary>JWT access token.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.AuthResponse.RefreshToken">
+            <summary>Refresh token for token rotation.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.AuthResponse.ExpiresAt">
+            <summary>Access token expiry (UTC).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.AuthResponse.User">
+            <summary>User profile info.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.UserProfileDto">
+            <summary>User profile returned in auth responses.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.Id">
+            <summary>User ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.Email">
+            <summary>Email.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.PhoneNumber">
+            <summary>Phone number.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.FullName">
+            <summary>Full name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.FirstName">
+            <summary>First name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.LastName">
+            <summary>Last name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.ProfileImageUrl">
+            <summary>Profile image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.Roles">
+            <summary>User roles.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.UpdateProfileRequest">
+            <summary>Update current user profile request.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UpdateProfileRequest.FirstName">
+            <summary>First name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UpdateProfileRequest.LastName">
+            <summary>Last name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UpdateProfileRequest.Email">
+            <summary>Email address.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UpdateProfileRequest.PhoneNumber">
+            <summary>Egyptian phone number (01XXXXXXXXX).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.AddressDto">
+            <summary>Address details DTO.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.UpsertAddressRequest">
+            <summary>Create/update address request.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.ChangePasswordRequest">
+            <summary>Change password request DTO.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.ChangePasswordRequest.CurrentPassword">
+            <summary>Current password.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.ChangePasswordRequest.NewPassword">
+            <summary>New password.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.ChangePasswordRequest.ConfirmNewPassword">
+            <summary>New password confirmation.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.GoogleLoginRequest">
+            <summary>Google sign-in request.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.GoogleLoginRequest.IdToken">
+            <summary>Google ID token returned by frontend OAuth flow.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.SendEmailVerificationRequest">
+            <summary>Request to send email verification code.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.SendEmailVerificationRequest.Email">
+            <summary>Optional email override. If empty, current user email is used.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.VerifyEmailRequest">
+            <summary>Request to verify email confirmation code.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.VerifyEmailRequest.Email">
+            <summary>Email being verified.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.VerifyEmailRequest.Code">
+            <summary>Email verification code generated by Identity token provider.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.SendPhoneOtpRequest">
+            <summary>Request to send mobile verification OTP.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.SendPhoneOtpRequest.PhoneNumber">
+            <summary>Target phone number in E.164 format (e.g. +2010XXXXXXX).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest">
+            <summary>Request to verify mobile OTP code.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest.PhoneNumber">
+            <summary>Target phone number in E.164 format.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest.Code">
+            <summary>OTP code received via SMS.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Cart.CartDto">
+            <summary>Response containing full cart details.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Cart.CartDto.Id">
+            <summary>Cart identifier.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Cart.CartDto.SubTotal">
+            <summary>Subtotal of all items.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Cart.CartDto.TotalItems">
+            <summary>Total number of items (sum of quantities).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Cart.CartDto.Items">
+            <summary>The cart items.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Cart.CartItemDto">
+            <summary>Individual cart item detail.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Cart.AddToCartRequest">
+            <summary>Request to add an item to the cart.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Cart.UpdateCartItemRequest">
+            <summary>Request to update the quantity of a cart item.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Category.CategoryDto">
+            <summary>Standard category list DTO, including child categories if applicable.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDto.Id">
+            <summary>Category ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDto.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDto.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDto.Slug">
+            <summary>URL-friendly slug.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDto.ImageUrl">
+            <summary>Image URL for the category banner/icon.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDto.DisplayOrder">
+            <summary>Display order.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDto.SubCategories">
+            <summary>Child categories (subcategories).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Category.CategoryBreadcrumbDto">
+            <summary>Category representation used for breadcrumbs path.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryBreadcrumbDto.Id">
+            <summary>Category ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryBreadcrumbDto.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryBreadcrumbDto.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryBreadcrumbDto.Slug">
+            <summary>URL-friendly slug.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Category.CategoryDetailDto">
+            <summary>Detailed category DTO, including full breadcrumb path.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.Id">
+            <summary>Category ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.DescriptionAr">
+            <summary>Arabic description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.DescriptionEn">
+            <summary>English description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.Slug">
+            <summary>URL slug.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.ImageUrl">
+            <summary>Image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.ParentId">
+            <summary>Parent category ID if any.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.Breadcrumbs">
+            <summary>Hierarchical breadcrumb path (root -> ... -> current).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CategoryDetailDto.SubCategories">
+            <summary>Immediate subcategories at this level.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Category.CreateCategoryRequest">
+            <summary>Request DTO for creating a category (admin).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CreateCategoryRequest.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CreateCategoryRequest.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CreateCategoryRequest.DescriptionAr">
+            <summary>Arabic description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CreateCategoryRequest.DescriptionEn">
+            <summary>English description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CreateCategoryRequest.ParentId">
+            <summary>Optional parent category ID to create a subcategory.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CreateCategoryRequest.ImageUrl">
+            <summary>Image URL (or handle upload separately).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.CreateCategoryRequest.DisplayOrder">
+            <summary>Ordering priority.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest">
+            <summary>Request DTO for updating a category (admin).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest.DescriptionAr">
+            <summary>Arabic description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest.DescriptionEn">
+            <summary>English description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest.ParentId">
+            <summary>Optional parent category ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest.ImageUrl">
+            <summary>Image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest.DisplayOrder">
+            <summary>Ordering priority.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest.IsActive">
+            <summary>Whether active or hidden.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Order.CreateOrderRequest">
+            <summary>Request to convert the active cart into a placed order.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Order.OrderDto">
+            <summary>Full order details response.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Order.OrderSummaryDto">
+            <summary>Summary order response for lists.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Order.OrderItemDto">
+            <summary>Detailed order item.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Payment.PaymentInitiationResponse">
+            <summary>Response from payment initialization (IFrame URL or Fawry Code).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.DTOs.Payment.PaymentInitiationResponse.#ctor(System.String,System.String)">
+            <summary>Response from payment initialization (IFrame URL or Fawry Code).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Payment.PaymobWebhookPayload">
+            <summary>Raw Paymob Webhook Payload.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.ProductListDto">
+            <summary>Product list item DTO (used in catalog/search results).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.Id">
+            <summary>Product ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.Slug">
+            <summary>URL-friendly slug.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.Price">
+            <summary>Current price in EGP.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.OriginalPrice">
+            <summary>Original price before discount.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.DiscountPercentage">
+            <summary>Discount percentage (computed).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.PrimaryImageUrl">
+            <summary>Primary image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.AverageRating">
+            <summary>Average rating (0-5).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.ReviewCount">
+            <summary>Total review count.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.InStock">
+            <summary>Whether in stock.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.IsFeatured">
+            <summary>Whether product is featured.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.CategoryNameAr">
+            <summary>Category name (Arabic).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductListDto.CategoryNameEn">
+            <summary>Category name (English).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.ProductDetailDto">
+            <summary>Full product detail DTO (product page).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Id">
+            <summary>Product ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Slug">
+            <summary>URL slug.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.DescriptionAr">
+            <summary>Arabic description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.DescriptionEn">
+            <summary>English description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Price">
+            <summary>Current price in EGP.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.OriginalPrice">
+            <summary>Original price before discount.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.DiscountPercentage">
+            <summary>Discount percentage.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.SKU">
+            <summary>SKU code.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.StockQuantity">
+            <summary>Stock quantity.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.InStock">
+            <summary>Whether in stock.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Weight">
+            <summary>Weight in kg.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Dimensions">
+            <summary>Dimensions (L×W×H).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Material">
+            <summary>Material.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Origin">
+            <summary>Country of origin.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.IsFeatured">
+            <summary>Whether featured.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.AverageRating">
+            <summary>Average rating.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.ReviewCount">
+            <summary>Total reviews.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.ViewCount">
+            <summary>Total views.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Category">
+            <summary>Category info.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Images">
+            <summary>Product images.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.Tags">
+            <summary>Tags.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.SourceUrl">
+            <summary>External source URL when imported.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.ImportedAt">
+            <summary>UTC timestamp when imported.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductDetailDto.CreatedAt">
+            <summary>Creation date.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.ProductImageDto">
+            <summary>Product image DTO.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImageDto.Id">
+            <summary>Image ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImageDto.ImageUrl">
+            <summary>Full image URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImageDto.ThumbnailUrl">
+            <summary>Thumbnail URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImageDto.AltTextAr">
+            <summary>Arabic alt text.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImageDto.AltTextEn">
+            <summary>English alt text.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImageDto.IsPrimary">
+            <summary>Whether primary image.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImageDto.DisplayOrder">
+            <summary>Display order.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.ProductCategoryDto">
+            <summary>Nested category DTO for product detail.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductCategoryDto.Id">
+            <summary>Category ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductCategoryDto.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductCategoryDto.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductCategoryDto.Slug">
+            <summary>Slug.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.ProductTagDto">
+            <summary>Tag DTO for product detail.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductTagDto.Id">
+            <summary>Tag ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductTagDto.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductTagDto.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.CreateProductRequest">
+            <summary>Create product request DTO (admin).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.DescriptionAr">
+            <summary>Arabic description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.DescriptionEn">
+            <summary>English description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.Price">
+            <summary>Price in EGP.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.OriginalPrice">
+            <summary>Original price (before discount).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.SKU">
+            <summary>SKU code.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.StockQuantity">
+            <summary>Initial stock quantity.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.CategoryId">
+            <summary>Category ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.Weight">
+            <summary>Weight in kg.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.Dimensions">
+            <summary>Dimensions string.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.Material">
+            <summary>Material.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.Origin">
+            <summary>Country of origin.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.IsFeatured">
+            <summary>Whether featured.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.TagIds">
+            <summary>Tag IDs to attach.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.ImageUrls">
+            <summary>Optional imported image URLs to attach at creation time.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.SourceUrl">
+            <summary>Optional source URL when created via importer.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.CreateProductRequest.ImportedAt">
+            <summary>Optional import timestamp (UTC).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.UpdateProductRequest">
+            <summary>Update product request DTO (admin).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.NameAr">
+            <summary>Arabic name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.NameEn">
+            <summary>English name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.DescriptionAr">
+            <summary>Arabic description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.DescriptionEn">
+            <summary>English description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.Price">
+            <summary>Price in EGP.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.OriginalPrice">
+            <summary>Original price.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.StockQuantity">
+            <summary>Stock quantity.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.CategoryId">
+            <summary>Category ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.Weight">
+            <summary>Weight.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.Dimensions">
+            <summary>Dimensions string.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.Material">
+            <summary>Material.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.Origin">
+            <summary>Country of origin.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.IsFeatured">
+            <summary>Whether featured.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.IsActive">
+            <summary>Whether active.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.UpdateProductRequest.TagIds">
+            <summary>Tag IDs to replace.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.ProductQueryParams">
+            <summary>Product query parameters for filtering/pagination.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.Search">
+            <summary>Search term (bilingual).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.CategoryId">
+            <summary>Filter by category ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.TagId">
+            <summary>Filter by tag ID.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.MinPrice">
+            <summary>Minimum price filter.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.MaxPrice">
+            <summary>Maximum price filter.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.IsFeatured">
+            <summary>Only featured products.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.InStock">
+            <summary>Only in-stock products.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.SortBy">
+            <summary>Sort by field (price, name, rating, newest).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.SortDirection">
+            <summary>Sort direction (asc/desc).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.PageNumber">
+            <summary>Page number (1-indexed).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductQueryParams.PageSize">
+            <summary>Page size.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.ProductImportRequest">
+            <summary>Admin request payload for importing a product from an external URL.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportRequest.Url">
+            <summary>Public product page URL to import from.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportRequest.PreferredCategoryId">
+            <summary>Optional category selected by admin as a preferred target.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto">
+            <summary>Preview data extracted from an external product page.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.SourceUrl">
+            <summary>The source URL that was imported.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.SourceHost">
+            <summary>Source host/domain name.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.NameAr">
+            <summary>Suggested Arabic name (editable by admin).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.NameEn">
+            <summary>Suggested English name (editable by admin).</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.DescriptionAr">
+            <summary>Suggested Arabic description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.DescriptionEn">
+            <summary>Suggested English description.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.Price">
+            <summary>Suggested product price.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.OriginalPrice">
+            <summary>Suggested original price before discount.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.SuggestedSku">
+            <summary>Suggested SKU for admin review.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.SuggestedCategoryId">
+            <summary>Suggested category ID based on admin preference or source hints.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.Weight">
+            <summary>Extracted product weight.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.Dimensions">
+            <summary>Extracted product dimensions.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.Material">
+            <summary>Extracted material.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.Origin">
+            <summary>Extracted country/region of origin.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.Currency">
+            <summary>Source currency code if detected.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.ImageUrls">
+            <summary>Uploaded image URLs prepared for product creation.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Product.ProductImportPreviewDto.Warnings">
+            <summary>Non-blocking warnings generated during import.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Wishlist.WishlistDto">
+            <summary>Response containing full wishlist details.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Wishlist.WishlistDto.Id">
+            <summary>Wishlist identifier.</summary>
+        </member>
+        <member name="P:GalleryBetak.Application.DTOs.Wishlist.WishlistDto.Items">
+            <summary>The saved items.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Wishlist.WishlistItemDto">
+            <summary>Individual wishlist item detail.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IAdminDashboardService">
+            <summary>
+            Core administrative functions for storefront telemetry and management.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.GetDashboardMetricsAsync(System.Threading.CancellationToken)">
+            <summary>Retrieves top-level KPIs.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.GetDetailedAnalyticsAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Retrieves detailed analytics for a configurable period.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.GetRecentAuditLogsAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Retrieves recent system audit logs.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.ListUsersAsync(System.Int32,System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>Lists users with their assigned roles.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.CreateUserAsync(GalleryBetak.Application.DTOs.Admin.CreateAdminUserRequest,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Creates a user account by admin.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.UpdateUserAsync(System.String,System.String,GalleryBetak.Application.DTOs.Admin.UpdateAdminUserRequest,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Updates user profile, status, and optional roles.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.SetUserStatusAsync(System.String,System.String,System.Boolean,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Toggles active/inactive state for a user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.DeleteUserAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Soft deletes a user account.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.AssignRoleAsync(System.String,System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Assigns a role to a user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.ListCouponsAsync(System.Int32,System.Int32,System.String,System.Nullable{System.Boolean},System.Threading.CancellationToken)">
+            <summary>Lists coupons with paging and optional search/activation filter.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.CreateCouponAsync(GalleryBetak.Application.DTOs.Admin.CreateCouponRequest,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Creates a coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.UpdateCouponAsync(System.Int32,GalleryBetak.Application.DTOs.Admin.UpdateCouponRequest,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Updates an existing coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.SetCouponStatusAsync(System.Int32,System.Boolean,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Toggles coupon active state.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.DeleteCouponAsync(System.Int32,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Soft deletes a coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.ListDiscountOffersAsync(System.Int32,System.Int32,System.String,System.Nullable{System.Boolean},System.Threading.CancellationToken)">
+            <summary>Lists discounted products (active offers).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.ApplyDiscountToProductAsync(System.Int32,GalleryBetak.Application.DTOs.Admin.ApplyProductDiscountRequest,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Applies or updates a product discount offer.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.ClearProductDiscountAsync(System.Int32,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Removes discount offer from a product.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.ListOrdersAsync(System.Int32,System.Int32,System.Nullable{GalleryBetak.Domain.Enums.OrderStatus},System.Threading.CancellationToken)">
+            <summary>Lists orders with optional status filter (admin view).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.GetRecentOrdersAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets recent orders for the dashboard view.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.ListCustomerServiceMessagesAsync(System.Int32,System.Int32,System.Nullable{GalleryBetak.Domain.Enums.CustomerServiceMessageStatus},System.String,System.Threading.CancellationToken)">
+            <summary>Lists customer service messages for admin inbox.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.CreateCustomerServiceMessageAsync(GalleryBetak.Application.DTOs.Admin.CreateCustomerServiceMessageRequest,System.Threading.CancellationToken)">
+            <summary>Submits a new customer service message from storefront.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAdminDashboardService.UpdateCustomerServiceMessageAsync(System.String,System.Int32,GalleryBetak.Application.DTOs.Admin.UpdateCustomerServiceMessageRequest,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Updates status/notes for customer service message.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IAuthService">
+            <summary>
+            Authentication service contract. Implemented in Infrastructure layer
+            using ASP.NET Identity + JWT.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.LoginAsync(GalleryBetak.Application.DTOs.Auth.LoginRequest,System.Threading.CancellationToken)">
+            <summary>Authenticates user and returns JWT + refresh token.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.RegisterAsync(GalleryBetak.Application.DTOs.Auth.RegisterRequest,System.Threading.CancellationToken)">
+            <summary>Registers a new user account.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.GoogleLoginAsync(GalleryBetak.Application.DTOs.Auth.GoogleLoginRequest,System.Threading.CancellationToken)">
+            <summary>Authenticates or creates user account from Google identity token.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.RefreshTokenAsync(GalleryBetak.Application.DTOs.Auth.RefreshTokenRequest,System.Threading.CancellationToken)">
+            <summary>Refreshes an expired access token using a valid refresh token.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.RevokeTokenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Revokes the user's refresh token (logout).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.ChangePasswordAsync(System.String,GalleryBetak.Application.DTOs.Auth.ChangePasswordRequest,System.Threading.CancellationToken)">
+            <summary>Changes the user's password.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.GetProfileAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets the current user's profile.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.UpdateProfileAsync(System.String,GalleryBetak.Application.DTOs.Auth.UpdateProfileRequest,System.Threading.CancellationToken)">
+            <summary>Updates the current user's profile.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.GetAddressesAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets the current user's addresses.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.CreateAddressAsync(System.String,GalleryBetak.Application.DTOs.Auth.UpsertAddressRequest,System.Threading.CancellationToken)">
+            <summary>Adds a new address for the current user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.UpdateAddressAsync(System.String,System.Int32,GalleryBetak.Application.DTOs.Auth.UpsertAddressRequest,System.Threading.CancellationToken)">
+            <summary>Updates an existing address for the current user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.SetDefaultAddressAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>Marks one address as default for the current user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.DeleteAddressAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>Deletes an address for the current user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.SendEmailVerificationAsync(System.String,GalleryBetak.Application.DTOs.Auth.SendEmailVerificationRequest,System.Threading.CancellationToken)">
+            <summary>Sends email verification code to the user email.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.VerifyEmailAsync(System.String,GalleryBetak.Application.DTOs.Auth.VerifyEmailRequest,System.Threading.CancellationToken)">
+            <summary>Verifies email confirmation code and confirms user email.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.SendPhoneOtpAsync(System.String,GalleryBetak.Application.DTOs.Auth.SendPhoneOtpRequest,System.Threading.CancellationToken)">
+            <summary>Sends mobile OTP via Twilio Verify.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.VerifyPhoneOtpAsync(System.String,GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest,System.Threading.CancellationToken)">
+            <summary>Verifies mobile OTP and confirms phone number for the user.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.ICartService">
+            <summary>
+            Service contract for managing user and guest shopping carts.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICartService.GetCartAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Gets the cart for the user or session.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICartService.AddToCartAsync(System.String,System.String,GalleryBetak.Application.DTOs.Cart.AddToCartRequest,System.Threading.CancellationToken)">
+            <summary>Adds a product to the cart.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICartService.UpdateItemQuantityAsync(System.String,System.String,System.Int32,GalleryBetak.Application.DTOs.Cart.UpdateCartItemRequest,System.Threading.CancellationToken)">
+            <summary>Updates the quantity of an item in the cart.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICartService.RemoveItemAsync(System.String,System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>Removes an item from the cart.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICartService.ClearCartAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Clears all items from the cart.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICartService.MergeCartAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Merges a guest cart into a user cart (called upon login).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.ICategoryService">
+            <summary>
+            Category service contract handling hierarchical categories and breadcrumbs.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICategoryService.GetHierarchyAsync(System.Threading.CancellationToken)">
+            <summary>Gets all root categories with their nested subcategories.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICategoryService.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets a detailed category including breadcrumb path.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICategoryService.GetBySlugAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets a detailed category by its URL slug.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICategoryService.CreateAsync(GalleryBetak.Application.DTOs.Category.CreateCategoryRequest,System.Threading.CancellationToken)">
+            <summary>Creates a new category (admin).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICategoryService.UpdateAsync(System.Int32,GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest,System.Threading.CancellationToken)">
+            <summary>Updates an existing category (admin).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.ICategoryService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Deletes a category and its subcategories (admin).</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.ICurrentUserService">
+            <summary>
+            Provides access to the current authenticated user's claims.
+            Implemented in the Infrastructure/API layer using HttpContext.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Interfaces.ICurrentUserService.UserId">
+            <summary>
+            The authenticated user's ID. Null if not authenticated.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Interfaces.ICurrentUserService.Email">
+            <summary>
+            The authenticated user's email address.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Interfaces.ICurrentUserService.IsAuthenticated">
+            <summary>
+            Whether the current user is authenticated.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Application.Interfaces.ICurrentUserService.IsAdmin">
+            <summary>
+            Whether the current user has Admin or SuperAdmin role.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IJwtTokenService">
+            <summary>
+            JWT token generation and validation service interface.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IJwtTokenService.GenerateAccessToken(GalleryBetak.Domain.Entities.ApplicationUser,System.Collections.Generic.IList{System.String})">
+            <summary>
+            Generates a JWT access token with user claims and roles.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IJwtTokenService.GetPrincipalFromExpiredToken(System.String)">
+            <summary>
+            Validates an expired access token and extracts claims.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IOrderService">
+            <summary>
+            Service contract for atomic order processing.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IOrderService.CreateOrderAsync(System.String,GalleryBetak.Application.DTOs.Order.CreateOrderRequest,System.Threading.CancellationToken)">
+            <summary>Creates a new order from the active user's cart.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IOrderService.GetOrderByIdAsync(System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>Retrieves a specific order for a user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IOrderService.GetUserOrdersAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Retrieves all orders for a user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IOrderService.UpdateOrderStatusAsync(System.Int32,GalleryBetak.Domain.Enums.OrderStatus,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Admin: Updates order status.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IPaymentService">
+            <summary>
+            Service contract for Paymob integration and webhook processing.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IPaymentService.CreatePaymentKeyAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Generates a payment initialization response (e.g. IFrame URL for Card, Reference Code for Fawry).
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IPaymentService.HandleWebhookAsync(GalleryBetak.Application.DTOs.Payment.PaymobWebhookPayload,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Processes Paymob transaction webhooks and safely transitions the Order state machine.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IPhotoService">
+            <summary>
+            Service contract for handling image uploads to a cloud provider (e.g., Cloudinary).
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IPhotoService.UploadImageAsync(System.IO.Stream,System.String,System.String)">
+            <summary>
+            Uploads an image file to the cloud provider.
+            </summary>
+            <param name="fileStream">The file stream to upload.</param>
+            <param name="fileName">The original file name.</param>
+            <param name="folder">Optional folder name in the cloud storage.</param>
+            <returns>A tuple containing the generated image URL and the provider's public ID.</returns>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IPhotoService.DeleteImageAsync(System.String)">
+            <summary>
+            Deletes an image from the cloud provider.
+            </summary>
+            <param name="publicId">The provider's public ID of the image.</param>
+            <returns>True if deletion was successful.</returns>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IProductImportService">
+            <summary>
+            Imports product previews from external storefront URLs for admin review.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductImportService.ImportFromUrlAsync(GalleryBetak.Application.DTOs.Product.ProductImportRequest,System.Threading.CancellationToken)">
+            <summary>
+            Imports and normalizes product preview data from an external URL.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IProductService">
+            <summary>
+            Product service contract. Covers catalog browsing, admin CRUD, and search.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductService.GetProductsAsync(GalleryBetak.Application.DTOs.Product.ProductQueryParams,System.Threading.CancellationToken)">
+            <summary>Gets a paginated, filtered list of products.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductService.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets a product by ID with full details.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductService.GetBySlugAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets a product by slug with full details.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductService.GetFeaturedAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets featured products for homepage.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductService.CreateAsync(GalleryBetak.Application.DTOs.Product.CreateProductRequest,System.Threading.CancellationToken)">
+            <summary>Creates a new product (admin).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductService.UpdateAsync(System.Int32,GalleryBetak.Application.DTOs.Product.UpdateProductRequest,System.Threading.CancellationToken)">
+            <summary>Updates a product (admin).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Soft-deletes a product (admin).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IProductService.GetLowStockAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets low-stock products for admin alerts.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Interfaces.IWishlistService">
+            <summary>
+            Service contract for managing user wishlists.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IWishlistService.GetWishlistAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Gets the user's wishlist.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IWishlistService.ToggleWishlistAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>Toggles a product in the wishlist (adds if missing, removes if present).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IWishlistService.ClearWishlistAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Clears the entire wishlist.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IWishlistService.MoveToCartAsync(System.String,System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>Moves a wishlist item directly into the active cart.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Mapping.CartMappingProfile">
+            <summary>
+            AutoMapper profile for Cart configurations.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Mapping.CategoryMappingProfile">
+            <summary>
+            AutoMapper profile for Category entity ↔ DTO mappings.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Mapping.CategoryMappingProfile.#ctor">
+            <summary>Configures category mappings.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Mapping.OrderMappingProfile">
+            <summary>
+            Mapping configurations for Orders and OrderItems.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Mapping.ProductMappingProfile">
+            <summary>
+            AutoMapper profile for Product entity ↔ DTO mappings.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Mapping.ProductMappingProfile.#ctor">
+            <summary>Configures product mappings.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Mapping.WishlistMappingProfile">
+            <summary>
+            AutoMapper profile for Wishlist configurations.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.OrderCountSpecification">
+            <summary>Specification to count orders optionally filtered by status.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.ActiveProductCountSpecification">
+            <summary>Specification to retrieve active products.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.LowStockProductsCountSpecification">
+            <summary>Specification to count products with low stock.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.RecentAuditLogsSpecification">
+            <summary>Specification to get recent audit logs.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.RecentOrdersSpecification">
+            <summary>Specification to get recent orders.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.SuccessfulOrdersSpecification">
+            <summary>Specification to get orders representing finalized revenue.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.RevenueLast30DaysOrdersSpecification">
+            <summary>Specification to get revenue-eligible orders in the last 30 days.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.AdminOrdersSpecification">
+            <summary>Specification to list orders for admin with optional status filter.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.AdminOrdersCountSpecification">
+            <summary>Specification to count orders for admin with optional status filter.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.OpenCustomerServiceMessagesCountSpecification">
+            <summary>Specification to count open customer service messages.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.ResolvedCustomerServiceMessagesCountSpecification">
+            <summary>Specification to count resolved/closed customer service messages.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.CustomerServiceMessagesSpecification">
+            <summary>Specification to list customer service messages with filters and paging.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.CustomerServiceMessagesCountSpecification">
+            <summary>Specification to count customer service messages with filters.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.AdminCouponsSpecification">
+            <summary>Specification to list coupons with optional filters and paging.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.AdminCouponsCountSpecification">
+            <summary>Specification to count coupons with optional filters.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.DiscountOffersSpecification">
+            <summary>Specification to list discounted products with optional filters and paging.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.DiscountOffersCountSpecification">
+            <summary>Specification to count discounted products with optional filters.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.OrdersForAnalyticsSpecification">
+            <summary>Specification to retrieve orders with items inside an analytics date window.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.CartWithItemsSpecification">
+            <summary>
+            Specification to retrieve a cart with its items and associated products eagerly loaded.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Specifications.CartWithItemsSpecification.#ctor(System.String,System.Boolean)">
+            <summary>Initializes specification by User ID.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Specifications.CartWithItemsSpecification.#ctor(System.String,System.Int32)">
+            <summary>Initializes specification by Session ID.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.OrderByNumberSpecification">
+            <summary>
+            Retrieves an Order by its unique OrderNumber.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.OrderWithItemsSpecification">
+            <summary>
+            Advanced Specification to eager-load order items.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Specifications.OrderWithItemsSpecification.#ctor(System.Int32,System.String)">
+            <summary>Load a specific user's order by ID.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Specifications.OrderWithItemsSpecification.#ctor(System.Int32)">
+            <summary>Load an order by ID (Admin override).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Specifications.OrderWithItemsSpecification.#ctor(System.String)">
+            <summary>Load all orders for a specific user.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.PaymentByGatewayOrderIdSpecification">
+            <summary>
+            Retrieves a Payment by its Gateway Order ID.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.ProductFiltersForCountSpecification">
+            <summary>
+            Specification to count products matching the exact same filters as the paginated query.
+            Used for total items calculation in pagination.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.ProductWithCategorySpecification">
+            <summary>
+            Specification for querying products with optional filtering, sorting, and pagination.
+            Includes bilingual search and category filtering.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Specifications.WishlistWithItemsSpecification">
+            <summary>
+            Specification to retrieve a wishlist with its items and associated products eagerly loaded.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Specifications.WishlistWithItemsSpecification.#ctor(System.String)">
+            <summary>Initializes specification by User ID.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Auth.LoginRequestValidator">
+            <summary>Validates login request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Auth.LoginRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Auth.RegisterRequestValidator">
+            <summary>Validates registration request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Auth.RegisterRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Auth.RefreshTokenRequestValidator">
+            <summary>Validates refresh token request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Auth.RefreshTokenRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Auth.ChangePasswordRequestValidator">
+            <summary>Validates change password request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Auth.ChangePasswordRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Auth.UpdateProfileRequestValidator">
+            <summary>Validates profile update request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Auth.UpdateProfileRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Auth.UpsertAddressRequestValidator">
+            <summary>Validates create/update address request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Auth.UpsertAddressRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Category.CreateCategoryRequestValidator">
+            <summary>Validates create category request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Category.CreateCategoryRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Category.UpdateCategoryRequestValidator">
+            <summary>Validates update category request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Category.UpdateCategoryRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Product.CreateProductRequestValidator">
+            <summary>Validates create product request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Product.CreateProductRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Product.UpdateProductRequestValidator">
+            <summary>Validates update product request.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Product.UpdateProductRequestValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.Validators.Product.ProductQueryParamsValidator">
+            <summary>Validates product query parameters.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Validators.Product.ProductQueryParamsValidator.#ctor">
+            <summary>Initializes validation rules.</summary>
+        </member>
+    </members>
+</doc>

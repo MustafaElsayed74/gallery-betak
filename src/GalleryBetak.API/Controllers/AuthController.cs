@@ -364,5 +364,31 @@ public class AuthController : BaseApiController
         var result = await _authService.DeleteAddressAsync(userId, addressId);
         return StatusCode(result.StatusCode, result);
     }
+
+    /// <summary>
+    /// Sends a password-reset link to the given email address.
+    /// Always returns 200 to prevent email enumeration.
+    /// </summary>
+    [HttpPost("forgot-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        var result = await _authService.ForgotPasswordAsync(request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Resets the user's password using the token from the reset email.
+    /// </summary>
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        var result = await _authService.ResetPasswordAsync(request);
+        return StatusCode(result.StatusCode, result);
+    }
 }
 

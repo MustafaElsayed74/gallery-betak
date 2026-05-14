@@ -65,6 +65,14 @@ export class AccountPageComponent {
     addressMessage: string | null = null;
     errorMessage: string | null = null;
 
+    // Phone verification state
+    showPhoneVerification = false;
+    phoneOtp = '';
+    sendingOtp = false;
+    verifyingOtp = false;
+    phoneVerificationMessage: string | null = null;
+    phoneVerificationError: string | null = null;
+
     ngOnInit() {
         this.route.queryParamMap
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -156,6 +164,45 @@ export class AccountPageComponent {
             error: error => {
                 this.errorMessage = this.getErrorMessage(error, this.t('Failed to update profile.', 'تعذر تحديث الملف الشخصي.'));
                 this.savingProfile = false;
+            }
+        });
+    }
+
+    startPhoneVerification() {
+        if (!this.profile?.phoneNumber) return;
+        this.sendingOtp = true;
+        this.phoneVerificationError = null;
+        this.phoneVerificationMessage = null;
+
+        this.authService.sendPhoneOtp(this.profile.phoneNumber).subscribe({
+            next: () => {
+                this.sendingOtp = false;
+                this.showPhoneVerification = true;
+                this.phoneVerificationMessage = this.t('Verification code sent to your phone.', 'تم إرسال رمز التحقق إلى هاتفك.');
+            },
+            error: (err) => {
+                this.sendingOtp = false;
+                this.phoneVerificationError = this.getErrorMessage(err, this.t('Failed to send verification code.', 'فشل إرسال رمز التحقق.'));
+            }
+        });
+    }
+
+    verifyPhone() {
+        if (!this.profile?.phoneNumber || !this.phoneOtp) return;
+        this.verifyingOtp = true;
+        this.phoneVerificationError = null;
+
+        this.authService.verifyPhoneOtp(this.profile.phoneNumber, this.phoneOtp).subscribe({
+            next: () => {
+                this.verifyingOtp = false;
+                this.showPhoneVerification = false;
+                this.phoneOtp = '';
+                this.profileMessage = this.t('Phone number verified successfully.', 'تم التحقق من رقم الهاتف بنجاح.');
+                this.loadSettings(); // Reload to get updated user profile state
+            },
+            error: (err) => {
+                this.verifyingOtp = false;
+                this.phoneVerificationError = this.getErrorMessage(err, this.t('Invalid verification code.', 'رمز التحقق غير صحيح.'));
             }
         });
     }

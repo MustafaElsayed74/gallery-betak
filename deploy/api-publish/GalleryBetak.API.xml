@@ -1,0 +1,519 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GalleryBetak.API</name>
+    </assembly>
+    <members>
+        <member name="T:GalleryBetak.API.Controllers.AdminController">
+            <summary>
+            Administrative endpoints for storefront management.
+            Require Admin roles.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.GetMetrics">
+            <summary>Retrieves storefront KPIs.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.GetDetailedAnalytics(System.Int32)">
+            <summary>Retrieves detailed analytics for a configurable period.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.ListUsers(System.Int32,System.Int32,System.String)">
+            <summary>Lists active users and their roles.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.CreateUser(GalleryBetak.Application.DTOs.Admin.CreateAdminUserRequest)">
+            <summary>Creates a user account from admin console.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.UpdateUser(System.String,GalleryBetak.Application.DTOs.Admin.UpdateAdminUserRequest)">
+            <summary>Updates user profile and optional roles.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.SetUserStatus(System.String,GalleryBetak.Application.DTOs.Admin.SetUserStatusRequest)">
+            <summary>Activates/deactivates a user account.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.DeleteUser(System.String)">
+            <summary>Soft deletes a user account.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.AssignRole(System.String,GalleryBetak.API.Controllers.AssignRoleRequest)">
+            <summary>Grants a role to a user.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.ListCoupons(System.Int32,System.Int32,System.String,System.Nullable{System.Boolean})">
+            <summary>Lists coupons with paging and optional filtering.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.CreateCoupon(GalleryBetak.Application.DTOs.Admin.CreateCouponRequest)">
+            <summary>Creates a coupon for storefront promotions.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.UpdateCoupon(System.Int32,GalleryBetak.Application.DTOs.Admin.UpdateCouponRequest)">
+            <summary>Updates coupon settings and validity.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.SetCouponStatus(System.Int32,GalleryBetak.Application.DTOs.Admin.SetCouponStatusRequest)">
+            <summary>Activates/deactivates a coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.DeleteCoupon(System.Int32)">
+            <summary>Soft deletes a coupon.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.ListOrders(System.Int32,System.Int32,System.Nullable{GalleryBetak.Domain.Enums.OrderStatus})">
+            <summary>Lists orders with optional status filter and paging.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.UpdateOrderStatus(System.Int32,GalleryBetak.API.Controllers.UpdateOrderStatusRequest)">
+            <summary>Updates order lifecycle status.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.GetRecentOrders">
+            <summary>Retrieves recent orders stream.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.ListOffers(System.Int32,System.Int32,System.String,System.Nullable{System.Boolean})">
+            <summary>Lists active product discount offers.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.ApplyOfferDiscount(System.Int32,GalleryBetak.Application.DTOs.Admin.ApplyProductDiscountRequest)">
+            <summary>Applies or updates product discount offer.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.ClearOfferDiscount(System.Int32)">
+            <summary>Removes discount offer from a product.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.GetAuditLogs">
+            <summary>Retrieves security audit logs.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.ListSupportMessages(System.Int32,System.Int32,System.Nullable{GalleryBetak.Domain.Enums.CustomerServiceMessageStatus},System.String)">
+            <summary>Lists support messages sent by customers.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.UpdateSupportMessage(System.Int32,GalleryBetak.Application.DTOs.Admin.UpdateCustomerServiceMessageRequest)">
+            <summary>Updates support message status and admin notes.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AdminController.ImportProduct(GalleryBetak.Application.DTOs.Product.ProductImportRequest)">
+            <summary>Imports product preview data from an external URL for admin review.</summary>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.BaseApiController">
+            <summary>
+            Base API controller with common attributes.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.API.Controllers.BaseApiController.CurrentUserId">
+            <summary>Gets the current user's ID from JWT claims.</summary>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.AuthController">
+            <summary>
+            Authentication endpoints: login, register, refresh, logout, profile, change password.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.#ctor(GalleryBetak.Application.Interfaces.IAuthService,Microsoft.Extensions.Logging.ILogger{GalleryBetak.API.Controllers.AuthController})">
+            <summary>Initializes AuthController.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.Login(GalleryBetak.Application.DTOs.Auth.LoginRequest)">
+            <summary>
+            Authenticates user and returns JWT + refresh token.
+            </summary>
+            <param name="request">Login credentials.</param>
+            <returns>Auth response with tokens and user profile.</returns>
+            <response code="200">Login successful.</response>
+            <response code="401">Invalid credentials.</response>
+            <response code="423">Account locked out.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.Register(GalleryBetak.Application.DTOs.Auth.RegisterRequest)">
+            <summary>
+            Registers a new user account.
+            </summary>
+            <param name="request">Registration details.</param>
+            <returns>Auth response with tokens and user profile.</returns>
+            <response code="201">User registered successfully.</response>
+            <response code="400">Validation failed.</response>
+            <response code="409">Email already exists.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.GoogleLogin(GalleryBetak.Application.DTOs.Auth.GoogleLoginRequest)">
+            <summary>
+            Authenticates user using Google ID token.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.RefreshToken(GalleryBetak.Application.DTOs.Auth.RefreshTokenRequest)">
+            <summary>
+            Refreshes an expired access token using a valid refresh token.
+            Implements token rotation (old refresh token is invalidated).
+            </summary>
+            <param name="request">Expired access token + valid refresh token.</param>
+            <returns>New auth response with new token pair.</returns>
+            <response code="200">Token refreshed successfully.</response>
+            <response code="401">Invalid or expired tokens.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.Logout">
+            <summary>
+            Logs out the current user by revoking their refresh token.
+            </summary>
+            <returns>Success confirmation.</returns>
+            <response code="200">Logout successful.</response>
+            <response code="401">Not authenticated.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.GetProfile">
+            <summary>
+            Gets the current user's profile.
+            </summary>
+            <returns>User profile with roles.</returns>
+            <response code="200">Profile retrieved.</response>
+            <response code="401">Not authenticated.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.UpdateProfile(GalleryBetak.Application.DTOs.Auth.UpdateProfileRequest)">
+            <summary>
+            Updates the current user's profile details.
+            </summary>
+            <param name="request">Updated user profile details.</param>
+            <returns>Updated user profile with roles.</returns>
+            <response code="200">Profile updated successfully.</response>
+            <response code="401">Not authenticated.</response>
+            <response code="409">Email already exists.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.ChangePassword(GalleryBetak.Application.DTOs.Auth.ChangePasswordRequest)">
+            <summary>
+            Changes the current user's password. Revokes refresh tokens on all devices.
+            </summary>
+            <param name="request">Current and new password.</param>
+            <returns>Success confirmation.</returns>
+            <response code="200">Password changed.</response>
+            <response code="400">Validation failed or incorrect current password.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.SendEmailVerification(GalleryBetak.Application.DTOs.Auth.SendEmailVerificationRequest)">
+            <summary>
+            Sends email verification code to the current user.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.VerifyEmail(GalleryBetak.Application.DTOs.Auth.VerifyEmailRequest)">
+            <summary>
+            Verifies email confirmation code for the current user.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.SendPhoneOtp(GalleryBetak.Application.DTOs.Auth.SendPhoneOtpRequest)">
+            <summary>
+            Sends mobile OTP via Twilio Verify for the current user.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.VerifyPhoneOtp(GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest)">
+            <summary>
+            Verifies mobile OTP code and confirms phone number.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.GetAddresses">
+            <summary>
+            Gets the current user's saved addresses.
+            </summary>
+            <returns>List of user addresses.</returns>
+            <response code="200">Addresses retrieved.</response>
+            <response code="401">Not authenticated.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.CreateAddress(GalleryBetak.Application.DTOs.Auth.UpsertAddressRequest)">
+            <summary>
+            Adds a new address for the current user.
+            </summary>
+            <param name="request">Address details.</param>
+            <returns>Created address.</returns>
+            <response code="201">Address created.</response>
+            <response code="401">Not authenticated.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.UpdateAddress(System.Int32,GalleryBetak.Application.DTOs.Auth.UpsertAddressRequest)">
+            <summary>
+            Updates an existing address for the current user.
+            </summary>
+            <param name="addressId">Address identifier.</param>
+            <param name="request">Updated address details.</param>
+            <returns>Updated address.</returns>
+            <response code="200">Address updated.</response>
+            <response code="401">Not authenticated.</response>
+            <response code="404">Address not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.SetDefaultAddress(System.Int32)">
+            <summary>
+            Sets the default (priority) address for the current user.
+            </summary>
+            <param name="addressId">Address identifier.</param>
+            <returns>Success confirmation.</returns>
+            <response code="200">Default address updated.</response>
+            <response code="401">Not authenticated.</response>
+            <response code="404">Address not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.AuthController.DeleteAddress(System.Int32)">
+            <summary>
+            Deletes one of the current user's addresses.
+            </summary>
+            <param name="addressId">Address identifier.</param>
+            <returns>Success confirmation.</returns>
+            <response code="200">Address deleted.</response>
+            <response code="401">Not authenticated.</response>
+            <response code="404">Address not found.</response>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.CartsController">
+            <summary>
+            Handles shopping cart operations for both guests and authenticated users.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CartsController.GetCart">
+            <summary>Gets the current user's or guest's cart.</summary>
+            <response code="200">Returns the cart and its contents.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CartsController.AddToCart(GalleryBetak.Application.DTOs.Cart.AddToCartRequest)">
+            <summary>Adds a product to the cart.</summary>
+            <response code="200">Cart updated successfully.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CartsController.UpdateItem(System.Int32,GalleryBetak.Application.DTOs.Cart.UpdateCartItemRequest)">
+            <summary>Updates cart item quantity.</summary>
+            <response code="200">Cart updated successfully.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CartsController.RemoveItem(System.Int32)">
+            <summary>Removes an item from the cart.</summary>
+            <response code="200">Cart updated successfully.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CartsController.ClearCart">
+            <summary>Clears the cart.</summary>
+            <response code="200">Cart cleared successfully.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CartsController.MergeGuestCart">
+            <summary>Merges guest cart into authenticated user cart.</summary>
+            <response code="200">Cart merged successfully.</response>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.CategoriesController">
+            <summary>
+            Category endpoints: browsing catalog tree and admin operations.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CategoriesController.#ctor(GalleryBetak.Application.Interfaces.ICategoryService)">
+            <summary>Initializes CategoriesController.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CategoriesController.GetHierarchy">
+            <summary>
+            Gets the complete hierarchical tree of active categories.
+            Used for navigation menus.
+            </summary>
+            <response code="200">Category tree retrieved.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CategoriesController.GetBySlug(System.String)">
+            <summary>
+            Gets detailed category info by URL slug, including breadcrumbs.
+            </summary>
+            <response code="200">Category details.</response>
+            <response code="404">Category not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CategoriesController.GetById(System.Int32)">
+            <summary>
+            Gets a category by its ID.
+            </summary>
+            <response code="200">Category details.</response>
+            <response code="404">Category not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CategoriesController.Create(GalleryBetak.Application.DTOs.Category.CreateCategoryRequest)">
+            <summary>
+            Creates a new category (admin only).
+            </summary>
+            <response code="201">Category created.</response>
+            <response code="400">Validation error.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CategoriesController.Update(System.Int32,GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest)">
+            <summary>
+            Updates an existing category (admin only).
+            </summary>
+            <response code="200">Category updated.</response>
+            <response code="404">Category not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.CategoriesController.Delete(System.Int32)">
+            <summary>
+            Soft-deletes a category. Unlinks or prevents delete if products/subcategories exist (admin only).
+            </summary>
+            <response code="200">Category deleted.</response>
+            <response code="400">Category in use.</response>
+            <response code="404">Category not found.</response>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.OrdersController">
+            <summary>
+            Endpoints for order management.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.OrdersController.CreateOrder(GalleryBetak.Application.DTOs.Order.CreateOrderRequest)">
+            <summary>Creates an order from the active cart.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.OrdersController.GetOrder(System.Int32)">
+            <summary>Retrieves a specific order.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.OrdersController.GetMyOrders">
+            <summary>Retrieves all orders for the current user.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.OrdersController.UpdateStatus(System.Int32,GalleryBetak.Domain.Enums.OrderStatus,System.String,System.String)">
+            <summary>Admin: Updates order state machine.</summary>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.PaymentsController">
+            <summary>
+            Handles Payment logic and Webhooks.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.PaymentsController.InitiatePayment(System.Int32)">
+            <summary>Generates the Payment Interface URL or Code for an order.</summary>
+            <response code="200">Returns an IFrame URL or Fawry Reference Code.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.PaymentsController.PaymobWebhook(System.String,GalleryBetak.Application.DTOs.Payment.PaymobWebhookPayload)">
+            <summary>Paymob Webhook Callbacks. Handles transactions automatically.</summary>
+            <response code="200">Always returns 200 OK to the gateway.</response>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.ProductsController">
+            <summary>
+            Product endpoints: catalog browsing, search, and admin CRUD.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.#ctor(GalleryBetak.Application.Interfaces.IProductService)">
+            <summary>Initializes ProductsController.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.GetProducts(GalleryBetak.Application.DTOs.Product.ProductQueryParams)">
+            <summary>
+            Gets a paginated, filtered list of products.
+            Supports search, category filtering, price range, and sorting.
+            </summary>
+            <response code="200">Products retrieved with pagination metadata.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.GetFeatured(System.Int32)">
+            <summary>
+            Gets featured products for homepage display.
+            </summary>
+            <param name="count">Number of featured products (default 8, max 20).</param>
+            <response code="200">Featured products retrieved.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.GetBySlug(System.String)">
+            <summary>
+            Gets a product by its URL-friendly slug.
+            </summary>
+            <response code="200">Product details.</response>
+            <response code="404">Product not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.GetById(System.Int32)">
+            <summary>
+            Gets a product by its ID with full details.
+            </summary>
+            <response code="200">Product details.</response>
+            <response code="404">Product not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.Create(GalleryBetak.Application.DTOs.Product.CreateProductRequest)">
+            <summary>
+            Creates a new product (admin only).
+            </summary>
+            <response code="201">Product created.</response>
+            <response code="400">Validation error.</response>
+            <response code="409">SKU conflict.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.Update(System.Int32,GalleryBetak.Application.DTOs.Product.UpdateProductRequest)">
+            <summary>
+            Updates a product (admin only).
+            </summary>
+            <response code="200">Product updated.</response>
+            <response code="404">Product not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.Delete(System.Int32)">
+            <summary>
+            Soft-deletes a product (admin only).
+            </summary>
+            <response code="200">Product deleted.</response>
+            <response code="404">Product not found.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ProductsController.GetLowStock(System.Int32)">
+            <summary>
+            Gets low-stock products (admin alert).
+            </summary>
+            <param name="threshold">Stock threshold (default 5).</param>
+            <response code="200">Low stock product list.</response>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.SupportController">
+            <summary>
+            Public customer support endpoints.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.SupportController.SubmitMessage(GalleryBetak.Application.DTOs.Admin.CreateCustomerServiceMessageRequest)">
+            <summary>Submits a customer service message.</summary>
+        </member>
+        <member name="T:GalleryBetak.API.Controllers.WishlistsController">
+            <summary>
+            Handles user wishlists (favorites).
+            Requires authentication.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.WishlistsController.GetWishlist">
+            <summary>Gets the current user's wishlist.</summary>
+            <response code="200">Returns the wishlist items.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.WishlistsController.ToggleItem(System.Int32)">
+            <summary>Toggles a product in the wishlist (Add/Remove).</summary>
+            <response code="200">Wishlist updated successfully.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.WishlistsController.ClearWishlist">
+            <summary>Clears the wishlist.</summary>
+            <response code="200">Wishlist cleared successfully.</response>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.WishlistsController.MoveToCart(System.Int32)">
+            <summary>Moves a wishlist item to the active cart.</summary>
+            <response code="200">Product moved successfully.</response>
+        </member>
+        <member name="T:GalleryBetak.API.Extensions.AuthExtensions">
+            <summary>
+            Configures JWT authentication and authorization policies.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Extensions.AuthExtensions.AddJwtAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds JWT Bearer authentication with configured settings.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.API.Extensions.CorsExtensions">
+            <summary>
+            Configures CORS policies for the API.
+            </summary>
+        </member>
+        <member name="F:GalleryBetak.API.Extensions.CorsExtensions.PolicyName">
+            <summary>
+            Name of the production CORS policy.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Extensions.CorsExtensions.AddProductionCors(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds CORS with allowed origins from configuration.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.API.Extensions.RateLimitingExtensions">
+            <summary>
+            Configures API rate limiting per endpoint type.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Extensions.RateLimitingExtensions.AddApiRateLimiting(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds IP-based rate limiting with per-endpoint rules.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.API.Extensions.SwaggerExtensions">
+            <summary>
+            Configures Swagger/OpenAPI with JWT bearer authentication support.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Extensions.SwaggerExtensions.AddSwaggerWithJwt(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds Swagger generation with JWT security definition.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.API.Middleware.GlobalExceptionHandlerMiddleware">
+            <summary>
+            Global exception handler middleware. Catches all unhandled exceptions
+            and returns a consistent ApiResponse with Arabic error messages.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Middleware.GlobalExceptionHandlerMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{GalleryBetak.API.Middleware.GlobalExceptionHandlerMiddleware})">
+            <summary>
+            Initializes the middleware.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Middleware.GlobalExceptionHandlerMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Processes the HTTP request, catching any unhandled exceptions.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.API.Middleware.SecurityHeadersMiddleware">
+            <summary>
+            Adds production security headers to every response.
+            Covers OWASP recommended headers.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Middleware.SecurityHeadersMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes the middleware.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.API.Middleware.SecurityHeadersMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Adds security headers and processes the request.
+            </summary>
+        </member>
+    </members>
+</doc>

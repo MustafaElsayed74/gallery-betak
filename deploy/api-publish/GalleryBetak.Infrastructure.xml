@@ -1,0 +1,810 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GalleryBetak.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="T:GalleryBetak.Infrastructure.Data.AppDbContext">
+            <summary>
+            Application database context. Extends IdentityDbContext for ASP.NET Identity integration.
+            Implements global soft-delete filter, automatic audit timestamps, and domain event dispatch.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Data.AppDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{GalleryBetak.Infrastructure.Data.AppDbContext})">
+            <summary>Initializes AppDbContext.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Categories">
+            <summary>Categories.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Products">
+            <summary>Products.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.ProductImages">
+            <summary>Product images.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Tags">
+            <summary>Tags.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.ProductTags">
+            <summary>Product-Tag junction.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Carts">
+            <summary>Shopping carts.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.CartItems">
+            <summary>Cart line items.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Wishlists">
+            <summary>Wishlists.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.WishlistItems">
+            <summary>Wishlist items.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Orders">
+            <summary>Orders.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.OrderItems">
+            <summary>Order line items.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Payments">
+            <summary>Payments.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Coupons">
+            <summary>Coupons.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.CouponUsages">
+            <summary>Coupon usage tracking.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Reviews">
+            <summary>Reviews.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.ReviewImages">
+            <summary>Review images.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Addresses">
+            <summary>Delivery addresses.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.Notifications">
+            <summary>Notifications.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.AuditLogs">
+            <summary>Audit logs.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.SearchLogs">
+            <summary>Search logs.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Data.AppDbContext.CustomerServiceMessages">
+            <summary>Customer service messages.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Data.AppDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Data.AppDbContext.SaveChangesAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.AppDbContextFactory">
+            <summary>
+            Design-time factory for EF Core CLI commands (migrations/update).
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.CartConfiguration">
+            <summary>EF Core configuration for Cart entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.CartItemConfiguration">
+            <summary>EF Core configuration for CartItem entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.WishlistConfiguration">
+            <summary>EF Core configuration for Wishlist entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.WishlistItemConfiguration">
+            <summary>EF Core configuration for WishlistItem entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.AddressConfiguration">
+            <summary>EF Core configuration for Address entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.ReviewConfiguration">
+            <summary>EF Core configuration for Review entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.ReviewImageConfiguration">
+            <summary>EF Core configuration for ReviewImage entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.CategoryConfiguration">
+            <summary>
+            EF Core Fluent API configuration for Category entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.CustomerServiceMessageConfiguration">
+            <summary>EF Core configuration for customer service messages.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.NotificationConfiguration">
+            <summary>EF Core configuration for Notification entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.AuditLogConfiguration">
+            <summary>EF Core configuration for AuditLog entity (immutable).</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.SearchLogConfiguration">
+            <summary>EF Core configuration for SearchLog entity.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.ApplicationUserConfiguration">
+            <summary>EF Core configuration for ApplicationUser (extended Identity user).</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.OrderConfiguration">
+            <summary>
+            EF Core Fluent API configuration for Order entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.OrderItemConfiguration">
+            <summary>
+            EF Core Fluent API configuration for OrderItem entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.PaymentConfiguration">
+            <summary>
+            EF Core configuration for Payment entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.CouponConfiguration">
+            <summary>
+            EF Core configuration for Coupon entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.CouponUsageConfiguration">
+            <summary>
+            EF Core configuration for CouponUsage entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.ProductConfiguration">
+            <summary>
+            EF Core Fluent API configuration for Product entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.ProductImageConfiguration">
+            <summary>
+            EF Core Fluent API configuration for ProductImage entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.TagConfiguration">
+            <summary>
+            EF Core Fluent API configuration for Tag entity.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Configurations.ProductTagConfiguration">
+            <summary>
+            EF Core configuration for ProductTag junction table.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Data.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Data.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Data.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Data.SpecificationEvaluator`1">
+            <summary>
+            Evaluates and applies an ISpecification against an IQueryable.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.DependencyInjection">
+            <summary>
+            Extension methods for registering Infrastructure layer services.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.DependencyInjection.AddInfrastructureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Hosting.IHostEnvironment)">
+            <summary>
+            Registers all Infrastructure layer services: DbContext, Identity, Redis, repositories, UoW.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Identity.AuthService">
+            <summary>
+            Authentication service implementation using ASP.NET Identity + JWT.
+            Handles login, registration, token refresh, and password management.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.#ctor(Microsoft.AspNetCore.Identity.UserManager{GalleryBetak.Domain.Entities.ApplicationUser},Microsoft.AspNetCore.Identity.SignInManager{GalleryBetak.Domain.Entities.ApplicationUser},GalleryBetak.Application.Interfaces.IJwtTokenService,GalleryBetak.Domain.Interfaces.IUnitOfWork,System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{GalleryBetak.Infrastructure.Identity.AuthService},GalleryBetak.Application.Interfaces.IEmailService)">
+            <summary>Initializes AuthService with required dependencies.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.LoginAsync(GalleryBetak.Application.DTOs.Auth.LoginRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.RegisterAsync(GalleryBetak.Application.DTOs.Auth.RegisterRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.GoogleLoginAsync(GalleryBetak.Application.DTOs.Auth.GoogleLoginRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.RefreshTokenAsync(GalleryBetak.Application.DTOs.Auth.RefreshTokenRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.RevokeTokenAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.ChangePasswordAsync(System.String,GalleryBetak.Application.DTOs.Auth.ChangePasswordRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.GetProfileAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.UpdateProfileAsync(System.String,GalleryBetak.Application.DTOs.Auth.UpdateProfileRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.GetAddressesAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.CreateAddressAsync(System.String,GalleryBetak.Application.DTOs.Auth.UpsertAddressRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.UpdateAddressAsync(System.String,System.Int32,GalleryBetak.Application.DTOs.Auth.UpsertAddressRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.SetDefaultAddressAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.DeleteAddressAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.SendEmailVerificationAsync(System.String,GalleryBetak.Application.DTOs.Auth.SendEmailVerificationRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.VerifyEmailAsync(System.String,GalleryBetak.Application.DTOs.Auth.VerifyEmailRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.SendPhoneOtpAsync(System.String,GalleryBetak.Application.DTOs.Auth.SendPhoneOtpRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.VerifyPhoneOtpAsync(System.String,GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Identity.CurrentUserService">
+            <summary>
+            Extracts the current authenticated user's claims from HttpContext.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.CurrentUserService.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Initializes a new instance of <see cref="T:GalleryBetak.Infrastructure.Identity.CurrentUserService"/>.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Identity.CurrentUserService.UserId">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Identity.CurrentUserService.Email">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Identity.CurrentUserService.IsAuthenticated">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Identity.CurrentUserService.IsAdmin">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Identity.IdentitySeeder">
+            <summary>
+            Seeds default roles and admin user on application startup.
+            Called from Program.cs during initialization.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.IdentitySeeder.SeedAsync(System.IServiceProvider)">
+            <summary>
+            Seeds default roles (Admin, Customer) and creates a default admin user.
+            Safe to call multiple times — idempotent.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.JwtTokenService.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>Initializes JwtTokenService with configuration.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.JwtTokenService.GenerateAccessToken(GalleryBetak.Domain.Entities.ApplicationUser,System.Collections.Generic.IList{System.String})">
+            <summary>
+            Generates a JWT access token with user claims and roles.
+            </summary>
+            <param name="user">The authenticated user.</param>
+            <param name="roles">User's assigned roles.</param>
+            <returns>JWT token string and expiry time.</returns>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.JwtTokenService.GenerateRefreshToken">
+            <summary>
+            Generates a cryptographically secure refresh token.
+            </summary>
+            <returns>Base64-encoded refresh token string.</returns>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.JwtTokenService.HashRefreshToken(System.String)">
+            <summary>
+            Hashes a refresh token using SHA-256 for secure storage.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.JwtTokenService.GetPrincipalFromExpiredToken(System.String)">
+            <summary>
+            Validates an expired access token and extracts claims (for refresh flow).
+            </summary>
+            <param name="token">The expired JWT token.</param>
+            <returns>ClaimsPrincipal if token is structurally valid, null otherwise.</returns>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Repositories.CategoryRepository">
+            <summary>
+            Category repository implementation with eager loading.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.CategoryRepository.GetByIdWithSubcategoriesAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Repositories.GenericRepository`1">
+            <summary>
+            Generic repository implementation using EF Core.
+            Provides standard CRUD operations for all entities.
+            </summary>
+            <typeparam name="T">Entity type inheriting from BaseEntity.</typeparam>
+        </member>
+        <member name="F:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.Context">
+            <summary>The database context.</summary>
+        </member>
+        <member name="F:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.DbSet">
+            <summary>The entity DbSet.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.#ctor(GalleryBetak.Infrastructure.Data.AppDbContext)">
+            <summary>Initializes the repository.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.GetAllAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.FindAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.AnyAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.CountAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.GetEntityWithSpecAsync(GalleryBetak.Domain.Interfaces.ISpecification{`0},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.ListAsync(GalleryBetak.Domain.Interfaces.ISpecification{`0},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.CountAsync(GalleryBetak.Domain.Interfaces.ISpecification{`0},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.AddAsync(`0,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.AddRangeAsync(System.Collections.Generic.IEnumerable{`0},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.Update(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.Remove(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.GenericRepository`1.RemoveRange(System.Collections.Generic.IEnumerable{`0})">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Repositories.OrderRepository">
+            <summary>
+            Order repository with optimized queries for order management.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.OrderRepository.#ctor(GalleryBetak.Infrastructure.Data.AppDbContext)">
+            <summary>Initializes OrderRepository.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.OrderRepository.GetByOrderNumberAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.OrderRepository.GetByUserAsync(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.OrderRepository.GetByStatusAsync(GalleryBetak.Domain.Enums.OrderStatus,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.OrderRepository.GetDetailAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.OrderRepository.GenerateOrderNumberAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Repositories.ProductRepository">
+            <summary>
+            Product repository with optimized queries for product catalog operations.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.ProductRepository.#ctor(GalleryBetak.Infrastructure.Data.AppDbContext)">
+            <summary>Initializes ProductRepository.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.ProductRepository.GetBySlugAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.ProductRepository.GetBySKUAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.ProductRepository.GetFeaturedAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.ProductRepository.GetByCategoryAsync(System.Int32,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.ProductRepository.SearchAsync(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.ProductRepository.GetLowStockAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.ProductRepository.GetDetailAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Repositories.UnitOfWork">
+            <summary>
+            Unit of Work implementation. Coordinates multiple repositories
+            within a single database transaction.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.UnitOfWork.#ctor(GalleryBetak.Infrastructure.Data.AppDbContext)">
+            <summary>Initializes UnitOfWork with the database context.</summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Products">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Orders">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Categories">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Carts">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Wishlists">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Addresses">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Payments">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.AuditLogs">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.CustomerServiceMessages">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Tags">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Coupons">
+            <inheritdoc/>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Reviews">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.UnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.UnitOfWork.BeginTransactionAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.UnitOfWork.CommitTransactionAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.UnitOfWork.RollbackTransactionAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.UnitOfWork.Dispose">
+            <summary>Disposes the context and transaction.</summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.AdminDashboardService">
+            <summary>
+            Administrative operations execution and system auditing.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.GetDashboardMetricsAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.GetDetailedAnalyticsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.GetRecentAuditLogsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.ListUsersAsync(System.Int32,System.Int32,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.CreateUserAsync(GalleryBetak.Application.DTOs.Admin.CreateAdminUserRequest,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.UpdateUserAsync(System.String,System.String,GalleryBetak.Application.DTOs.Admin.UpdateAdminUserRequest,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.SetUserStatusAsync(System.String,System.String,System.Boolean,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.DeleteUserAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.AssignRoleAsync(System.String,System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.ListCouponsAsync(System.Int32,System.Int32,System.String,System.Nullable{System.Boolean},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.CreateCouponAsync(GalleryBetak.Application.DTOs.Admin.CreateCouponRequest,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.UpdateCouponAsync(System.Int32,GalleryBetak.Application.DTOs.Admin.UpdateCouponRequest,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.SetCouponStatusAsync(System.Int32,System.Boolean,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.DeleteCouponAsync(System.Int32,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.ListDiscountOffersAsync(System.Int32,System.Int32,System.String,System.Nullable{System.Boolean},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.ApplyDiscountToProductAsync(System.Int32,GalleryBetak.Application.DTOs.Admin.ApplyProductDiscountRequest,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.ClearProductDiscountAsync(System.Int32,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.ListOrdersAsync(System.Int32,System.Int32,System.Nullable{GalleryBetak.Domain.Enums.OrderStatus},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.GetRecentOrdersAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.ListCustomerServiceMessagesAsync(System.Int32,System.Int32,System.Nullable{GalleryBetak.Domain.Enums.CustomerServiceMessageStatus},System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.CreateCustomerServiceMessageAsync(GalleryBetak.Application.DTOs.Admin.CreateCustomerServiceMessageRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.AdminDashboardService.UpdateCustomerServiceMessageAsync(System.String,System.Int32,GalleryBetak.Application.DTOs.Admin.UpdateCustomerServiceMessageRequest,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.CartService">
+            <summary>
+            Implementation of shopping cart logic. Handles guest tracking and cart merging.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CartService.GetOrInitializeCartAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Gets or initializes the active cart for the requester.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CartService.GetCartAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CartService.AddToCartAsync(System.String,System.String,GalleryBetak.Application.DTOs.Cart.AddToCartRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CartService.UpdateItemQuantityAsync(System.String,System.String,System.Int32,GalleryBetak.Application.DTOs.Cart.UpdateCartItemRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CartService.RemoveItemAsync(System.String,System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CartService.ClearCartAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CartService.MergeCartAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.CategoryService">
+            <summary>
+            Implementation of category service handling nested subcategories and path logic.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CategoryService.#ctor(GalleryBetak.Domain.Interfaces.IUnitOfWork,AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{GalleryBetak.Infrastructure.Services.CategoryService})">
+            <summary>Initializes CategoryService.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CategoryService.GetHierarchyAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CategoryService.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CategoryService.GetBySlugAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CategoryService.CreateAsync(GalleryBetak.Application.DTOs.Category.CreateCategoryRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CategoryService.UpdateAsync(System.Int32,GalleryBetak.Application.DTOs.Category.UpdateCategoryRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.CategoryService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.OrderService">
+            <summary>
+            Domain-driven order logic execution.
+            Transfers the Cart state into a Frozen Order state, triggers domain events, and clears the cart.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.OrderService.CreateOrderAsync(System.String,GalleryBetak.Application.DTOs.Order.CreateOrderRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.OrderService.GetOrderByIdAsync(System.Int32,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.OrderService.GetUserOrdersAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.OrderService.UpdateOrderStatusAsync(System.Int32,GalleryBetak.Domain.Enums.OrderStatus,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.PaymentService">
+            <summary>
+            Robust Paymob Integration Service handling multi-step token acquisition, API negotiation,
+            and secure HMAC webhook signature validations.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PaymentService.AuthenticateAsync(System.Threading.CancellationToken)">
+            <summary>Phase 1: Get Authentication Token</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PaymentService.RegisterOrderAsync(System.String,GalleryBetak.Domain.Entities.Order,System.Threading.CancellationToken)">
+            <summary>Phase 2: Register Order on Paymob</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PaymentService.GetPaymentKeyAsync(System.String,System.String,GalleryBetak.Domain.Entities.Order,System.Int32,System.Threading.CancellationToken)">
+            <summary>Phase 3: Get Payment Key</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PaymentService.InitiateFawryPayAsync(System.String,System.Threading.CancellationToken)">
+            <summary>Retrieve Fawry Reference</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PaymentService.CreatePaymentKeyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PaymentService.HandleWebhookAsync(GalleryBetak.Application.DTOs.Payment.PaymobWebhookPayload,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PaymentService.VerifyHmac(GalleryBetak.Application.DTOs.Payment.PaymobWebhookPayload,System.String)">
+            <summary>
+            Implements secure hash validation against Paymob specs.
+            Concatenates values of [amount_cents, created_at, currency, error_occured, has_parent_transaction, id, integration_id, is_3d_secure, is_auth, is_capture, is_refunded, is_standalone_payment, is_voided, order.id, owner, pending, source_data.pan, source_data.sub_type, source_data.type, success]
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.PhotoService">
+            <summary>
+            Cloudinary implementation of IPhotoService for cloud image storage.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PhotoService.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>Initializes PhotoService with Cloudinary configuration.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PhotoService.UploadImageAsync(System.IO.Stream,System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.PhotoService.DeleteImageAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.ProductImportHtmlParser">
+            <summary>
+            Extracts product-like fields from HTML using JSON-LD and meta tag fallbacks.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductImportHtmlParser.Extract(System.String,System.Uri)">
+            <summary>
+            Parses a product page and returns extracted values.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.ProductImportExtractionResult">
+            <summary>
+            Raw extraction model before import normalization.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.ProductImportService">
+            <summary>
+            Server-side importer that fetches product pages, extracts preview fields, and uploads images.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductImportService.#ctor(System.Net.Http.IHttpClientFactory,GalleryBetak.Application.Interfaces.IPhotoService,GalleryBetak.Infrastructure.Services.ProductImportHtmlParser,Microsoft.Extensions.Options.IOptions{GalleryBetak.Infrastructure.Settings.ProductImporterSettings},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{GalleryBetak.Infrastructure.Services.ProductImportService})">
+            <summary>Initializes importer service dependencies.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductImportService.ImportFromUrlAsync(GalleryBetak.Application.DTOs.Product.ProductImportRequest,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.ProductService">
+            <summary>
+            Product service implementation with full catalog, search, and admin CRUD.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.#ctor(GalleryBetak.Domain.Interfaces.IUnitOfWork,AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{GalleryBetak.Infrastructure.Services.ProductService})">
+            <summary>Initializes ProductService.</summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.GetProductsAsync(GalleryBetak.Application.DTOs.Product.ProductQueryParams,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.GetBySlugAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.GetFeaturedAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.CreateAsync(GalleryBetak.Application.DTOs.Product.CreateProductRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.UpdateAsync(System.Int32,GalleryBetak.Application.DTOs.Product.UpdateProductRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.ProductService.GetLowStockAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Services.WishlistService">
+            <summary>
+            Implementation of user wishlist logic.
+            </summary>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.WishlistService.GetWishlistAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.WishlistService.ToggleWishlistAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.WishlistService.ClearWishlistAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Services.WishlistService.MoveToCartAsync(System.String,System.Int32,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Settings.PaymobSettings">
+            <summary>
+            Paymob Gateway Configuration bindings.
+            </summary>
+        </member>
+        <member name="T:GalleryBetak.Infrastructure.Settings.ProductImporterSettings">
+            <summary>
+            Runtime settings for external product import.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Settings.ProductImporterSettings.UserAgent">
+            <summary>
+            User-Agent sent to external websites.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Settings.ProductImporterSettings.RequestTimeoutSeconds">
+            <summary>
+            Request timeout in seconds.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Settings.ProductImporterSettings.DelayBetweenRequestsMs">
+            <summary>
+            Per-host politeness delay in milliseconds.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Settings.ProductImporterSettings.MaxImages">
+            <summary>
+            Maximum number of images to import per product.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Settings.ProductImporterSettings.MaxImageSizeMb">
+            <summary>
+            Maximum downloaded image size in MB.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Settings.ProductImporterSettings.AllowedDomains">
+            <summary>
+            Optional domain allowlist. Empty means allow all public hosts.
+            </summary>
+        </member>
+        <member name="P:GalleryBetak.Infrastructure.Settings.ProductImporterSettings.RespectRobotsTxt">
+            <summary>
+            If true, importer checks robots.txt before fetching product pages.
+            </summary>
+        </member>
+    </members>
+</doc>

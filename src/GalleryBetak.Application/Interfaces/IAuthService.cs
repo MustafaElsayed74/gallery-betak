@@ -57,7 +57,13 @@ public interface IAuthService
     /// <summary>Sends mobile OTP via Twilio Verify.</summary>
     Task<ApiResponse<bool>> SendPhoneOtpAsync(string userId, SendPhoneOtpRequest request, CancellationToken cancellationToken = default);
 
-    /// <summary>Verifies mobile OTP and confirms phone number for the user.</summary>
+    /// <summary>Verifies mobile OTP code and confirms phone number for the user.</summary>
     Task<ApiResponse<bool>> VerifyPhoneOtpAsync(string userId, VerifyPhoneOtpRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Sends password-reset email with a secure link (anonymous).</summary>
+    Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>Resets user password using the token from the reset email (anonymous).</summary>
+    Task<ApiResponse<bool>> ResetPasswordAsync(ResetPasswordRequest request, CancellationToken cancellationToken = default);
 }
 

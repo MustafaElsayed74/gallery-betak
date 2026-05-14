@@ -45,6 +45,7 @@ export interface UserProfile {
   id: string;
   email: string;
   phoneNumber: string | null;
+  phoneNumberConfirmed: boolean;
   firstName: string;
   lastName: string;
   fullName: string;
@@ -201,6 +202,18 @@ export class AuthService {
     return this.http.put<ApiResponse<UserProfile>>(`${this.AUTH_URL}/profile`, model).pipe(
       map(response => this.requirePayload(response, 'Update profile payload missing.')),
       tap(profile => this.syncUserFromProfile(profile))
+    );
+  }
+
+  sendPhoneOtp(phoneNumber: string): Observable<boolean> {
+    return this.http.post<ApiResponse<boolean>>(`${this.AUTH_URL}/phone/send-otp`, { phoneNumber }).pipe(
+      map(response => response.data ?? false)
+    );
+  }
+
+  verifyPhoneOtp(phoneNumber: string, code: string): Observable<boolean> {
+    return this.http.post<ApiResponse<boolean>>(`${this.AUTH_URL}/phone/verify-otp`, { phoneNumber, code }).pipe(
+      map(response => response.data ?? false)
     );
   }
 

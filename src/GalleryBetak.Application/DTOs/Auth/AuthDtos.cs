@@ -89,6 +89,9 @@ public sealed record UserProfileDto
     /// <summary>Phone number.</summary>
     public string? PhoneNumber { get; init; }
 
+    /// <summary>Is phone number verified.</summary>
+    public bool PhoneNumberConfirmed { get; init; }
+
     /// <summary>Full name.</summary>
     public string FullName { get; init; } = string.Empty;
 
@@ -254,4 +257,22 @@ public sealed record VerifyPhoneOtpRequest
     [Required]
     public string Code { get; init; } = string.Empty;
 }
+/// <summary>Request to initiate password reset.</summary>
+public sealed record ForgotPasswordRequest
+{
+    [Required][EmailAddress]
+    public string Email { get; init; } = string.Empty;
+}
 
+/// <summary>Request to complete password reset using token from email link.</summary>
+public sealed record ResetPasswordRequest
+{
+    [Required][EmailAddress]
+    public string Email { get; init; } = string.Empty;
+    [Required]
+    public string Token { get; init; } = string.Empty;
+    [Required][MinLength(8)]
+    public string NewPassword { get; init; } = string.Empty;
+    [Required][Compare(nameof(NewPassword))]
+    public string ConfirmNewPassword { get; init; } = string.Empty;
+}

@@ -357,19 +357,18 @@ public sealed class AuthService : IAuthService
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        var profile = new UserProfileDto
+        return ApiResponse<UserProfileDto>.Ok(new UserProfileDto
         {
             Id = user.Id,
-            Email = user.Email ?? "",
+            Email = user.Email!,
             PhoneNumber = user.PhoneNumber,
+            PhoneNumberConfirmed = user.PhoneNumberConfirmed,
             FullName = user.FullName,
             FirstName = user.FirstName,
             LastName = user.LastName,
             ProfileImageUrl = user.ProfileImageUrl,
-            Roles = roles.ToList().AsReadOnly()
-        };
-
-        return ApiResponse<UserProfileDto>.Ok(profile);
+            Roles = roles.ToList()
+        });
     }
 
     /// <inheritdoc/>
@@ -629,9 +628,11 @@ public sealed class AuthService : IAuthService
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         try
         {
-            var subject = "GalleryBetak Email Verification";
-            var body = $"Your verification code is:\n{token}\n\nIf you did not request this, ignore this email.";
-            await _emailService.SendEmailAsync(targetEmail, subject, body, cancellationToken);
+            await _emailService.SendEmailVerificationCodeAsync(
+                targetEmail,
+                user.FullName,
+                token,
+                cancellationToken);
         }
         catch (Exception ex)
         {
@@ -799,6 +800,89 @@ public sealed class AuthService : IAuthService
     }
 
     // ── Private Helpers ───────────────────────────────────────────
+
+    /// <inheritdoc/>
+    public async Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        // Always return OK to prevent email enumeration attacks
+        var user = await _userManager.FindByEmailAsync(request.Email.Trim());
+        if (user is null || user.IsDeleted || !user.IsActive)
+        {
+            _logger.LogInformation("ForgotPassword: email not found or inactive — silent success: {Email}", request.Email);
+            return ApiResponse<bool>.Ok(true,
+                "إذا كان البريد الإلكتروني مسجلاً، ستصلك رسالة بتعليمات إعادة تعيين كلمة المرور",
+                "If the email is registered, a reset link has been sent.");
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var encodedToken = Uri.EscapeDataString(token);
+        var encodedEmail = Uri.EscapeDataString(user.Email ?? string.Empty);
+        var resetLink = $"https://gallery-betak.vercel.app/auth/reset-password?email={encodedEmail}&token={encodedToken}";
+
+        try
+        {
+            await _emailService.SendPasswordResetEmailAsync(
+                user.Email!,
+                user.FullName,
+                resetLink,
+                cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send password reset email to {Email}", user.Email);
+            return ApiResponse<bool>.Fail(500,
+                "حدث خطأ أثناء إرسال البريد الإلكتروني. حاول مرة أخرى.",
+                "Failed to send reset email. Please try again.");
+        }
+
+        _logger.LogInformation("Password reset email sent to {Email}", user.Email);
+        return ApiResponse<bool>.Ok(true,
+            "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+            "Password reset link sent to your email.");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ApiResponse<bool>> ResetPasswordAsync(ResetPasswordRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (!string.Equals(request.NewPassword, request.ConfirmNewPassword, StringComparison.Ordinal))
+        {
+            return ApiResponse<bool>.Fail(400,
+                "كلمتا المرور غير متطابقتين",
+                "Passwords do not match.");
+        }
+
+        var user = await _userManager.FindByEmailAsync(request.Email.Trim());
+        if (user is null || user.IsDeleted)
+        {
+            return ApiResponse<bool>.Fail(400,
+                "بيانات غير صالحة",
+                "Invalid request.");
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors
+                .Select(e => new ApiError { Field = e.Code, Message = e.Description })
+                .ToList();
+
+            return ApiResponse<bool>.Fail(400,
+                "رمز إعادة التعيين غير صالح أو منتهي الصلاحية. يرجى طلب رابط جديد.",
+                "Invalid or expired reset token. Please request a new link.",
+                errors);
+        }
+
+        // Revoke all refresh tokens on password reset for security
+        user.SetRefreshToken(string.Empty, DateTime.UtcNow.AddDays(-1));
+        await _userManager.UpdateAsync(user);
+
+        _logger.LogInformation("Password reset successfully for {Email}", user.Email);
+        return ApiResponse<bool>.Ok(true,
+            "تم تغيير كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن.",
+            "Password reset successfully. You can now log in.");
+    }
 
     private async Task<AuthResponse> GenerateAuthResponseAsync(ApplicationUser user)
     {
