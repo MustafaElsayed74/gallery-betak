@@ -160,16 +160,16 @@ try
         };
     });
 
-    // 4. Swagger (Development only)
-    if (app.Environment.IsDevelopment())
+    // 4. Swagger (enabled in all environments for diagnostics)
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
     {
-        app.UseSwagger();
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "GalleryBetak API v1");
-            options.RoutePrefix = "swagger";
-        });
-    }
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "GalleryBetak API v1");
+        options.RoutePrefix = "swagger";
+    });
+
+    // Quick diagnostic endpoint — no DB dependency
+    app.MapGet("/ping", () => Results.Ok(new { status = "ok", time = DateTime.UtcNow }));
 
     // 5. Response compression
     app.UseResponseCompression();
