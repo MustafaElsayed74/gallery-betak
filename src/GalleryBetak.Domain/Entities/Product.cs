@@ -104,7 +104,8 @@ public sealed class Product : BaseEntity
     /// </summary>
     public static Product Create(
         string nameAr, string nameEn, string slug, string sku,
-        decimal price, int categoryId, int stockQuantity = 0)
+        decimal price, int categoryId, int stockQuantity = 0,
+        string? descriptionAr = null, string? descriptionEn = null)
     {
         if (string.IsNullOrWhiteSpace(nameAr))
             throw new DomainException("اسم المنتج بالعربية مطلوب", "Product Arabic name is required.");
@@ -124,6 +125,8 @@ public sealed class Product : BaseEntity
             Price = price,
             CategoryId = categoryId,
             StockQuantity = stockQuantity,
+            DescriptionAr = descriptionAr,
+            DescriptionEn = descriptionEn,
             IsActive = true
         };
     }

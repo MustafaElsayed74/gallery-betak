@@ -260,6 +260,12 @@
         <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.VerifyPhoneOtpAsync(System.String,GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.ForgotPasswordAsync(GalleryBetak.Application.DTOs.Auth.ForgotPasswordRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GalleryBetak.Infrastructure.Identity.AuthService.ResetPasswordAsync(GalleryBetak.Application.DTOs.Auth.ResetPasswordRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:GalleryBetak.Infrastructure.Identity.CurrentUserService">
             <summary>
             Extracts the current authenticated user's claims from HttpContext.

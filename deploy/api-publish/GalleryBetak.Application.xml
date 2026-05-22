@@ -289,6 +289,9 @@
         <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.PhoneNumber">
             <summary>Phone number.</summary>
         </member>
+        <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.PhoneNumberConfirmed">
+            <summary>Is phone number verified.</summary>
+        </member>
         <member name="P:GalleryBetak.Application.DTOs.Auth.UserProfileDto.FullName">
             <summary>Full name.</summary>
         </member>
@@ -372,6 +375,12 @@
         </member>
         <member name="P:GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest.Code">
             <summary>OTP code received via SMS.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.ForgotPasswordRequest">
+            <summary>Request to initiate password reset.</summary>
+        </member>
+        <member name="T:GalleryBetak.Application.DTOs.Auth.ResetPasswordRequest">
+            <summary>Request to complete password reset using token from email link.</summary>
         </member>
         <member name="T:GalleryBetak.Application.DTOs.Cart.CartDto">
             <summary>Response containing full cart details.</summary>
@@ -1060,7 +1069,13 @@
             <summary>Sends mobile OTP via Twilio Verify.</summary>
         </member>
         <member name="M:GalleryBetak.Application.Interfaces.IAuthService.VerifyPhoneOtpAsync(System.String,GalleryBetak.Application.DTOs.Auth.VerifyPhoneOtpRequest,System.Threading.CancellationToken)">
-            <summary>Verifies mobile OTP and confirms phone number for the user.</summary>
+            <summary>Verifies mobile OTP code and confirms phone number for the user.</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.ForgotPasswordAsync(GalleryBetak.Application.DTOs.Auth.ForgotPasswordRequest,System.Threading.CancellationToken)">
+            <summary>Sends password-reset email with a secure link (anonymous).</summary>
+        </member>
+        <member name="M:GalleryBetak.Application.Interfaces.IAuthService.ResetPasswordAsync(GalleryBetak.Application.DTOs.Auth.ResetPasswordRequest,System.Threading.CancellationToken)">
+            <summary>Resets user password using the token from the reset email (anonymous).</summary>
         </member>
         <member name="T:GalleryBetak.Application.Interfaces.ICartService">
             <summary>

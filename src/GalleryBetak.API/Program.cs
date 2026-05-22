@@ -132,6 +132,16 @@ try
         }
         catch (Exception dbEx)
         {
+            Log.Error(dbEx, "Database initialization/seeding failed.");
+            try
+            {
+                File.WriteAllText("seeder-error.txt", $"{DateTime.UtcNow:O} - Database seeding failed:\n{dbEx}");
+            }
+            catch (Exception writeEx)
+            {
+                Log.Warning(writeEx, "Failed to write seeder-error.txt file");
+            }
+
             Log.Warning(dbEx,
                 "Database initialization failed — the remote SQL Server may be unreachable. " +
                 "The API will still start but database-dependent features will be unavailable until the connection is restored.");

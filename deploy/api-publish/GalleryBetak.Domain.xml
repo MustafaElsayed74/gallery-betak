@@ -909,7 +909,7 @@
         <member name="P:GalleryBetak.Domain.Entities.Product.Reviews">
             <summary>Product reviews.</summary>
         </member>
-        <member name="M:GalleryBetak.Domain.Entities.Product.Create(System.String,System.String,System.String,System.String,System.Decimal,System.Int32,System.Int32)">
+        <member name="M:GalleryBetak.Domain.Entities.Product.Create(System.String,System.String,System.String,System.String,System.Decimal,System.Int32,System.Int32,System.String,System.String)">
             <summary>
             Factory method to create a product with validated input.
             </summary>

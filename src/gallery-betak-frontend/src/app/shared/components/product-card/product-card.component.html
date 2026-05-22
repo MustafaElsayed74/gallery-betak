@@ -3,7 +3,7 @@
   [routerLink]="['/products', product.slug]">
 
   <!-- Image Wrapper -->
-  <div class="product-card-media relative h-60 w-full bg-slate-100 overflow-hidden">
+  <div class="product-card-media relative h-60 w-full bg-white overflow-hidden p-2 md:p-3">
     <!-- Badges -->
     <div class="absolute top-3 right-3 z-10 flex flex-col gap-2">
       <span *ngIf="product.discountPercentage > 0"
@@ -27,7 +27,7 @@
     </button>
 
     <img [src]="product.imageUrl || 'assets/placeholder.svg'" [alt]="productDisplayName"
-      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+      class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy">
   </div>
 
   <!-- Content -->

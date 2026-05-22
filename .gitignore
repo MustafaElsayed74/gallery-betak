@@ -49,6 +49,7 @@ dist/
 ## Logs
 logs/
 *.log
+seeder-error.txt
 
 ## Local temp build output
 temp-build/

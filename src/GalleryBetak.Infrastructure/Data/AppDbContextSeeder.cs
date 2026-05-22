@@ -1,7 +1,11 @@
 using GalleryBetak.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GalleryBetak.Infrastructure.Data
@@ -10,101 +14,206 @@ namespace GalleryBetak.Infrastructure.Data
     {
         public static async Task SeedAsync(AppDbContext context)
         {
-            List<Category>? seedCategories = null;
-
-            if (!context.Categories.Any())
+            // If kitchen tools are already seeded, skip to avoid overhead on every startup
+            if (await context.Products.AnyAsync(p => p.SKU.StartsWith("ELG-")))
             {
-                seedCategories = new List<Category>
-                {
-                    Category.Create("أثاث منزلي", "Home Furniture", "home-furniture", null, null, null, "M19 21V5...", 1),
-                    Category.Create("ديكورات", "Decorations", "decorations", null, null, null, "M5 3v4...", 2),
-                    Category.Create("إضاءة", "Lighting", "lighting", null, null, null, "M9.663 17h4.673...", 3),
-                    Category.Create("سجاد", "Rugs", "rugs", null, null, null, "M4 5a1...", 4),
-                    Category.Create("أقمشة ومفارش", "Textiles", "textiles", null, null, null, "M3 6h18...", 5)
-                };
+                return;
+            }
 
-                await context.Categories.AddRangeAsync(seedCategories);
+            // Read the embedded JSON resource
+            var assembly = Assembly.GetExecutingAssembly();
+            string jsonContent = string.Empty;
+            
+            using (var stream = assembly.GetManifestResourceStream("GalleryBetak.Infrastructure.Data.Seed.elghazawy-kitchen-tools.json"))
+            {
+                if (stream == null)
+                {
+                    throw new FileNotFoundException("Could not find embedded resource 'GalleryBetak.Infrastructure.Data.Seed.elghazawy-kitchen-tools.json'");
+                }
+                using (var reader = new StreamReader(stream))
+                {
+                    jsonContent = await reader.ReadToEndAsync();
+                }
+            }
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var payload = JsonSerializer.Deserialize<SeedPayload>(jsonContent, options);
+            if (payload == null || payload.Category == null || payload.Products == null)
+            {
+                return;
+            }
+
+            // 1. Delete ProductTags and ProductImages for ELG-% and legacy SKUs (SKU001 - SKU010)
+            var legacySkus = Enumerable.Range(1, 10).Select(i => $"SKU{i:D3}").ToList();
+
+            var productsToDelete = await context.Products
+                .Where(p => p.SKU.StartsWith("ELG-") || legacySkus.Contains(p.SKU))
+                .ToListAsync();
+
+            if (productsToDelete.Any())
+            {
+                var productIds = productsToDelete.Select(p => p.Id).ToList();
+
+                // Delete ProductImages
+                var imagesToDelete = await context.ProductImages
+                    .Where(pi => productIds.Contains(pi.ProductId))
+                    .ToListAsync();
+                context.ProductImages.RemoveRange(imagesToDelete);
+
+                // Delete ProductTags if any
+                var tagsToDelete = await context.ProductTags
+                    .Where(pt => productIds.Contains(pt.ProductId))
+                    .ToListAsync();
+                context.ProductTags.RemoveRange(tagsToDelete);
+
+                // Delete related CartItems (ON DELETE RESTRICT prevention)
+                var cartItemsToDelete = await context.CartItems
+                    .Where(ci => productIds.Contains(ci.ProductId))
+                    .ToListAsync();
+                context.CartItems.RemoveRange(cartItemsToDelete);
+
+                // Delete related WishlistItems (ON DELETE RESTRICT prevention)
+                var wishlistItemsToDelete = await context.WishlistItems
+                    .Where(wi => productIds.Contains(wi.ProductId))
+                    .ToListAsync();
+                context.WishlistItems.RemoveRange(wishlistItemsToDelete);
+
+                // Delete Products
+                context.Products.RemoveRange(productsToDelete);
                 await context.SaveChangesAsync();
             }
 
-            if (!context.Products.Any())
+            // 2. Delete Categories that are the legacy ones and have no products left
+            var legacyCategorySlugs = new[] { "home-furniture", "decorations", "lighting", "rugs", "textiles" };
+            var categoriesToDelete = await context.Categories
+                .Where(c => legacyCategorySlugs.Contains(c.Slug) && !context.Products.Any(p => p.CategoryId == c.Id))
+                .ToListAsync();
+
+            if (categoriesToDelete.Any())
             {
-                var categories = seedCategories ?? await context.Categories
-                    .OrderBy(c => c.DisplayOrder)
-                    .Take(5)
-                    .ToListAsync();
-
-                if (categories.Count == 0)
-                {
-                    return;
-                }
-
-                int CategoryIdAt(int index)
-                {
-                    if (index < categories.Count)
-                    {
-                        return categories[index].Id;
-                    }
-
-                    return categories[0].Id;
-                }
-
-                var products = new List<Product>
-                {
-                    Product.Create("طقم جلوس فاخر كلاسيك 8 قطع", "Classic Sofa Set 8 Pieces", "أريكة فاخرة بتصميم كلاسيكي ومقاعد مريحة", "Luxury classic sofa set with premium comfort", 45000, "SKU001", 10, CategoryIdAt(0)),
-                    Product.Create("نجفة كريستال بوهيمي ذهبي", "Crystal Chandelier Gold", "نجفة بتصميم أنيق تناسب غرف المعيشة والاستقبال", "Elegant chandelier for living and dining spaces", 12500, "SKU002", 5, CategoryIdAt(2)),
-                    Product.Create("سجادة حرير إيراني 2x3", "Iranian Silk Rug 2x3", "سجادة فاخرة بألوان دافئة ونقوش تقليدية", "Premium rug with warm tones and traditional patterns", 10500, "SKU003", 20, CategoryIdAt(3)),
-                    Product.Create("طاولة طعام خشب بلوط مع 6 كراسي", "Oak Dining Table 6 Chairs", "طاولة طعام متينة مع ستة كراسي مريحة", "Durable dining table with six chairs", 22000, "SKU004", 2, CategoryIdAt(0)),
-                    Product.Create("مزهرية سيراميك مطفية", "Matte Ceramic Vase", "مزهرية ديكورية بتشطيب مطفي", "Decorative ceramic vase with matte finish", 1850, "SKU005", 40, CategoryIdAt(1)),
-                    Product.Create("مصباح أرضي معدني أسود", "Black Metal Floor Lamp", "مصباح أرضي عصري بقاعدة مستقرة", "Modern floor lamp with sturdy base", 4200, "SKU006", 18, CategoryIdAt(2)),
-                    Product.Create("وسادة مخملية مطرزة", "Embroidered Velvet Cushion", "وسادة فاخرة تضيف لمسة دافئة للغرفة", "Soft velvet cushion with embroidered details", 950, "SKU007", 60, CategoryIdAt(4)),
-                    Product.Create("طقم ستائر شيفون مزدوج", "Double Chiffon Curtain Set", "ستائر خفيفة تسمح بمرور الضوء بشكل أنيق", "Lightweight curtains that soften daylight", 3200, "SKU008", 25, CategoryIdAt(4)),
-                    Product.Create("رف جداري خشب طبيعي", "Natural Wood Wall Shelf", "رف جداري عملي للديكور والتنظيم", "Practical wall shelf for decor and storage", 2400, "SKU009", 30, CategoryIdAt(0)),
-                    Product.Create("لوحة جدارية هندسية", "Geometric Wall Art", "لوحة ديكور بتصميم هندسي معاصر", "Contemporary geometric wall art", 2700, "SKU010", 14, CategoryIdAt(1))
-                };
-                
-                products[2].SetDiscount(12500); // Set discount to generate correct original price logic
-                products[0].SetDiscount(50000);
-                products[3].SetDiscount(26000);
-                products[5].SetDiscount(5000);
-                products[7].SetDiscount(4100);
-                
-                await context.Products.AddRangeAsync(products);
+                context.Categories.RemoveRange(categoriesToDelete);
                 await context.SaveChangesAsync();
             }
 
-            if (!context.ProductImages.Any())
+            // 3. Find or Create Kitchen Tools category
+            var kitchenCategory = await context.Categories.FirstOrDefaultAsync(c => c.Slug == "kitchen-tools");
+            if (kitchenCategory == null)
             {
-                var products = await context.Products
-                    .OrderBy(p => p.CreatedAt)
-                    .Take(10)
-                    .ToListAsync();
+                kitchenCategory = Category.Create(
+                    payload.Category.NameAr,
+                    payload.Category.NameEn,
+                    payload.Category.Slug,
+                    payload.Category.DescriptionAr,
+                    payload.Category.DescriptionEn,
+                    null,
+                    payload.Category.ImageUrl,
+                    1
+                );
+                await context.Categories.AddAsync(kitchenCategory);
+                await context.SaveChangesAsync();
+            }
 
-                if (products.Count == 0)
+            // 4. Seed Products
+            var productsToInsert = new List<Product>();
+            for (int i = 0; i < payload.Products.Count; i++)
+            {
+                var seedProd = payload.Products[i];
+                
+                // Skip if duplicate SKU in current batch (just in case)
+                if (productsToInsert.Any(p => p.SKU == seedProd.Sku.ToUpperInvariant()))
                 {
-                    return;
+                    continue;
                 }
 
-                var productImages = new List<ProductImage>();
+                var product = Product.Create(
+                    nameAr: seedProd.NameAr,
+                    nameEn: seedProd.NameEn,
+                    slug: seedProd.Slug,
+                    sku: seedProd.Sku,
+                    price: seedProd.Price,
+                    categoryId: kitchenCategory.Id,
+                    stockQuantity: seedProd.StockQuantity,
+                    descriptionAr: seedProd.DescriptionAr,
+                    descriptionEn: seedProd.DescriptionEn
+                );
 
-                for (var index = 0; index < products.Count; index++)
+                if (seedProd.OriginalPrice.HasValue && seedProd.OriginalPrice.Value > seedProd.Price)
                 {
-                    var product = products[index];
-                    productImages.Add(
-                        ProductImage.Create(
-                            product.Id,
-                            "/assets/seed-images/geometric-wall-art.svg",
-                            null,
-                            product.NameAr,
-                            product.NameEn,
-                            1,
-                            true));
+                    product.SetDiscount(seedProd.OriginalPrice.Value);
                 }
 
-                await context.ProductImages.AddRangeAsync(productImages);
+                product.SetImportMetadata(seedProd.SourceUrl, DateTime.UtcNow);
+
+                if (i < 12)
+                {
+                    product.SetFeatured(true);
+                }
+
+                // Add Images
+                int imageOrder = 1;
+                foreach (var imageUrl in seedProd.ImageUrls)
+                {
+                    var image = ProductImage.Create(
+                        productId: 0,
+                        imageUrl: imageUrl,
+                        thumbnailUrl: null,
+                        altTextAr: seedProd.NameAr,
+                        altTextEn: seedProd.NameEn,
+                        displayOrder: imageOrder,
+                        isPrimary: imageOrder == 1
+                    );
+                    product.Images.Add(image);
+                    imageOrder++;
+                }
+
+                productsToInsert.Add(product);
+            }
+
+            if (productsToInsert.Any())
+            {
+                await context.Products.AddRangeAsync(productsToInsert);
                 await context.SaveChangesAsync();
             }
         }
+
+        private class SeedPayload
+        {
+            public string Source { get; set; } = string.Empty;
+            public string ScrapedAtUtc { get; set; } = string.Empty;
+            public SeedCategory Category { get; set; } = null!;
+            public List<SeedProduct> Products { get; set; } = null!;
+        }
+
+        private class SeedCategory
+        {
+            public string NameAr { get; set; } = string.Empty;
+            public string NameEn { get; set; } = string.Empty;
+            public string Slug { get; set; } = string.Empty;
+            public string? DescriptionAr { get; set; }
+            public string? DescriptionEn { get; set; }
+            public string? ImageUrl { get; set; }
+        }
+
+        private class SeedProduct
+        {
+            public string SourceId { get; set; } = string.Empty;
+            public string Sku { get; set; } = string.Empty;
+            public string Slug { get; set; } = string.Empty;
+            public string NameAr { get; set; } = string.Empty;
+            public string NameEn { get; set; } = string.Empty;
+            public string? DescriptionAr { get; set; }
+            public string? DescriptionEn { get; set; }
+            public decimal Price { get; set; }
+            public decimal? OriginalPrice { get; set; }
+            public int StockQuantity { get; set; }
+            public string? Material { get; set; }
+            public string? Origin { get; set; }
+            public string SourceUrl { get; set; } = string.Empty;
+            public List<string> ImageUrls { get; set; } = null!;
+        }
     }
 }
-
