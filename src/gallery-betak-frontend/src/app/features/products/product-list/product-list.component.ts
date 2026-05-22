@@ -7,17 +7,12 @@ import { Store } from '@ngrx/store';
 import { CartActions } from '../../../core/store/cart/cart.actions';
 import { WishlistService } from '../../../core/services/api/wishlist.service';
 import { ProductDto, ProductService, ProductSpecParams } from '../../../core/services/api/product.service';
-import { CategoryService } from '../../../core/services/api/category.service';
+import { CategoryDto, CategoryService } from '../../../core/services/api/category.service';
 import { combineLatest } from 'rxjs';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthRedirectService } from '../../../core/services/auth-redirect.service';
 import { UiTextService } from '../../../core/services/ui-text.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-interface CategoryFilterItem {
-  id: number;
-  name: string;
-}
 
 @Component({
   selector: 'app-product-list',
@@ -41,7 +36,7 @@ export class ProductListComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   products: ProductDto[] = [];
-  categories: CategoryFilterItem[] = [];
+  categories: CategoryDto[] = [];
   uiMessages = this.uiTextService.getCurrentMessages();
 
   isLoading = false;
@@ -72,6 +67,45 @@ export class ProductListComponent implements OnInit {
       this.minPrice !== null ||
       this.maxPrice !== null ||
       this.pageIndex > 1;
+  }
+
+  get activeCategory(): CategoryDto | null {
+    if (!this.selectedCategoryId) return null;
+    
+    // Find in roots
+    const root = this.categories.find(c => c.id === this.selectedCategoryId);
+    if (root) return root;
+
+    // Find in subcategories
+    for (const cat of this.categories) {
+      const sub = cat.subCategories?.find(s => s.id === this.selectedCategoryId);
+      if (sub) return sub;
+    }
+    
+    return null;
+  }
+
+  get activeParentCategory(): CategoryDto | null {
+    if (!this.selectedCategoryId) return null;
+    
+    // If selected is a root
+    if (this.categories.some(c => c.id === this.selectedCategoryId)) {
+      return this.categories.find(c => c.id === this.selectedCategoryId) || null;
+    }
+
+    // If selected is a sub
+    return this.categories.find(c => c.subCategories?.some(s => s.id === this.selectedCategoryId)) || null;
+  }
+
+  get sliderSubcategories(): CategoryDto[] {
+    const parent = this.activeParentCategory;
+    if (parent) {
+      return parent.subCategories || [];
+    }
+    
+    // Default to Kitchen Tools subcategories if no category selected
+    const kitchenTools = this.categories.find(c => c.slug === 'kitchen-tools-equipment');
+    return kitchenTools?.subCategories || [];
   }
 
   ngOnInit(): void {
@@ -120,10 +154,7 @@ export class ProductListComponent implements OnInit {
 
     this.categoryService.getHierarchicalCategories().subscribe({
       next: categories => {
-        this.categories = categories.map(category => ({
-          id: category.id,
-          name: category.nameAr || category.nameEn
-        }));
+        this.categories = categories;
         this.isCategoriesLoading = false;
       },
       error: () => {
@@ -313,8 +344,56 @@ export class ProductListComponent implements OnInit {
     this.updateQueryParams({ page: this.pageIndex + 1 });
   }
 
+  goToPage(page: number | string) {
+    if (typeof page === 'string' || page === this.pageIndex || this.isLoading) {
+      return;
+    }
+    this.updateQueryParams({ page });
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.totalCount / this.pageSize);
+  }
+
+  get pageNumbers(): (number | string)[] {
+    const total = this.totalPages;
+    if (total <= 1) return [];
+
+    const current = this.pageIndex;
+    const delta = 1; // Number of pages to show before and after current
+    const range = [];
+
+    range.push(1);
+
+    for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
+      range.push(i);
+    }
+
+    if (total > 1) {
+      range.push(total);
+    }
+
+    // Add ellipses where there are gaps
+    const withEllipses = [];
+    let l;
+
+    for (let i of range) {
+      if (l) {
+        if (i - l === 2) {
+          withEllipses.push(l + 1);
+        } else if (i - l !== 1) {
+          withEllipses.push('...');
+        }
+      }
+      withEllipses.push(i);
+      l = i;
+    }
+
+    return withEllipses;
+  }
+
   get canGoNextPage(): boolean {
-    return this.pageIndex * this.pageSize < this.totalCount;
+    return this.pageIndex < this.totalPages;
   }
 
   private mapSort(sort: string): string {

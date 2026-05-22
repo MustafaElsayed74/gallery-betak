@@ -80,7 +80,7 @@
 
         <button type="button" class="mobile-category-chip" *ngFor="let cat of categories"
           [class.is-active]="selectedCategoryId === cat.id" (click)="selectCategory(cat.id)">
-          {{ cat.name }}
+          {{ cat.nameAr || cat.nameEn }}
         </button>
       </div>
 
@@ -179,10 +179,10 @@
               {{ uiMessages.products.categoriesLoading }}
             </div>
 
-            <ul class="space-y-2 mobile-noon-filter-list">
+            <ul class="space-y-4 mobile-noon-filter-list">
               <li>
                 <button type="button" (click)="selectCategory(null)"
-                  class="w-full text-right px-3 py-2 rounded-lg transition mobile-noon-filter-option"
+                  class="w-full text-right px-3 py-2 rounded-lg transition mobile-noon-filter-option font-bold"
                   [class.bg-cyan-50]="selectedCategoryId === null" [class.text-cyan-700]="selectedCategoryId === null"
                   [class.text-slate-700]="selectedCategoryId !== null">
                   {{ uiMessages.products.allCategories }}
@@ -190,12 +190,24 @@
               </li>
               <li *ngFor="let cat of categories">
                 <button type="button" (click)="selectCategory(cat.id)"
-                  class="w-full text-right px-3 py-2 rounded-lg transition mobile-noon-filter-option"
+                  class="w-full text-right px-3 py-2 rounded-lg transition mobile-noon-filter-option font-bold"
                   [class.bg-cyan-50]="selectedCategoryId === cat.id"
                   [class.text-cyan-700]="selectedCategoryId === cat.id"
                   [class.text-slate-700]="selectedCategoryId !== cat.id">
-                  {{ cat.name }}
+                  <i *ngIf="cat.imageUrl" class="fa-solid mr-2 rtl:ml-2 rtl:mr-0 text-slate-400" [ngClass]="cat.imageUrl"></i>
+                  {{ cat.nameAr || cat.nameEn }}
                 </button>
+                <ul *ngIf="cat.subCategories && cat.subCategories.length > 0" class="pr-6 mt-1 space-y-1">
+                  <li *ngFor="let sub of cat.subCategories">
+                    <button type="button" (click)="selectCategory(sub.id)"
+                      class="w-full text-right px-3 py-1.5 rounded-lg transition mobile-noon-filter-option text-sm"
+                      [class.bg-cyan-50]="selectedCategoryId === sub.id"
+                      [class.text-cyan-700]="selectedCategoryId === sub.id"
+                      [class.text-slate-600]="selectedCategoryId !== sub.id">
+                      {{ sub.nameAr || sub.nameEn }}
+                    </button>
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
@@ -248,6 +260,35 @@
         <div *ngIf="errorMessage"
           class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {{ errorMessage }}
+        </div>
+
+        <!-- Subcategories Slider -->
+        <div *ngIf="sliderSubcategories.length > 0" class="mb-6 overflow-x-auto pb-4 hide-scrollbar">
+          <div class="flex gap-4 min-w-max px-2">
+            <button *ngFor="let sub of sliderSubcategories" 
+                    (click)="selectCategory(sub.id)"
+                    class="flex flex-col items-center gap-2 group focus:outline-none w-24">
+              <div class="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 border-2"
+                   [class.bg-cyan-50]="selectedCategoryId === sub.id"
+                   [class.border-cyan-500]="selectedCategoryId === sub.id"
+                   [class.text-cyan-600]="selectedCategoryId === sub.id"
+                   [class.bg-slate-100]="selectedCategoryId !== sub.id"
+                   [class.border-transparent]="selectedCategoryId !== sub.id"
+                   [class.text-slate-500]="selectedCategoryId !== sub.id"
+                   [class.group-hover:bg-cyan-50]="selectedCategoryId !== sub.id"
+                   [class.group-hover:text-cyan-600]="selectedCategoryId !== sub.id">
+                <i *ngIf="sub.imageUrl" class="fa-solid text-2xl" [ngClass]="sub.imageUrl"></i>
+                <svg *ngIf="!sub.imageUrl" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                </svg>
+              </div>
+              <span class="text-xs font-medium text-center leading-tight transition-colors"
+                    [class.text-cyan-700]="selectedCategoryId === sub.id"
+                    [class.text-slate-600]="selectedCategoryId !== sub.id">
+                {{ sub.nameAr || sub.nameEn }}
+              </span>
+            </button>
+          </div>
         </div>
 
         <div *ngIf="isLoading"
@@ -329,24 +370,40 @@
         </div>
 
         <!-- Pagination -->
-        <div class="products-pagination mt-12 flex items-center justify-center border-t border-slate-200 pt-8">
+        <div class="products-pagination mt-12 flex items-center justify-center border-t border-slate-200 pt-8" *ngIf="totalCount > pageSize">
           <nav class="relative z-0 inline-flex shadow-sm gap-2 mobile-pagination-shell" aria-label="Pagination">
             <button (click)="goToPreviousPage()" [disabled]="pageIndex <= 1 || isLoading"
-              class="relative inline-flex items-center px-4 py-2 border border-slate-200 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 rounded-lg disabled:opacity-50">
+              class="relative inline-flex items-center px-3 py-2 border border-slate-200 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 rounded-lg disabled:opacity-50">
               <span class="sr-only">{{ uiMessages.products.previous }}</span>
-              <svg class="h-5 w-5 rotate-180" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="h-5 w-5 rotate-180 rtl:rotate-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd"
                   d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                   clip-rule="evenodd" />
               </svg>
             </button>
-            <button
-              class="relative inline-flex items-center px-4 py-2 border border-cyan-500 bg-cyan-50 text-sm font-bold text-cyan-700 rounded-lg">{{
-              pageIndex }}</button>
+            
+            <ng-container *ngFor="let page of pageNumbers">
+              <button *ngIf="page !== '...'" (click)="goToPage(page)" [disabled]="isLoading"
+                class="relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-lg transition-colors"
+                [class.border-cyan-500]="page === pageIndex"
+                [class.bg-cyan-50]="page === pageIndex"
+                [class.text-cyan-700]="page === pageIndex"
+                [class.border-slate-200]="page !== pageIndex"
+                [class.bg-white]="page !== pageIndex"
+                [class.text-slate-700]="page !== pageIndex"
+                [class.hover:bg-slate-50]="page !== pageIndex">
+                {{ page }}
+              </button>
+              <span *ngIf="page === '...'"
+                class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-slate-400">
+                ...
+              </span>
+            </ng-container>
+
             <button (click)="goToNextPage()" [disabled]="!canGoNextPage || isLoading"
-              class="relative inline-flex items-center px-4 py-2 border border-slate-200 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 rounded-lg">
+              class="relative inline-flex items-center px-3 py-2 border border-slate-200 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 rounded-lg disabled:opacity-50">
               <span class="sr-only">{{ uiMessages.products.next }}</span>
-              <svg class="h-5 w-5 rotate-180" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="h-5 w-5 rotate-180 rtl:rotate-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd"
                   d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                   clip-rule="evenodd" />

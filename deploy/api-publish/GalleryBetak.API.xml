@@ -419,6 +419,12 @@
             <param name="threshold">Stock threshold (default 5).</param>
             <response code="200">Low stock product list.</response>
         </member>
+        <member name="M:GalleryBetak.API.Controllers.ReviewsController.CreateReview(GalleryBetak.Application.Interfaces.CreateReviewRequest)">
+            <summary>Creates a new product review.</summary>
+        </member>
+        <member name="M:GalleryBetak.API.Controllers.ReviewsController.GetProductReviews(System.Int32)">
+            <summary>Retrieves approved reviews for a product.</summary>
+        </member>
         <member name="T:GalleryBetak.API.Controllers.SupportController">
             <summary>
             Public customer support endpoints.

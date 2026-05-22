@@ -1591,6 +1591,9 @@
         <member name="M:GalleryBetak.Domain.Interfaces.IOrderRepository.GenerateOrderNumberAsync(System.Threading.CancellationToken)">
             <summary>Generates the next order number (ORD-YYYYMM-NNNNN).</summary>
         </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.IOrderRepository.HasUserPurchasedProductAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>Checks if a user has a 'Delivered' order containing a specific product.</summary>
+        </member>
         <member name="T:GalleryBetak.Domain.Interfaces.ISpecification`1">
             <summary>
             Encapsulates query logic (filtering, sorting, including, paging) into a reusable specification.

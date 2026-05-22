@@ -1,0 +1,65 @@
+<div class="page-shell py-12 min-h-screen bg-slate-50">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-black text-slate-900 font-cairo">My Orders</h1>
+      <p class="text-slate-500 mt-2">View and track your previous orders</p>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
+    </div>
+
+    <div *ngIf="!isLoading && errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl shadow-sm">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && orders.length === 0" class="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
+      <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-bold text-slate-900 mb-2 font-cairo">No orders yet</h3>
+      <p class="text-slate-500 mb-8 max-w-md mx-auto">Looks like you haven't made any purchases yet. Start shopping to see your orders here.</p>
+      <a routerLink="/products" class="inline-block px-8 py-3 bg-slate-900 hover:bg-black text-white font-bold rounded-xl transition-colors shadow-md">
+        Start Shopping
+      </a>
+    </div>
+
+    <div *ngIf="!isLoading && orders.length > 0" class="space-y-6">
+      <div *ngFor="let order of orders" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 pb-4 border-b border-slate-100 gap-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 block">Order Number</span>
+            <span class="font-mono font-medium text-slate-900">{{ order.orderNumber }}</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 block">Date</span>
+            <span class="text-slate-900">{{ order.createdAt | date:'mediumDate' }}</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 block">Total Amount</span>
+            <span class="font-bold text-slate-900">{{ order.totalAmount | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <div>
+            <span class="px-3 py-1 text-xs font-bold rounded-full inline-block"
+                  [ngClass]="{
+                    'bg-amber-50 text-amber-700 border border-amber-200': order.status === 'Pending',
+                    'bg-blue-50 text-blue-700 border border-blue-200': order.status === 'Processing',
+                    'bg-indigo-50 text-indigo-700 border border-indigo-200': order.status === 'Shipped',
+                    'bg-emerald-50 text-emerald-700 border border-emerald-200': order.status === 'Delivered',
+                    'bg-rose-50 text-rose-700 border border-rose-200': order.status === 'Cancelled'
+                  }">
+              {{ order.status }}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <p class="text-sm text-slate-600 font-medium">{{ order.itemCount }} items</p>
+          <!-- Future: Add 'View Details' button if needed -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

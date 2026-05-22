@@ -9,11 +9,12 @@ import { ToastService } from '../../../core/services/toast.service';
 import { AuthRedirectService } from '../../../core/services/auth-redirect.service';
 import { UiTextService } from '../../../core/services/ui-text.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ProductReviewsComponent } from '../product-reviews/product-reviews.component';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ProductReviewsComponent],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })

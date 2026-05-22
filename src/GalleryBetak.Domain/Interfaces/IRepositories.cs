@@ -50,5 +50,8 @@ public interface IOrderRepository : IGenericRepository<Entities.Order>
 
     /// <summary>Generates the next order number (ORD-YYYYMM-NNNNN).</summary>
     Task<string> GenerateOrderNumberAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Checks if a user has a 'Delivered' order containing a specific product.</summary>
+    Task<bool> HasUserPurchasedProductAsync(string userId, int productId, CancellationToken cancellationToken = default);
 }
 

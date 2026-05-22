@@ -89,5 +89,13 @@ public sealed class OrderRepository : GenericRepository<Order>, IOrderRepository
         var lastSequence = int.Parse(lastOrder[(prefix.Length + 1)..]);
         return $"{prefix}-{(lastSequence + 1):D5}";
     }
+
+    /// <inheritdoc/>
+    public async Task<bool> HasUserPurchasedProductAsync(string userId, int productId, CancellationToken cancellationToken = default)
+    {
+        return await DbSet
+            .Where(o => o.UserId == userId && o.Status == OrderStatus.Delivered)
+            .AnyAsync(o => o.Items.Any(i => i.ProductId == productId), cancellationToken);
+    }
 }
 

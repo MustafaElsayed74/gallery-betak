@@ -418,6 +418,9 @@
         <member name="M:GalleryBetak.Infrastructure.Repositories.OrderRepository.GenerateOrderNumberAsync(System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="M:GalleryBetak.Infrastructure.Repositories.OrderRepository.HasUserPurchasedProductAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:GalleryBetak.Infrastructure.Repositories.ProductRepository">
             <summary>
             Product repository with optimized queries for product catalog operations.
