@@ -53,6 +53,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/account/my-orders/my-orders.component').then(m => m.MyOrdersComponent)
   },
   {
+    path: 'account/orders/:id',
+    loadComponent: () => import('./features/account/order-details/order-details.component').then(m => m.OrderDetailsComponent)
+  },
+  {
     path: 'admin',
     canActivate: [adminGuard],
     loadComponent: () => import('./features/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)

@@ -99,7 +99,7 @@ public sealed class EmailService : IEmailService
         await SendEmailAsync(toEmail, subject, body, cancellationToken);
     }
 
-    public async Task SendOrderTrackingEmailAsync(string toEmail, string orderNumber, string status, string? trackingNumber, CancellationToken cancellationToken = default)
+    public async Task SendOrderTrackingEmailAsync(string toEmail, int orderId, string orderNumber, string status, string? trackingNumber, CancellationToken cancellationToken = default)
     {
         var subject = $"تحديث حالة الطلب: {orderNumber} — جاليري بيتك";
 
@@ -112,7 +112,7 @@ public sealed class EmailService : IEmailService
             greeting: "عزيزنا العميل،",
             mainText: mainText,
             ctaLabel: "تتبع طلبك",
-            ctaUrl: "https://gallery-betak.vercel.app/account",
+            ctaUrl: $"https://gallery-betak.vercel.app/account/orders/{orderId}",
             footnote: "شكراً لتسوقك مع جاليري بيتك. نحن دائماً هنا لخدمتك."
         );
 

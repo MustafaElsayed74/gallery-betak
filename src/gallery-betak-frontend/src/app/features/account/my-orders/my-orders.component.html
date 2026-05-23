@@ -57,9 +57,11 @@
 
         <div class="flex items-center justify-between">
           <p class="text-sm text-slate-600 font-medium">{{ order.itemCount }} items</p>
-          <!-- Future: Add 'View Details' button if needed -->
+          <a [routerLink]="['/account/orders', order.id]" class="text-sm font-bold text-cyan-600 hover:text-cyan-800 transition-colors inline-flex items-center">
+            View Details
+            <svg class="w-4 h-4 ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
         </div>
-      </div>
     </div>
   </div>
 </div>

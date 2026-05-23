@@ -181,6 +181,12 @@
                     {{ uiMessages.navbar.addressBook }}
                   </a>
                 </li>
+                <li>
+                  <a routerLink="/account/orders" (click)="closeUserMenu()"
+                    class="flex items-center rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-700 transition">
+                    My Orders / طلباتي
+                  </a>
+                </li>
                 <li *ngIf="(isAdmin$ | async)">
                   <a routerLink="/admin" (click)="closeUserMenu()"
                     class="flex items-center rounded-xl px-3 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-50 transition">
@@ -265,6 +271,8 @@
           <a routerLink="/account" [queryParams]="{ tab: 'addresses' }"
             class="block rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-slate-50">{{
             uiMessages.navbar.addressBook }}</a>
+          <a routerLink="/account/orders"
+            class="block rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-slate-50">My Orders / طلباتي</a>
           <a *ngIf="(isAdmin$ | async)" routerLink="/admin"
             class="block rounded-xl px-3 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-50">{{
             uiMessages.navbar.adminDashboard }}</a>

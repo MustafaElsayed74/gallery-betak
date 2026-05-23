@@ -31,7 +31,7 @@ public sealed class CategoryService : ICategoryService
     public async Task<ApiResponse<IReadOnlyList<CategoryDto>>> GetHierarchyAsync(CancellationToken ct = default)
     {
         // For performance, getting all active categories and building tree in memory
-        var allCategories = await _unitOfWork.Categories.GetAllAsync(ct);
+        var allCategories = await _unitOfWork.Categories.GetAllWithSubcategoriesAsync(ct);
         
         var roots = allCategories
             .Where(c => c.ParentId == null && c.IsActive)

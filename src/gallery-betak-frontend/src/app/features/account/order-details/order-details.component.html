@@ -1,0 +1,189 @@
+<div class="page-shell py-12 min-h-screen bg-slate-50">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="mb-6">
+      <a routerLink="/account/orders" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
+        <svg class="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Orders
+      </a>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
+    </div>
+
+    <div *ngIf="!isLoading && errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl shadow-sm">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!isLoading && order" class="space-y-8">
+      
+      <!-- Order Header -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-black text-slate-900 font-cairo">Order {{ order.orderNumber }}</h1>
+          <p class="text-slate-500 mt-1">Placed on {{ order.createdAt | date:'mediumDate' }}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-medium text-slate-500 uppercase tracking-wider mb-1">Total Amount</p>
+          <p class="text-2xl font-bold text-slate-900">{{ order.totalAmount | currency:'EGP':'symbol-narrow':'1.0-0' }}</p>
+        </div>
+      </div>
+
+      <!-- Tracking Timeline -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+        <h2 class="text-lg font-bold text-slate-900 mb-8 font-cairo">Tracking Status</h2>
+        
+        <div class="relative">
+          <!-- Progress Bar Background -->
+          <div class="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2 rounded-full hidden md:block"></div>
+          
+          <div class="relative z-10 flex flex-col md:flex-row justify-between gap-6 md:gap-0">
+            <!-- Pending -->
+            <div class="flex md:flex-col items-center gap-4 md:gap-3 text-center w-full md:w-auto">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-4 bg-emerald-500 border-white shadow-md text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="text-left md:text-center">
+                <p class="font-bold text-slate-900">Pending</p>
+              </div>
+            </div>
+
+            <!-- Processing -->
+            <div class="flex md:flex-col items-center gap-4 md:gap-3 text-center w-full md:w-auto">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-4 border-white shadow-md transition-colors"
+                   [ngClass]="(order.status === 'Processing' || order.status === 'Shipped' || order.status === 'Delivered') ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'">
+                <svg *ngIf="order.status === 'Processing' || order.status === 'Shipped' || order.status === 'Delivered'; else notProc" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <ng-template #notProc><div class="w-3 h-3 rounded-full bg-slate-300"></div></ng-template>
+              </div>
+              <div class="text-left md:text-center">
+                <p class="font-bold" [ngClass]="(order.status === 'Processing' || order.status === 'Shipped' || order.status === 'Delivered') ? 'text-slate-900' : 'text-slate-400'">Processing</p>
+              </div>
+            </div>
+
+            <!-- Shipped -->
+            <div class="flex md:flex-col items-center gap-4 md:gap-3 text-center w-full md:w-auto">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-4 border-white shadow-md transition-colors"
+                   [ngClass]="(order.status === 'Shipped' || order.status === 'Delivered') ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'">
+                <svg *ngIf="order.status === 'Shipped' || order.status === 'Delivered'; else notShip" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <ng-template #notShip><div class="w-3 h-3 rounded-full bg-slate-300"></div></ng-template>
+              </div>
+              <div class="text-left md:text-center">
+                <p class="font-bold" [ngClass]="(order.status === 'Shipped' || order.status === 'Delivered') ? 'text-slate-900' : 'text-slate-400'">Shipped</p>
+              </div>
+            </div>
+
+            <!-- Delivered -->
+            <div class="flex md:flex-col items-center gap-4 md:gap-3 text-center w-full md:w-auto">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-4 border-white shadow-md transition-colors"
+                   [ngClass]="order.status === 'Delivered' ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'">
+                <svg *ngIf="order.status === 'Delivered'; else notDeliv" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <ng-template #notDeliv><div class="w-3 h-3 rounded-full bg-slate-300"></div></ng-template>
+              </div>
+              <div class="text-left md:text-center">
+                <p class="font-bold" [ngClass]="order.status === 'Delivered' ? 'text-slate-900' : 'text-slate-400'">Delivered</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="order.trackingNumber" class="mt-8 p-4 bg-cyan-50 border border-cyan-100 rounded-xl flex items-center gap-4">
+          <div class="p-2 bg-white rounded-lg shadow-sm text-cyan-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-cyan-800">Tracking Number</p>
+            <p class="font-mono text-lg text-cyan-900">{{ order.trackingNumber }}</p>
+          </div>
+        </div>
+        
+        <div *ngIf="order.status === 'Cancelled'" class="mt-8 p-4 bg-rose-50 border border-rose-100 rounded-xl text-rose-700 font-bold text-center">
+          This order has been cancelled.
+        </div>
+      </div>
+
+      <!-- Order Details Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left: Items List -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h2 class="text-lg font-bold text-slate-900 mb-6 font-cairo border-b border-slate-100 pb-4">Items ({{ order.items.length }})</h2>
+            
+            <div class="space-y-6">
+              <div *ngFor="let item of order.items" class="flex items-start gap-4 pb-6 border-b border-slate-50 last:border-0 last:pb-0">
+                <div class="w-20 h-20 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
+                  <img *ngIf="item.productImageUrl" [src]="item.productImageUrl" [alt]="item.productNameEn" class="w-full h-full object-cover">
+                  <div *ngIf="!item.productImageUrl" class="w-full h-full flex items-center justify-center text-slate-400">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-base font-bold text-slate-900 truncate">{{ item.productNameAr || item.productNameEn }}</h3>
+                  <p class="text-sm text-slate-500 font-mono mt-1">SKU: {{ item.productSKU }}</p>
+                  <div class="mt-2 flex items-center justify-between">
+                    <p class="text-sm text-slate-600">Qty: <span class="font-bold">{{ item.quantity }}</span></p>
+                    <p class="font-bold text-slate-900">{{ item.totalPrice | currency:'EGP':'symbol-narrow':'1.0-0' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Summary & Info -->
+        <div class="space-y-6">
+          <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h2 class="text-lg font-bold text-slate-900 mb-6 font-cairo border-b border-slate-100 pb-4">Summary</h2>
+            
+            <div class="space-y-3 text-sm">
+              <div class="flex justify-between text-slate-600">
+                <span>Subtotal</span>
+                <span class="font-medium text-slate-900">{{ order.subTotal | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <div class="flex justify-between text-slate-600">
+                <span>Shipping</span>
+                <span class="font-medium text-slate-900">{{ order.shippingCost === 0 ? 'Free' : (order.shippingCost | currency:'EGP':'symbol-narrow':'1.0-0') }}</span>
+              </div>
+              <div *ngIf="order.discountAmount > 0" class="flex justify-between text-emerald-600">
+                <span>Discount</span>
+                <span class="font-medium">-{{ order.discountAmount | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+                <span class="font-bold text-slate-900 text-base">Total</span>
+                <span class="font-black text-slate-900 text-xl">{{ order.totalAmount | currency:'EGP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 font-cairo border-b border-slate-100 pb-4">Shipping Info</h2>
+            <div class="space-y-1 text-sm text-slate-600">
+              <p class="font-bold text-slate-900">{{ order.shippingRecipientName }}</p>
+              <p>{{ order.shippingPhone }}</p>
+              <p class="mt-2">{{ order.shippingStreetAddress }}</p>
+              <p>{{ order.shippingCity }}, {{ order.shippingGovernorate }}</p>
+            </div>
+          </div>
+          
+          <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 font-cairo border-b border-slate-100 pb-4">Payment Info</h2>
+            <div class="text-sm text-slate-600 flex justify-between items-center">
+              <span>Method: <strong>{{ order.paymentMethod }}</strong></span>
+              <span class="px-2 py-1 rounded-md text-xs font-bold"
+                    [ngClass]="order.paymentStatus === 'Paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'">
+                {{ order.paymentStatus }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

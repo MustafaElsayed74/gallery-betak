@@ -15,7 +15,7 @@ namespace GalleryBetak.Infrastructure.Data
         public static async Task SeedAsync(AppDbContext context)
         {
             // Check if the new category structure is already seeded by checking for one of the new root categories
-            if (await context.Categories.AnyAsync(c => c.NameAr == "أدوات المطبخ" && c.ParentId == null))
+            if (await context.Categories.AnyAsync(c => c.NameAr == "أدوات ومعدات المطبخ" && c.ParentId == null))
             {
                 return;
             }

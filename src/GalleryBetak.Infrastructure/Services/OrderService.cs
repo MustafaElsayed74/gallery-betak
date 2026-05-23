@@ -253,7 +253,7 @@ public sealed class OrderService : IOrderService
 
                     try
                     {
-                        await _emailService.SendOrderTrackingEmailAsync(user.Email, order.OrderNumber, statusAr, trackingNumber, ct);
+                        await _emailService.SendOrderTrackingEmailAsync(user.Email, order.Id, order.OrderNumber, statusAr, trackingNumber, ct);
                     }
                     catch
                     {

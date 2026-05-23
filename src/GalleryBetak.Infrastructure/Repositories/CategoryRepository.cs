@@ -24,5 +24,14 @@ public sealed class CategoryRepository : GenericRepository<Category>, ICategoryR
             .Include(c => c.Children)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
+
+    /// <inheritdoc/>
+    public async Task<IReadOnlyList<Category>> GetAllWithSubcategoriesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Categories
+            .Include(c => c.Children)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 }
 

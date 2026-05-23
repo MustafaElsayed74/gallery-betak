@@ -11,5 +11,10 @@ public interface ICategoryRepository : IGenericRepository<Category>
     /// Gets a category by ID and eager-loads its children subcategories.
     /// </summary>
     Task<Category?> GetByIdWithSubcategoriesAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets all categories with their children subcategories eager-loaded.
+    /// </summary>
+    Task<IReadOnlyList<Category>> GetAllWithSubcategoriesAsync(CancellationToken cancellationToken = default);
 }
 
