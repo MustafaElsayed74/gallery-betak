@@ -1,5 +1,5 @@
 <div
-  class="product-card product-card-shell bg-gradient-to-b from-white to-slate-50/60 rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1.5 hover:border-cyan-200 transition-all duration-300 relative group cursor-pointer"
+  class="product-card product-card-shell bg-gradient-to-b from-white to-slate-50/40 rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(14,165,233,0.15)] hover:-translate-y-2 hover:border-sky-200/50 transition-all duration-500 ease-out relative group cursor-pointer"
   [routerLink]="['/products', product.slug]">
 
   <!-- Image Wrapper -->
@@ -18,16 +18,16 @@
 
     <!-- Wishlist Button Overlay -->
     <button (click)="onAddToWishlist($event)"
-      class="product-card-wishlist-btn absolute top-3 left-3 z-10 bg-white/85 backdrop-blur text-slate-400 hover:text-rose-500 hover:bg-white w-9 h-9 flex items-center justify-center rounded-full shadow-sm transition opacity-0 group-hover:opacity-100 focus:outline-none"
+      class="product-card-wishlist-btn absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-md text-slate-400 hover:text-rose-500 hover:bg-white w-9 h-9 flex items-center justify-center rounded-full shadow-sm transition-all duration-300 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 focus:outline-none"
       [attr.aria-label]="uiMessages.products.addToWishlist" [title]="uiMessages.products.addToWishlist">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
       </svg>
     </button>
 
     <img [src]="product.imageUrl || 'assets/placeholder.svg'" [alt]="productDisplayName"
-      class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" loading="lazy">
+      class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out" loading="lazy">
   </div>
 
   <!-- Content -->
@@ -63,9 +63,9 @@
 
       <!-- Add to Cart (Quick Action) -->
       <button (click)="onAddToCart($event)"
-        class="product-card-cart-btn bg-cyan-50 text-cyan-700 hover:bg-gradient-to-r hover:from-sky-500 hover:to-teal-500 hover:text-white w-9 h-9 rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-cyan-400"
+        class="product-card-cart-btn group/cart bg-sky-50/50 text-sky-600 hover:bg-gradient-to-r hover:from-sky-500 hover:to-teal-400 hover:text-white w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/30 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-400"
         [attr.aria-label]="uiMessages.products.addToCart" [title]="uiMessages.products.addToCart">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 transition-transform group-hover/cart:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
       </button>

@@ -2,7 +2,7 @@
 <section class="home-hero relative overflow-hidden text-white">
   <!-- Interactive Background Pattern -->
   <div
-    class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-600 via-slate-900 to-slate-950">
+    class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-sky-950 to-slate-950 opacity-90">
   </div>
   <div class="absolute inset-0 opacity-55"
     style="background-image: linear-gradient(rgba(148,163,184,0.17) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.17) 1px, transparent 1px); background-size: 52px 52px;">
@@ -38,9 +38,9 @@
 <!-- Categories Strip -->
 <section class="home-categories py-12 page-shell">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
       <a *ngFor="let cat of (categories$ | async)?.slice(0, 4)" [routerLink]="['/categories', cat.id]"
-        class="group flex flex-col items-center justify-center p-4 sm:p-6 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white to-slate-50 hover:border-cyan-300 hover:bg-cyan-50/30 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer">
+        class="group flex flex-col items-center justify-center p-6 sm:p-8 rounded-3xl border border-slate-200/50 bg-gradient-to-br from-white to-slate-50 shadow-sm hover:border-sky-300 hover:shadow-[0_20px_40px_-15px_rgba(14,165,233,0.15)] hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer">
         <div
           class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white flex items-center justify-center text-cyan-600 group-hover:scale-110 transition-transform shadow-sm mb-3 sm:mb-4 overflow-hidden border border-slate-100">
           <img *ngIf="cat.imageUrl" [src]="cat.imageUrl" [alt]="cat.nameAr" class="w-full h-full object-cover">
@@ -58,8 +58,9 @@
 </section>
 
 <!-- Top Sellers -->
-<section class="home-top-sellers py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="home-top-sellers py-20 sm:py-24 relative">
+  <div class="absolute inset-0 bg-slate-50/50 pointer-events-none"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div class="flex justify-between items-end mb-10 border-b border-slate-200 pb-4">
       <div>
         <h2 class="text-3xl font-bold font-cairo text-slate-900 mb-2">{{ uiMessages.home.topSellersTitle }}</h2>
@@ -95,10 +96,10 @@
 </section>
 
 <!-- Features Info -->
-<section class="home-features py-16 bg-gradient-to-b from-white to-slate-50/80 border-y border-slate-100">
+<section class="home-features py-20 sm:py-24 bg-gradient-to-b from-white to-slate-50/80 border-y border-slate-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-      <div class="text-center rounded-2xl border border-slate-100 bg-white/90 p-6 shadow-sm">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+      <div class="text-center rounded-3xl border border-slate-100 bg-white/90 p-8 lg:p-10 shadow-sm hover:shadow-xl transition-shadow duration-300">
         <div class="w-16 h-16 mx-auto bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center mb-4">
           <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -108,7 +109,7 @@
         <h3 class="text-lg font-bold mb-2">{{ uiMessages.home.featureFastShippingTitle }}</h3>
         <p class="text-slate-500 text-sm">{{ uiMessages.home.featureFastShippingText }}</p>
       </div>
-      <div class="text-center rounded-2xl border border-slate-100 bg-white/90 p-6 shadow-sm">
+      <div class="text-center rounded-3xl border border-slate-100 bg-white/90 p-8 lg:p-10 shadow-sm hover:shadow-xl transition-shadow duration-300">
         <div class="w-16 h-16 mx-auto bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center mb-4">
           <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -118,7 +119,7 @@
         <h3 class="text-lg font-bold mb-2">{{ uiMessages.home.featureGuaranteedQualityTitle }}</h3>
         <p class="text-slate-500 text-sm">{{ uiMessages.home.featureGuaranteedQualityText }}</p>
       </div>
-      <div class="text-center rounded-2xl border border-slate-100 bg-white/90 p-6 shadow-sm">
+      <div class="text-center rounded-3xl border border-slate-100 bg-white/90 p-8 lg:p-10 shadow-sm hover:shadow-xl transition-shadow duration-300">
         <div class="w-16 h-16 mx-auto bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center mb-4">
           <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
