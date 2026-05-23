@@ -1442,6 +1442,11 @@
             Gets a category by ID and eager-loads its children subcategories.
             </summary>
         </member>
+        <member name="M:GalleryBetak.Domain.Interfaces.ICategoryRepository.GetAllWithSubcategoriesAsync(System.Threading.CancellationToken)">
+            <summary>
+            Gets all categories with their children subcategories eager-loaded.
+            </summary>
+        </member>
         <member name="T:GalleryBetak.Domain.Interfaces.IGenericRepository`1">
             <summary>
             Generic repository interface. Defines common data access operations
