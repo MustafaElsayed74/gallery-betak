@@ -180,7 +180,7 @@ public sealed class Order : BaseEntity
     }
 
     /// <summary>Ships the order with a tracking number.</summary>
-    public void Ship(string trackingNumber)
+    public void Ship(string? trackingNumber = null)
     {
         ValidateTransition(OrderStatus.Shipped);
         Status = OrderStatus.Shipped;

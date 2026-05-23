@@ -214,8 +214,6 @@ public sealed class OrderService : IOrderService
                     order.StartProcessing();
                     break;
                 case OrderStatus.Shipped:
-                    if (string.IsNullOrWhiteSpace(trackingNumber))
-                        return ApiResponse<bool>.Fail(400, "رقم التتبع مطلوب", "Tracking number required for shipping.");
                     order.Ship(trackingNumber);
                     break;
                 case OrderStatus.Delivered:

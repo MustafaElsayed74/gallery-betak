@@ -40,10 +40,10 @@ public sealed class OrderShippedEvent : BaseDomainEvent
     /// <summary>The order ID.</summary>
     public int OrderId { get; }
     /// <summary>Shipping tracking number.</summary>
-    public string TrackingNumber { get; }
+    public string? TrackingNumber { get; }
 
     /// <summary>Creates an OrderShippedEvent.</summary>
-    public OrderShippedEvent(int orderId, string trackingNumber)
+    public OrderShippedEvent(int orderId, string? trackingNumber = null)
     {
         OrderId = orderId;
         TrackingNumber = trackingNumber;
