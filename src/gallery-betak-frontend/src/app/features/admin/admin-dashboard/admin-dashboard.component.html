@@ -494,20 +494,22 @@
             </section>
 
             <section *ngSwitchCase="'orders'" class="module-panel space-y-6" [attr.dir]="isArabic ? 'rtl' : 'ltr'">
-                <!-- Pending Queue Header -->
+                <!-- Orders Header -->
                 <div class="rounded-2xl border border-cyan-100 bg-gradient-to-r from-cyan-50 via-sky-50 to-blue-50 p-6">
                     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div>
-                            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-cyan-700">{{ t('Pending
-                                queue', 'قائمة الانتظار') }}</p>
-                            <p class="mt-1 text-sm text-slate-600">{{ t('This list shows pending orders only. Confirmed
-                                orders move out automatically after status update.', 'هذه القائمة تعرض الطلبات المعلقة
-                                فقط. الطلبات المؤكدة تنتقل تلقائيًا بعد تحديث الحالة.') }}</p>
+                            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-cyan-700">{{ t('Order Management', 'إدارة الطلبات') }}</p>
+                            <p class="mt-1 text-sm text-slate-600">{{ t('Manage and track orders across all statuses.', 'إدارة وتتبع الطلبات بجميع حالاتها.') }}</p>
                         </div>
-                        <div
-                            class="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-white/80 px-4 py-2 text-sm font-semibold text-cyan-800">
-                            <span class="h-2 w-2 rounded-full bg-cyan-500"></span>
-                            {{ t('Pending orders', 'الطلبات المعلقة') }}: {{ orderTotal }}
+                        <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                            <select [(ngModel)]="orderStatusFilter" (change)="orderPage = 1; loadOrders()"
+                                class="rounded-xl border border-cyan-200 bg-white px-4 py-2 text-sm text-cyan-900 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10">
+                                <option *ngFor="let status of orderStatuses" [value]="status">{{ displayOrderStatus(status) }}</option>
+                            </select>
+                            <div class="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-white/80 px-4 py-2 text-sm font-semibold text-cyan-800">
+                                <span class="h-2 w-2 rounded-full" [ngClass]="orderStatusFilter === 'Pending' ? 'bg-amber-500' : 'bg-cyan-500'"></span>
+                                {{ displayOrderStatus(orderStatusFilter) }}: {{ orderTotal }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -620,10 +622,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <p class="mt-4 font-medium text-slate-900">{{ t('No pending orders right now', 'لا توجد طلبات معلقة
-                        حاليًا') }}</p>
-                    <p class="mt-1 text-sm text-slate-500">{{ t('New checkout requests will appear here automatically.',
-                        'ستظهر طلبات الشراء الجديدة هنا تلقائيًا.') }}</p>
+                    <p class="mt-4 font-medium text-slate-900">{{ t('No orders found', 'لا توجد طلبات') }}</p>
+                    <p class="mt-1 text-sm text-slate-500">{{ t('There are no orders matching the selected status.', 'لا توجد طلبات تتطابق مع الحالة المحددة.') }}</p>
                 </div>
 
                 <!-- Pagination -->
