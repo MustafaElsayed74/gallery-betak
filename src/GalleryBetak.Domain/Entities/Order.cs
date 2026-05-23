@@ -227,8 +227,17 @@ public sealed class Order : BaseEntity
         var valid = (Status, target) switch
         {
             (OrderStatus.Pending, OrderStatus.Confirmed) => true,
+            (OrderStatus.Pending, OrderStatus.Processing) => true,
+            (OrderStatus.Pending, OrderStatus.Shipped) => true,
+            (OrderStatus.Pending, OrderStatus.Delivered) => true,
+            
             (OrderStatus.Confirmed, OrderStatus.Processing) => true,
+            (OrderStatus.Confirmed, OrderStatus.Shipped) => true,
+            (OrderStatus.Confirmed, OrderStatus.Delivered) => true,
+            
             (OrderStatus.Processing, OrderStatus.Shipped) => true,
+            (OrderStatus.Processing, OrderStatus.Delivered) => true,
+            
             (OrderStatus.Shipped, OrderStatus.Delivered) => true,
             _ => false
         };

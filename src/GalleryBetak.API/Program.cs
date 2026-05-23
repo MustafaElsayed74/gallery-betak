@@ -56,6 +56,7 @@ try
                 System.Text.Json.JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.DefaultIgnoreCondition =
                 System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
         });
 
     // 7. HttpContext accessor (needed by CurrentUserService)
