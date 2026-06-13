@@ -47,7 +47,9 @@ namespace GalleryBetak.UnitTests.Application.Services
                 .Setup(manager => manager.GetUsersInRoleAsync(It.IsAny<string>()))
                 .ReturnsAsync(new List<ApplicationUser>());
 
-            _orderService = new OrderService(_mockUow.Object, _mockCartService.Object, _mockMapper.Object, _mockUserManager.Object);
+            var mockEmailService = new Mock<IEmailService>();
+
+            _orderService = new OrderService(_mockUow.Object, _mockCartService.Object, _mockMapper.Object, _mockUserManager.Object, mockEmailService.Object);
         }
 
         private static Mock<UserManager<ApplicationUser>> CreateUserManagerMock()

@@ -47,14 +47,18 @@ namespace GalleryBetak.UnitTests.Application.Services
             _mockJwtTokenService = new Mock<IJwtTokenService>();
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockLogger = new Mock<ILogger<AuthService>>();
+            var mockHttpClientFactory = new Mock<IHttpClientFactory>();
+            var mockEmailService = new Mock<IEmailService>();
 
             _authService = new AuthService(
                 _mockUserManager.Object,
                 _mockSignInManager.Object,
                 _mockJwtTokenService.Object,
                 _mockUnitOfWork.Object,
+                mockHttpClientFactory.Object,
                 _mockConfig.Object,
-                _mockLogger.Object);
+                _mockLogger.Object,
+                mockEmailService.Object);
         }
 
         [Fact]
