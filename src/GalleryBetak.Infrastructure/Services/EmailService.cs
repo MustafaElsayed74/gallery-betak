@@ -24,7 +24,7 @@ public sealed class EmailService : IEmailService
         var username = _configuration["EmailConfiguration:UserName"] ?? _configuration["SmtpSettings:Username"];
         var password = _configuration["EmailConfiguration:Password"] ?? _configuration["SmtpSettings:Password"];
         var from = _configuration["EmailConfiguration:From"] ?? _configuration["SmtpSettings:FromEmail"] ?? username;
-        var fromName = _configuration["SmtpSettings:FromName"] ?? "جاليري بيتك";
+        var fromName = _configuration["SmtpSettings:FromName"] ?? "ميراكي";
 
         if (string.IsNullOrWhiteSpace(smtpHost) ||
             string.IsNullOrWhiteSpace(username) ||
@@ -70,11 +70,11 @@ public sealed class EmailService : IEmailService
 
     public async Task SendPasswordResetEmailAsync(string toEmail, string userName, string resetLink, CancellationToken cancellationToken = default)
     {
-        var subject = "إعادة تعيين كلمة المرور — جاليري بيتك";
+        var subject = "إعادة تعيين كلمة المرور — ميراكي";
         var body = BuildBrandedEmail(
             title: "إعادة تعيين كلمة المرور",
             greeting: $"مرحباً {userName}،",
-            mainText: "تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بحسابك في جاليري بيتك. انقر على الزر أدناه لإنشاء كلمة مرور جديدة.",
+            mainText: "تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بحسابك في ميراكي. انقر على الزر أدناه لإنشاء كلمة مرور جديدة.",
             ctaLabel: "إعادة تعيين كلمة المرور",
             ctaUrl: resetLink,
             footnote: "إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذا البريد بأمان — حسابك بخير. الرابط صالح لمدة 24 ساعة فقط."
@@ -85,15 +85,15 @@ public sealed class EmailService : IEmailService
 
     public async Task SendEmailVerificationCodeAsync(string toEmail, string userName, string code, CancellationToken cancellationToken = default)
     {
-        var subject = "تأكيد بريدك الإلكتروني — جاليري بيتك";
+        var subject = "تأكيد بريدك الإلكتروني — ميراكي";
         var body = BuildBrandedEmail(
             title: "تأكيد البريد الإلكتروني",
             greeting: $"أهلاً {userName}،",
-            mainText: "شكراً لانضمامك إلى جاليري بيتك! استخدم الكود التالي لتأكيد بريدك الإلكتروني:",
+            mainText: "شكراً لانضمامك إلى ميراكي! استخدم الكود التالي لتأكيد بريدك الإلكتروني:",
             ctaLabel: null,
             ctaUrl: null,
             otp: code,
-            footnote: "الكود صالح لمدة محدودة. إذا لم تُنشئ حساباً في جاليري بيتك، يمكنك تجاهل هذا البريد."
+            footnote: "الكود صالح لمدة محدودة. إذا لم تُنشئ حساباً في ميراكي، يمكنك تجاهل هذا البريد."
         );
 
         await SendEmailAsync(toEmail, subject, body, cancellationToken);
@@ -101,7 +101,7 @@ public sealed class EmailService : IEmailService
 
     public async Task SendOrderTrackingEmailAsync(string toEmail, int orderId, string orderNumber, string status, string? trackingNumber, CancellationToken cancellationToken = default)
     {
-        var subject = $"تحديث حالة الطلب: {orderNumber} — جاليري بيتك";
+        var subject = $"تحديث حالة الطلب: {orderNumber} — ميراكي";
 
         var mainText = $"نود إعلامك بأن حالة طلبك رقم <strong>{orderNumber}</strong> قد تغيّرت إلى: <strong>{status}</strong>.";
         if (!string.IsNullOrWhiteSpace(trackingNumber))
@@ -113,7 +113,7 @@ public sealed class EmailService : IEmailService
             mainText: mainText,
             ctaLabel: "تتبع طلبك",
             ctaUrl: $"https://gallery-betak.vercel.app/account/orders/{orderId}",
-            footnote: "شكراً لتسوقك مع جاليري بيتك. نحن دائماً هنا لخدمتك."
+            footnote: "شكراً لتسوقك مع ميراكي. نحن دائماً هنا لخدمتك."
         );
 
         await SendEmailAsync(toEmail, subject, body, cancellationToken);
@@ -166,11 +166,11 @@ public sealed class EmailService : IEmailService
     <td style=""background:linear-gradient(135deg,#0b1329 0%,#134e4a 50%,#0369a1 100%);border-radius:20px 20px 0 0;padding:40px 40px 32px;text-align:center;"">
       <div style=""display:inline-flex;align-items:center;gap:12px;margin-bottom:8px;"">
         <div style=""width:48px;height:48px;background:linear-gradient(135deg,#0ea5e9,#14b8a6);border-radius:12px;display:inline-flex;align-items:center;justify-content:center;"">
-          <span style=""font-size:22px;"">🏠</span>
+          <span style=""font-size:22px;"">✨</span>
         </div>
-        <span style=""font-size:26px;font-weight:900;color:#fff;letter-spacing:-0.5px;"">جاليري بيتك</span>
+        <span style=""font-size:26px;font-weight:900;color:#fff;letter-spacing:-0.5px;"">ميراكي</span>
       </div>
-      <p style=""color:rgba(186,230,253,0.8);font-size:13px;margin:0;"">وجهتك الأولى للأثاث والديكور المنزلي</p>
+      <p style=""color:rgba(186,230,253,0.8);font-size:13px;margin:0;"">حقائب وإكسسوارات لطيفة</p>
     </td>
   </tr>
 
@@ -189,13 +189,11 @@ public sealed class EmailService : IEmailService
   <!-- Footer -->
   <tr>
     <td style=""background:#0f172a;border-radius:0 0 20px 20px;padding:24px 40px;text-align:center;"">
-      <p style=""font-size:12px;color:#64748b;margin:0 0 6px;"">جاليري بيتك — مركز ديرب نجم، شارع السنترال</p>
+      <p style=""font-size:12px;color:#64748b;margin:0 0 6px;"">ميراكي — مركز ديرب نجم، شارع السنترال</p>
       <p style=""font-size:12px;color:#64748b;margin:0;"">
         <a href=""https://gallery-betak.vercel.app"" style=""color:#0ea5e9;text-decoration:none;"">gallery-betak.vercel.app</a>
-        &nbsp;|&nbsp;
-        <a href=""tel:+201289095013"" style=""color:#0ea5e9;text-decoration:none;"">+20 128 909 5013</a>
       </p>
-      <p style=""font-size:11px;color:#475569;margin:12px 0 0;"">© {DateTime.UtcNow.Year} جاليري بيتك. جميع الحقوق محفوظة.</p>
+      <p style=""font-size:11px;color:#475569;margin:12px 0 0;"">© {DateTime.UtcNow.Year} ميراكي. جميع الحقوق محفوظة.</p>
     </td>
   </tr>
 

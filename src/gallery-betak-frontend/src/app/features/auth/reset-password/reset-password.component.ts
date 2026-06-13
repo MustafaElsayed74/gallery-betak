@@ -29,7 +29,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M5 3.5v8.7M8.1 3.5v8.7M11.2 3.5v8.7M5 12.2c0 1.7 1.4 3.1 3.1 3.1s3.1-1.4 3.1-3.1M8.1 15.3v13.2M22.8 3.5v11.8M22.8 15.3c-2.9 0-5.3 2.5-5.3 5.6s2.4 5.6 5.3 5.6 5.3-2.5 5.3-5.6-2.4-5.6-5.3-5.6z"/>
               </svg>
             </span>
-            <span class="text-white text-2xl font-black font-cairo">جاليري بيتك</span>
+            <span class="text-white text-2xl font-black font-cairo">ميراكي</span>
           </div>
         </div>
 
